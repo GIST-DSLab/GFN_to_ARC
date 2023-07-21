@@ -64,6 +64,11 @@ class MiniArcEnv:
             return self.translate(selected_rows, selected_cols, action_arg)
         else:
             return self.select_fill(selected_rows, selected_cols, action_arg - len(Direction))
+        next_state = np.ravel(self.state), np.ravel(self.obj_map)
+        reward = self.reward()  # you need to implement this
+        done = False  # change this as needed
+        info = {}  # change this as needed
+        return torch.from_numpy(next_state), reward, done, info
 
     def translate(self, selected_rows, selected_cols, direction):
         prev_state = self.state.copy()
@@ -114,20 +119,7 @@ class MiniArcEnv:
         self.state = self.initial.copy()
         self.obj_map = self.initial_obj_map.copy()
         return np.ravel(self.state), np.ravel(self.obj_map)
-    
+
     def reward(self):
-        """만들어야함
-        
-        def reward(self, s):
-        grid = s.view(len(s), self.size, self.size)
-        coord = (grid == 1).nonzero()[:, 1:].view(len(s), 2)
-        R0, R1, R2 = 1e-2, 0.5, 2
-        norm = torch.abs(coord / (self.size-1) - 0.5)
-        R1_term = torch.prod(0.25 < norm, dim=1)
-        R2_term = torch.prod((0.3 < norm) & (norm < 0.4), dim=1)
-        return (R0 + R1*R1_term + R2*R2_term).to(self.device)
-        
-        이거 참고
-        
-        """
-        pass
+        # placeholder implementation
+        return ((self.state == self.goal).sum() - (self.initial == self.goal).sum()).item()

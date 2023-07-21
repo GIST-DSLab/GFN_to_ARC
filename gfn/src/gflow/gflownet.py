@@ -36,7 +36,6 @@ class GFlowNet(nn.Module):
         Args:
             s: An NxD matrix representing N states
         """
-        #import pdb; pdb.set_trace()
         probs = self.forward_policy(s)
 
         return probs
@@ -56,18 +55,16 @@ class GFlowNet(nn.Module):
         done = False
         log = Log(s0, self.backward_policy, self.total_flow,
                   self.env) if return_log else None
-        import pdb
-        pdb.set_trace()
         while not done:
-            probs = self.forward_probs(s)
+            probs = self.forward_probs(s)  # 여기서 에러남
             actions = Categorical(probs).sample()
-            s = self.env.step(s, actions)
+            s, reward, done, _ = self.env.step(s, actions)
 
             if return_log:
-                log.log(s, probs, actions, done)
+                log = Log(s, probs, actions, done)  # 의심 1 : done이 log에서 바껴야함?
 
-            if s == self.env.GOAL:
-                done = True
+            if done:
+                break
 
         return (s, log) if return_log else s
 

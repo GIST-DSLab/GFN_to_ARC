@@ -12,8 +12,8 @@ class ForwardPolicy(nn.Module):
         self.dense2 = nn.Linear(hidden_dim, num_actions)
 
     def forward(self, s):
-        # import pdb; pdb.set_trace()
         x = self.dense1(s)
+        # import pdb; pdb.set_trace()
         x = relu(x)
         x = self.dense2(x)
         return softmax(x, dim=1)

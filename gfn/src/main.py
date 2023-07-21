@@ -45,21 +45,6 @@ class examplearc:
         return cls.INITIAL.copy(), cls.GOAL.copy(), cls.OBJ_MAP.copy()
 
 
-"""def plot(samples, env, save_path=None):
-    _, ax = plt.subplots(1, 2)
-    s = samples.sum(0).view(size, size)
-    e = env.reward(torch.eye(env.state_dim)).view(size, size)
-
-    ax[0].matshow(s.cpu().numpy())
-    ax[0].set_title("Samples")
-    ax[1].matshow(e.cpu().numpy())
-    ax[1].set_title("Environment")
-    if save_path is not None:
-        plt.savefig(save_path)
-    else:
-        plt.show()"""
-
-
 def train(batch_size, num_epochs, device):
 
     env = MiniArcEnv(*examplearc.get_args())
@@ -70,12 +55,13 @@ def train(batch_size, num_epochs, device):
     backward_policy = BackwardPolicy(
         32, num_actions=700).to(device)
 
-    model = GFlowNet(forward_policy, backward_policy, env=env).to(device)
+    model = GFlowNet(forward_policy, backward_policy,
+                     env=env).to(device)  # 여기서 안되는 중
 
     opt = AdamW(model.parameters(), lr=5e-3)
 
     for i in (p := tqdm(range(num_epochs))):
-        s0 = torch.tensor(env.initial).to(device)
+        s0 = torch.tensor(env.initial, dtype= torch.float32).to(device)
         #import pdb; pdb.set_trace()
         s, log = model.sample_states(s0, return_log=True)
         loss = trajectory_balance_loss(log.total_flow,
@@ -90,7 +76,7 @@ def train(batch_size, num_epochs, device):
 
     s0 = torch.tensor(env.initial).to(device)
     s = model.sample_states(s0, return_log=False)
-    # plot(s, env, save_path="/home/jovyan/Gflownet/gfn/result/")
+    print("Final state\n" + s)
 
 
 if __name__ == "__main__":
