@@ -52,18 +52,23 @@ class GFlowNet(nn.Module):
             and backward probabilities, the actions taken, etc.)
         """
         s = s0.clone()
-        done = False
         log = Log(s0, self.backward_policy, self.total_flow,
                   self.env) if return_log else None
-        while not done:
-            probs = self.forward_probs(s)  # 여기서 에러남
+        is_done = False
+        while not is_done:
+            probs = self.forward_probs(s)
             actions = Categorical(probs).sample()
-            s, reward, done, _ = self.env.step(s, actions)
+            result = self.env.step(actions)
+
+            # if len(result) == 2:
+            #     s, reward = result
+            # else:
+            s, obj, reward, is_done = result  # is_done이랑 done이랑 같은거 아닌가?
 
             if return_log:
-                log = Log(s, probs, actions, done)  # 의심 1 : done이 log에서 바껴야함?
+                log = Log(s, probs, actions, is_done)  # log에 저장
 
-            if done:
+            if is_done:
                 break
 
         return (s, log) if return_log else s

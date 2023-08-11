@@ -49,7 +49,7 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-        had_terminating_action = actions == probs.shape[-1] - 1
+        had_terminating_action = actions == probs.shape[-1] - 1 # 여기 수정해야할듯 action과 prob간의 관계? , reward는 어떻게 받는지 
         active, just_finished = ~done, ~done
         active[active == True] = ~had_terminating_action
         just_finished[just_finished == True] = had_terminating_action

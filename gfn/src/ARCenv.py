@@ -44,18 +44,21 @@ class MiniArcEnv:
 
         self.num_actions = 2 * (len(Direction) + NUM_COLORS)
         self.num_pixels = self.max_rows * self.max_cols
+        self.Done = False
 
     def step(self, action):
-        pixel = action // self.num_actions
+        pixel = action // self.num_actions  # action도 한 가지 값으로 나와야지 맞음
+        # 이게 0이나 1로 나와야함
         is_obj = action % self.num_actions // (len(Direction) + NUM_COLORS)
         row, col = pixel // self.max_rows, pixel % self.max_rows
         if is_obj:
             obj_index = self.obj_map[row, col]
-            selected_rows, selected_cols = np.nonzero(
-                self.obj_map == obj_index)
+            selected = torch.nonzero(self.obj_map == obj_index)
+
+            selected_rows, selected_cols = selected[:, 0], selected[:, 1]
         else:
-            selected_rows = np.array([row])
-            selected_cols = np.array([col])
+            selected_rows = torch.tensor([row])
+            selected_cols = torch.tensor([col])
         action_arg = action % (self.num_actions // 2)
         is_translate = action_arg < len(Direction)
 
@@ -64,25 +67,26 @@ class MiniArcEnv:
             return self.translate(selected_rows, selected_cols, action_arg)
         else:
             return self.select_fill(selected_rows, selected_cols, action_arg - len(Direction))
-        next_state = np.ravel(self.state), np.ravel(self.obj_map)
-        reward = self.reward()  # you need to implement this
-        done = False  # change this as needed
-        info = {}  # change this as needed
-        return torch.from_numpy(next_state), reward, done, info
+
+        # next_state = np.ravel(self.state), np.ravel(self.obj_map)
+        # reward = *self.reward_done(prev_state, self.state)  # you need to implement this
+        # done = False  # change this as needed
+        # info = {}  # change this as needed
+        # return torch.from_numpy(next_state), reward, done, info
 
     def translate(self, selected_rows, selected_cols, direction):
-        prev_state = self.state.copy()
+        prev_state = torch.tensor(self.state)
 
         target_rows = selected_rows + \
-            self.translate_y[Direction(direction % 4)]
+            self.translate_y[Direction(direction.item() % 4)]
         target_cols = selected_cols + \
-            self.translate_x[Direction(direction % 4)]
+            self.translate_x[Direction(direction.item() % 4)]
 
-        row_excluder = np.logical_and(
+        row_excluder = torch.logical_and(
             target_rows >= 0, target_rows < self.max_rows)
-        col_excluder = np.logical_and(
+        col_excluder = torch.logical_and(
             target_cols >= 0, target_cols < self.max_cols)
-        excluder = np.logical_and(row_excluder, col_excluder)
+        excluder = torch.logical_and(row_excluder, col_excluder)
         target_rows = target_rows[excluder]
         moved_rows = selected_rows[excluder]
         target_cols = target_cols[excluder]
@@ -96,13 +100,13 @@ class MiniArcEnv:
         self.obj_map[selected_rows, selected_cols] = DEFAULT_COLOR
         self.obj_map[target_rows, target_cols] = temp
 
-        return np.ravel(self.state), np.ravel(self.obj_map), *self.reward_done(prev_state, self.state)
+        return torch.ravel(self.state), torch.ravel(self.obj_map), *self.reward_done(prev_state, self.state)
 
     def select_fill(self, selected_rows, selected_cols, color):
-        prev_state = self.state.copy()
+        prev_state = torch.tensor(self.state, dtype=torch.long)
         self.state[selected_rows, selected_cols] = color
 
-        return np.ravel(self.state), np.ravel(self.obj_map), *self.reward_done(prev_state, self.state)
+        return torch.ravel(self.state), torch.ravel(self.obj_map), *self.reward_done(prev_state, self.state)
 
     def reward_done(self, state, next_state):
         is_done = int((next_state == self.goal).all())
@@ -116,9 +120,9 @@ class MiniArcEnv:
         return distance + is_done * 50000, is_done
 
     def reset(self):
-        self.state = self.initial.copy()
-        self.obj_map = self.initial_obj_map.copy()
-        return np.ravel(self.state), np.ravel(self.obj_map)
+        self.state = self.initial.clone().detach()
+        self.obj_map = self.initial_obj_map.clone().detach()
+        return torch.ravel(self.state), torch.ravel(self.obj_map)
 
     def reward(self):
         # placeholder implementation
