@@ -64,6 +64,7 @@ class GFlowNet(nn.Module):
             #     s, reward = result
             # else:
             s, obj, reward, is_done = result  # is_done이랑 done이랑 같은거 아닌가?
+# 뭔가 지금 log에 저장이 안되고있는거같음 ->
 
             if return_log:
                 log = Log(s, probs, actions, is_done)  # log에 저장

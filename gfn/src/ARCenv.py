@@ -114,10 +114,10 @@ class MiniArcEnv:
             return is_done, is_done
         # potential = (state == self.goal).sum() ** 2
         # next_potential = (next_state == self.goal).sum() ** 2
-        initial_distance = (self.initial == self.goal).sum()
-        distance = ((next_state == self.goal).sum() - initial_distance)
+        # initial_distance = (self.initial == self.goal).sum()
+        distance = (next_state - self.goal).square().sum()
         # return 0.99 * next_potential - potential + is_done, is_done
-        return distance + is_done * 50000, is_done
+        return 1/distance + is_done * 50000, is_done
 
     def reset(self):
         self.state = self.initial.clone().detach()

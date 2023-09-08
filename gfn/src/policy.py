@@ -13,7 +13,7 @@ class ForwardPolicy(nn.Module):
 
     def forward(self, s):
         x = torch.flatten(s, 0)
-        x = torch.tensor(x, dtype=torch.float32)
+        x = x.to(torch.float32) # 이부분 바꾸는게 좋다고 함 clone().detach()로? 근데 dtype때문에 이렇게 한거라서 일단 놔둠
         x = self.dense1(x)
         x = relu(x)
         x = self.dense2(x)
