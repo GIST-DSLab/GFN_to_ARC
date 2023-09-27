@@ -40,7 +40,7 @@ class GFlowNet(nn.Module):
 
         return probs
 
-    def sample_states(self, s0, return_log=False):
+    def sample_states(self, s0, return_log=True):
         """
         Samples and returns a collection of final states from the GFlowNet.
 
@@ -55,7 +55,10 @@ class GFlowNet(nn.Module):
         log = Log(s0, self.backward_policy, self.total_flow,
                   self.env) if return_log else None
         is_done = False
+
+        iter = 0
         while not is_done:
+            iter += 1
             probs = self.forward_probs(s)
             actions = Categorical(probs).sample()
             result = self.env.step(actions)
@@ -68,6 +71,9 @@ class GFlowNet(nn.Module):
 
             if return_log:
                 log = Log(s, probs, actions, is_done)  # log에 저장
+
+            if iter > 100:  # max_length
+                return (s, log) if return_log else s
 
             if is_done:
                 break

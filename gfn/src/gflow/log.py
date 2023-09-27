@@ -23,12 +23,12 @@ class Log:
         self.backward_policy = backward_policy
         self.total_flow = total_flow
         self.env = env
-        self._traj = [s0] #state value
+        self._traj = [s0]  # state value
         self._fwd_probs = []
         self._back_probs = None
         self._actions = []
         self._state_colors = []
-        self.rewards = [] # ??? 이거 어떻게 바꿀지 고민 
+        self.rewards = []  # ??? 이거 어떻게 바꿀지 고민
         self.num_samples = s0.shape[0]
         self.is_terminals = []
 
@@ -49,7 +49,8 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-        had_terminating_action = actions == probs.shape[-1] - 1 # 여기 수정해야할듯 action과 prob간의 관계? , reward는 어떻게 받는지 
+        had_terminating_action = actions == probs.shape[-1] - \
+            1  # 여기 수정해야할듯 action과 prob간의 관계? , reward는 어떻게 받는지
         active, just_finished = ~done, ~done
         active[active == True] = ~had_terminating_action
         just_finished[just_finished == True] = had_terminating_action
@@ -77,7 +78,7 @@ class Log:
     @property
     def fwd_probs(self):
         if type(self._fwd_probs) is list:
-            self._fwd_probs = torch.cat(self._fwd_probs, dim=1)
+            self._fwd_probs = torch.cat(self._fwd_probs, dim=1)  # 여기 뭐가 들어가야하지
         return self._fwd_probs
 
     @property
