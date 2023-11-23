@@ -1,0 +1,112 @@
+2023-11-23 19:38:11,179 INFO    StreamThr :47548 [internal.py:wandb_internal():86] W&B internal server running at pid: 47548, started at: 2023-11-23 19:38:11.178946
+2023-11-23 19:38:11,184 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: status
+2023-11-23 19:38:11,201 INFO    WriterThread:47548 [datastore.py:open_for_write():85] open: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\run-iwuei1jk.wandb
+2023-11-23 19:38:11,203 DEBUG   SenderThread:47548 [sender.py:send():380] send: header
+2023-11-23 19:38:11,204 DEBUG   SenderThread:47548 [sender.py:send():380] send: run
+2023-11-23 19:38:12,013 INFO    SenderThread:47548 [dir_watcher.py:__init__():211] watching files in: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files
+2023-11-23 19:38:12,013 INFO    SenderThread:47548 [sender.py:_start_run_threads():1124] run started: iwuei1jk with start time 1700735891.179946
+2023-11-23 19:38:12,032 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: check_version
+2023-11-23 19:38:12,032 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: check_version
+2023-11-23 19:38:12,103 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: run_start
+2023-11-23 19:38:12,150 DEBUG   HandlerThread:47548 [system_info.py:__init__():32] System info init
+2023-11-23 19:38:12,150 DEBUG   HandlerThread:47548 [system_info.py:__init__():47] System info init done
+2023-11-23 19:38:12,150 INFO    HandlerThread:47548 [system_monitor.py:start():194] Starting system monitor
+2023-11-23 19:38:12,152 INFO    HandlerThread:47548 [system_monitor.py:probe():214] Collecting system info
+2023-11-23 19:38:12,152 INFO    SystemMonitor:47548 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2023-11-23 19:38:12,154 INFO    SystemMonitor:47548 [interfaces.py:start():190] Started cpu monitoring
+2023-11-23 19:38:12,166 INFO    SystemMonitor:47548 [interfaces.py:start():190] Started disk monitoring
+2023-11-23 19:38:12,168 INFO    SystemMonitor:47548 [interfaces.py:start():190] Started gpu monitoring
+2023-11-23 19:38:12,169 DEBUG   HandlerThread:47548 [system_info.py:probe():196] Probing system
+2023-11-23 19:38:12,170 INFO    SystemMonitor:47548 [interfaces.py:start():190] Started memory monitoring
+2023-11-23 19:38:12,187 INFO    SystemMonitor:47548 [interfaces.py:start():190] Started network monitoring
+2023-11-23 19:38:12,204 DEBUG   HandlerThread:47548 [system_info.py:_probe_git():181] Probing git
+2023-11-23 19:38:12,254 DEBUG   HandlerThread:47548 [system_info.py:_probe_git():189] Probing git done
+2023-11-23 19:38:12,255 DEBUG   HandlerThread:47548 [system_info.py:probe():244] Probing system done
+2023-11-23 19:38:12,255 DEBUG   HandlerThread:47548 [system_monitor.py:probe():223] {'os': 'Windows-10-10.0.22621-SP0', 'python': '3.9.13', 'heartbeatAt': '2023-11-23T10:38:12.170954', 'startedAt': '2023-11-23T10:38:11.157946', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'C:\\Users\\sanha\\GFN_to_ARC\\gfn\\src\\main.py', 'codePathLocal': 'src\\main.py', 'codePath': 'src\\main.py', 'git': {'remote': None, 'commit': None}, 'email': '57973170+hsh6449@users.noreply.github.com', 'root': 'C:/Users/sanha/GFN_to_ARC/gfn', 'host': 'DESKTOP-2DTJQL2', 'username': 'sanha', 'executable': 'C:\\Users\\sanha\\anaconda3\\envs\\gfn\\python.exe', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 3801.0, 'min': 0.0, 'max': 3801.0}, 'cpu_freq_per_core': [{'current': 3801.0, 'min': 0.0, 'max': 3801.0}], 'disk': {'/': {'total': 1862.2851524353027, 'used': 309.35444259643555}}, 'gpu': 'NVIDIA GeForce RTX 3060', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 3060', 'memory_total': 12884901888}], 'memory': {'total': 59.89608383178711}}
+2023-11-23 19:38:12,255 INFO    HandlerThread:47548 [system_monitor.py:probe():224] Finished collecting system info
+2023-11-23 19:38:12,255 INFO    HandlerThread:47548 [system_monitor.py:probe():227] Publishing system info
+2023-11-23 19:38:12,255 DEBUG   HandlerThread:47548 [system_info.py:_save_pip():52] Saving list of pip packages installed into the current environment
+2023-11-23 19:38:12,258 DEBUG   HandlerThread:47548 [system_info.py:_save_pip():68] Saving pip packages done
+2023-11-23 19:38:12,258 DEBUG   HandlerThread:47548 [system_info.py:_save_conda():75] Saving list of conda packages installed into the current environment
+2023-11-23 19:38:13,017 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\requirements.txt
+2023-11-23 19:38:13,018 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\conda-environment.yaml
+2023-11-23 19:38:20,087 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\conda-environment.yaml
+2023-11-23 19:38:20,279 DEBUG   HandlerThread:47548 [system_info.py:_save_conda():87] Saving conda packages done
+2023-11-23 19:38:20,280 INFO    HandlerThread:47548 [system_monitor.py:probe():229] Finished publishing system info
+2023-11-23 19:38:20,288 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: keepalive
+2023-11-23 19:38:20,288 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: status_report
+2023-11-23 19:38:20,289 DEBUG   SenderThread:47548 [sender.py:send():380] send: files
+2023-11-23 19:38:20,289 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-metadata.json with policy now
+2023-11-23 19:38:20,308 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: stop_status
+2023-11-23 19:38:20,309 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: stop_status
+2023-11-23 19:38:20,314 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: internal_messages
+2023-11-23 19:38:20,800 DEBUG   SenderThread:47548 [sender.py:send():380] send: telemetry
+2023-11-23 19:38:21,096 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:21,096 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-metadata.json
+2023-11-23 19:38:21,929 INFO    wandb-upload_0:47548 [upload_job.py:push():131] Uploaded file C:\Users\sanha\AppData\Local\Temp\tmpmk5qxzjuwandb\hkzdukq2-wandb-metadata.json
+2023-11-23 19:38:22,830 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: status_report
+2023-11-23 19:38:23,118 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:25,140 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:25,311 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:25,312 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:25,313 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:25,314 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:26,149 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_created():271] file/dir created: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:27,158 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:27,366 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:27,367 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:27,368 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:27,369 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:28,168 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:28,408 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: status_report
+2023-11-23 19:38:29,178 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:29,192 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:29,194 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:29,195 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:29,197 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:30,188 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:31,197 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:31,255 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:31,258 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:31,258 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:31,259 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:32,206 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:33,217 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:33,338 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:33,339 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:33,341 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:33,343 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:34,227 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:34,391 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: status_report
+2023-11-23 19:38:35,238 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:35,314 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: stop_status
+2023-11-23 19:38:35,315 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: stop_status
+2023-11-23 19:38:35,328 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: internal_messages
+2023-11-23 19:38:35,333 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:35,644 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:35,645 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:35,646 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:36,248 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:37,258 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:37,374 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:37,375 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:37,377 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:37,379 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:38,268 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:39,278 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:39,428 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: status_report
+2023-11-23 19:38:39,488 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:39,489 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:39,489 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:39,490 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:40,287 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:41,252 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: partial_history
+2023-11-23 19:38:41,253 DEBUG   SenderThread:47548 [sender.py:send():380] send: history
+2023-11-23 19:38:41,254 DEBUG   SenderThread:47548 [sender.py:send_request():407] send_request: summary_record
+2023-11-23 19:38:41,254 INFO    SenderThread:47548 [sender.py:_save_file():1380] saving file wandb-summary.json with policy end
+2023-11-23 19:38:41,301 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:41,302 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\wandb-summary.json
+2023-11-23 19:38:43,318 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:44,328 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\output.log
+2023-11-23 19:38:45,445 DEBUG   HandlerThread:47548 [handler.py:handle_request():146] handle_request: status_report
+2023-11-23 19:38:46,342 INFO    Thread-21 :47548 [dir_watcher.py:_on_file_modified():288] file/dir modified: c:\Users\sanha\GFN_to_ARC\gfn\wandb\run-20231123_193811-iwuei1jk\files\config.yaml

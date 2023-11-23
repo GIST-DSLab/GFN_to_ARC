@@ -8,9 +8,10 @@ from gflow.gflownet import GFlowNet
 from policy import ForwardPolicy, BackwardPolicy
 from gflow.utils import trajectory_balance_loss
 from torch.optim import Adam
+
 # from grid import Grid
 import numpy as np
-from gfn.ARCdataset import ARCdataset
+# from gfn.ARCdataset import ARCdataset
 
 
 def plot(samples, env):
@@ -66,9 +67,4 @@ if __name__ == "__main__":
     batch_size = args.batch_size
     num_epochs = args.num_epochs
 
-    dataset = ARCdataset(
-        "/home/jovyan/Gflownet/ARCdataset/diagonal_flip_augment.data_2/")
-    train_dataloader = DataLoader(
-        dataset, batch_size=batch_size, shuffle=False)
-
-    train(batch_size, num_epochs, train_dataloader)
+    train(batch_size, num_epochs)

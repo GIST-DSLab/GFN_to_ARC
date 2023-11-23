@@ -21,18 +21,19 @@ class Log:
             which samples are drawn
         """
         self.backward_policy = backward_policy
-        self.total_flow = total_flow
+        self.total_flow = 1
         self.env = env
-        self._traj = [s0]  # state value
+        self._traj = []  # state value
         self._fwd_probs = []
         self._back_probs = None
         self._actions = []
         self._state_colors = []
-        self.rewards = []  # ??? 이거 어떻게 바꿀지 고민
-        self.num_samples = s0.shape[0]
+        self.rewards = []
+        self.num_samples = len(self._traj)
         self.is_terminals = []
+        self.masks = []
 
-    def log(self, s, probs, actions, done):
+    def log(self, s, probs, actions, done, rewards=None):
         """
         Logs relevant information about each sampling step
 
@@ -49,42 +50,41 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-        had_terminating_action = actions == probs.shape[-1] - \
-            1  # 여기 수정해야할듯 action과 prob간의 관계? , reward는 어떻게 받는지
-        active, just_finished = ~done, ~done
-        active[active == True] = ~had_terminating_action
-        just_finished[just_finished == True] = had_terminating_action
+        had_terminating_action = (
+            actions["operation"] == 34)  # 34번이 sumbmit , reward는 어떻게 받는지
 
-        states = self._traj[-1].squeeze(1).clone()
-        states[active] = s[active]
-        self._traj.append(states.view(self.num_samples, 1, -1))
+        # active = ~had_terminating_action
+        # just_finished = had_terminating_action
 
-        fwd_probs = torch.ones(self.num_samples, 1)
-        fwd_probs[~done] = probs.gather(1, actions.unsqueeze(1))
-        self._fwd_probs.append(fwd_probs)
+        state = torch.tensor(s["grid"])
+        self._traj.append(torch.tensor(state))
+        self._fwd_probs.append(probs.unsqueeze(0))
+        self._actions.append(actions["operation"])
+        self.masks.append(actions["selection"])
+        self.rewards.append(rewards)
+        self.total_flow += torch.sum(probs)
 
-        _actions = -torch.ones(self.num_samples, 1).long()
-        _actions[~done] = actions.unsqueeze(1)
-        self._actions.append(_actions)
-
-        self.rewards[just_finished] = self.env.reward(s[just_finished])
 
     @property
     def traj(self):
         if type(self._traj) is list:
-            self._traj = torch.cat(self._traj, dim=1)[:, :-1, :]
+            # self._traj = torch.cat(self._traj, dim=1)[:, :-1, :]
+            pass
         return self._traj
 
     @property
     def fwd_probs(self):
         if type(self._fwd_probs) is list:
-            self._fwd_probs = torch.cat(self._fwd_probs, dim=1)  # 여기 뭐가 들어가야하지
+            # self._fwd_probs = torch.cat(self._fwd_probs, dim=0)  # 여기 뭐가 들어가야하지
+            pass
+        # half_length = len(self._fwd_probs) // 2
         return self._fwd_probs
 
     @property
     def actions(self):
         if type(self._actions) is list:
-            self._actions = torch.cat(self._actions, dim=1)
+            # self._actions = torch.cat(self._actions, dim=1)
+            pass
         return self._actions
 
     @property
@@ -92,14 +92,13 @@ class Log:
         if self._back_probs is not None:
             return self._back_probs
 
-        s = self.traj[:, 1:, :].reshape(-1, self.env.state_dim)
-        prev_s = self.traj[:, :-1, :].reshape(-1, self.env.state_dim)
-        actions = self.actions[:, :-1].flatten()
+        # s = self.traj[-2]  # 마지막에서 두번째 꺼
+        # prev_s = self.traj[-1]  # 마지막 꺼
+        actions = self.actions[-1]
 
-        terminated = (actions == -1) | (actions == self.env.num_actions - 1)
-        zero_to_n = torch.arange(len(terminated))
-        back_probs = self.backward_policy(s) * self.env.mask(prev_s)
-        back_probs = torch.where(terminated, 1, back_probs[zero_to_n, actions])
-        self._back_probs = back_probs.reshape(self.num_samples, -1)
+        terminated = (actions == 34) | (len(self.actions) == 100)
+        
+        back_probs = self.backward_policy(self.fwd_probs) 
+        self._back_probs = back_probs
 
         return self._back_probs

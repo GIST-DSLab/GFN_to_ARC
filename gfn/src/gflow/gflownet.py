@@ -2,17 +2,20 @@ import torch
 from torch import nn
 from torch.nn.parameter import Parameter
 from torch.distributions import Categorical
+
+import numpy as np
 from .log import Log
 
 
 class GFlowNet(nn.Module):
-    def __init__(self, forward_policy, backward_policy, env=None, device='cpu'):
+    def __init__(self, forward_policy, backward_policy, env=None, device='cuda'):
         super().__init__()
-        self.total_flow = Parameter(torch.ones(1).to(device))
+        self.total_flow = Parameter(torch.ones(1000).to(device))
         self.forward_policy = forward_policy.to(device)
         self.backward_policy = backward_policy.to(device)
         self.env = env
         self.device = device
+        self.actions = {}
 
         """
         Initializes a GFlowNet using the specified forward and backward policies
@@ -51,26 +54,31 @@ class GFlowNet(nn.Module):
             sampling process (e.g. the trajectory of each sample, the forward
             and backward probabilities, the actions taken, etc.)
         """
-        s = s0.clone()
-        log = Log(s0, self.backward_policy, self.total_flow,
+        s = torch.tensor(s0["input"]).to(self.device)
+        log = Log(s, self.backward_policy, self.total_flow,
                   self.env) if return_log else None
         is_done = False
 
         iter = 0
         while not is_done:
             iter += 1
-            probs = self.forward_probs(s)
-            actions = Categorical(probs).sample()
-            result = self.env.step(actions)
+            probs = self.forward_probs(s)  # 랜덤액션?
+            selection = np.zeros((30, 30), dtype=bool)
+            selection[:s0["grid_dim"][0], :s0["grid_dim"][1]] = np.ones(
+                s0["grid_dim"], dtype=bool)
 
-            # if len(result) == 2:
-            #     s, reward = result
-            # else:
-            s, obj, reward, is_done = result  # is_done이랑 done이랑 같은거 아닌가?
-# 뭔가 지금 log에 저장이 안되고있는거같음 ->
+            self.actions["operation"] = int(Categorical(probs).sample())
+            self.actions["selection"] = selection  # selection 어떻게
+            result = self.env.step(self.actions)
+
+            # reward 는 spaset reward 이기 때문에 따로 reward 함수를 만들어서 log에 저장하는 함수를 만들어야함
+            state, reward, is_done, _, info = result
+            s = torch.tensor(state["grid"]).to(self.device)
+
+            ime_reward = self.reward(s)
 
             if return_log:
-                log = Log(s, probs, actions, is_done)  # log에 저장
+                log.log(s=state, probs=probs, actions = self.actions, done=is_done, rewards=ime_reward)  # log에 저장
 
             if iter > 100:  # max_length
                 return (s, log) if return_log else s
@@ -78,7 +86,8 @@ class GFlowNet(nn.Module):
             if is_done:
                 break
 
-        return (s, log) if return_log else s
+        # return (s, log) if return_log else s
+        return s, log
 
     def evaluate_trajectories(self, traj, actions):
         """
@@ -112,6 +121,29 @@ class GFlowNet(nn.Module):
                                  back_probs[zero_to_n[:-num_samples], actions])
         back_probs = back_probs.reshape(num_samples, -1)
 
-        rewards = self.env.reward(finals)
+        rewards = self.reward(finals)
 
         return fwd_probs, back_probs, rewards
+    
+    def reward(self, s):
+        """
+        Returns the reward associated with a given state.
+
+        Args:
+            s: An NxD matrix representing N states
+        """
+        terminal = torch.tensor(self.env.unwrapped.answer)
+        pad_terminal = torch.zeros_like(s)
+        pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
+
+        # MSE 
+        r = 1/(torch.sqrt((pad_terminal - s)**2))
+        for i in range(len(r)):
+            for j in range(len(r[0])):
+                if r[i][j] == float("inf"):
+                    r[i][j] = 0
+        mse_loss = r.sum()
+
+        # sparse reward
+        sparse_reward = torch.where((pad_terminal - s).sum(dim=1) == 0, 1, 0.1)
+        return mse_loss

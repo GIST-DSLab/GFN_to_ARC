@@ -1,0 +1,12 @@
+
+  0%|                                                                                                                               | 0/1000 [00:00<?, ?it/s]C:\Users\sanha\GFN_to_ARC\gfn\src\gflow\log.py:60: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self._traj.append(torch.tensor(state))
+
+
+
+
+
+
+
+
+-9.394:   1%|▉                                                                                                              | 9/1000 [00:20<37:42,  2.28s/it]
