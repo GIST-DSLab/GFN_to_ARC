@@ -25,7 +25,8 @@ class ForwardPolicy(nn.Module):
 
             return softmax(x, dim=0)
         except :
-            pdb.set_trace()
+            # pdb.set_trace()
+            pass
             # return softmax(x, dim=0)
 
 class BackwardPolicy(nn.Module):

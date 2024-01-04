@@ -18,9 +18,9 @@ import time
 import pickle
 from typing import Dict, List, Tuple
 
-# import wandb
+import wandb
 
-# wandb.init(project="gflow", entity="hsh6449")
+wandb.init(project="gflow", entity="hsh6449")
 
 
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
@@ -75,7 +75,7 @@ def train(num_epochs, device):
                                         log.fwd_probs,
                                         log.back_probs)
             
-            # wandb.log({"loss": loss.item()})
+            wandb.log({"loss": loss.item()})
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
             opt.step()

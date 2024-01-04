@@ -21,11 +21,11 @@ class Log:
             which samples are drawn
         """
         self.backward_policy = backward_policy
-        self.total_flow = 1
+        self.total_flow = total_flow
         self.env = env
         self._traj = []  # state value
         self._fwd_probs = []
-        self._back_probs = None
+        self._back_probs = []
         self._actions = []
         self._state_colors = []
         self.rewards = []
@@ -33,7 +33,7 @@ class Log:
         self.is_terminals = []
         self.masks = []
 
-    def log(self, s, probs, actions, done, rewards=None):
+    def log(self, s, probs, actions, rewards=None, total_flow=None, done=None):
         """
         Logs relevant information about each sampling step
 
@@ -62,7 +62,7 @@ class Log:
         self._actions.append(actions["operation"])
         self.masks.append(actions["selection"])
         self.rewards.append(rewards)
-        self.total_flow += torch.sum(probs)
+        self.total_flow = self.total_flow
 
 
     @property
@@ -89,16 +89,20 @@ class Log:
 
     @property
     def back_probs(self):
-        if self._back_probs is not None:
-            return self._back_probs
+        # if self._back_probs is not None:
+        #     return self._back_probs
 
         # s = self.traj[-2]  # 마지막에서 두번째 꺼
         # prev_s = self.traj[-1]  # 마지막 꺼
+        if type(self._back_probs) is list:
+            pass
         actions = self.actions[-1]
 
         terminated = (actions == 34) | (len(self.actions) == 100)
-        
-        self._back_probs = self.backward_policy(self.traj[-1].to("cuda")) 
-        
+        for t in range(len(self._traj)):
+            # if t == 0:
+            #     self._back_probs.append(torch.tensor(1.0))
+            
+            self._back_probs.append(self.backward_policy(self.traj[-t].to("cuda")).unsqueeze(0))        
 
         return self._back_probs

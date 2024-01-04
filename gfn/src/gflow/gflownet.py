@@ -10,7 +10,7 @@ from .log import Log
 class GFlowNet(nn.Module):
     def __init__(self, forward_policy, backward_policy, env=None, device='cuda'):
         super().__init__()
-        self.total_flow = Parameter(torch.ones(1000).to(device))
+        self.total_flow = Parameter(torch.tensor(1.0).to(device))
         self.forward_policy = forward_policy.to(device)
         self.backward_policy = backward_policy.to(device)
         self.env = env
@@ -78,7 +78,7 @@ class GFlowNet(nn.Module):
             ime_reward = self.reward(s)
 
             if return_log:
-                log.log(s=state, probs=probs, actions = self.actions, done=is_done, rewards=ime_reward)  # log에 저장
+                log.log(s=state, probs=probs, actions = self.actions, rewards=ime_reward, total_flow=self.total_flow, done=is_done)  # log에 저장
 
             if iter > 100:  # max_length
                 return (s, log) if return_log else s
