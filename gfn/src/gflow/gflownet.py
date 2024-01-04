@@ -73,7 +73,7 @@ class GFlowNet(nn.Module):
 
             # reward 는 spaset reward 이기 때문에 따로 reward 함수를 만들어서 log에 저장하는 함수를 만들어야함
             state, reward, is_done, _, info = result
-            s = torch.tensor(state["grid"]).to(self.device)
+            s = torch.tensor(state["grid"], dtype = torch.long).to(self.device)
 
             ime_reward = self.reward(s)
 
@@ -137,13 +137,13 @@ class GFlowNet(nn.Module):
         pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
 
         # MSE 
-        r = 1/(torch.sqrt((pad_terminal - s)**2))
+        r = ((pad_terminal - s)**2 + 1e-6)
         for i in range(len(r)):
             for j in range(len(r[0])):
                 if r[i][j] == float("inf"):
                     r[i][j] = 0
-        mse_loss = r.sum()
+        mse_reward = 1 / (r.sum() + 1e-6) 
 
         # sparse reward
         sparse_reward = torch.where((pad_terminal - s).sum(dim=1) == 0, 1, 0.1)
-        return mse_loss
+        return mse_reward

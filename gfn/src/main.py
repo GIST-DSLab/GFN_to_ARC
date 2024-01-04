@@ -18,12 +18,14 @@ import time
 import pickle
 from typing import Dict, List, Tuple
 
-import wandb
+# import wandb
 
-wandb.init(project="gflow", entity="hsh6449")
+# wandb.init(project="gflow", entity="hsh6449")
 
 
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
+
+torch.autograd.set_detect_anomaly(True)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -41,8 +43,7 @@ def train(num_epochs, device):
     forward_policy = ForwardPolicy(
         30, hidden_dim=32, num_actions=35).to(device)
 
-    backward_policy = BackwardPolicy(
-        32, num_actions=35).to(device)
+    backward_policy = BackwardPolicy(30, hidden_dim=32, num_actions=35).to(device)
 
     model = GFlowNet(forward_policy, backward_policy,
                      env=env).to(device)
@@ -53,34 +54,35 @@ def train(num_epochs, device):
         state, info = env.reset()
         # s0 = torch.tensor(state, dtype=torch.float32).to(device)
         
-        result = model.sample_states(state, return_log=True)
-        
-        if len(result) == 2:
-            s, log = result
-        else:
-            s = result
+        for _ in range(10):
+            result = model.sample_states(state, return_log=True)
+            
+            if len(result) == 2:
+                s, log = result
+            else:
+                s = result
 
-        # probs = model.forward_probs(s)
+            # probs = model.forward_probs(s)
 
-        # model.actions["operation"] = int(torch.argmax(probs).item())
-        # model.actions["selection"] = np.zeros((30, 30))
+            # model.actions["operation"] = int(torch.argmax(probs).item())
+            # model.actions["selection"] = np.zeros((30, 30))
 
-        # result = env.step(model.actions)
-        # state, reward, is_done, _, info = result
+            # result = env.step(model.actions)
+            # state, reward, is_done, _, info = result
 
-        loss = trajectory_balance_loss(log.total_flow,
-                                       log.rewards,
-                                       log.fwd_probs,
-                                       log.back_probs)
-        
-        wandb.log({"loss": loss.item()})
-        loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
-        opt.step()
+            loss = trajectory_balance_loss(log.total_flow,
+                                        log.rewards,
+                                        log.fwd_probs,
+                                        log.back_probs)
+            
+            # wandb.log({"loss": loss.item()})
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
+            opt.step()
 
 
-        opt.zero_grad()
-        if i % 10 == 0:
+            opt.zero_grad()
+            # if i % 10 == 0:
             p.set_description(f"{loss.item():.3f}")
     
     state, _ = env.reset()

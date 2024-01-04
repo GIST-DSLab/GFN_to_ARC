@@ -98,7 +98,7 @@ class Log:
 
         terminated = (actions == 34) | (len(self.actions) == 100)
         
-        back_probs = self.backward_policy(self.fwd_probs) 
-        self._back_probs = back_probs
+        self._back_probs = self.backward_policy(self.traj[-1].to("cuda")) 
+        
 
         return self._back_probs

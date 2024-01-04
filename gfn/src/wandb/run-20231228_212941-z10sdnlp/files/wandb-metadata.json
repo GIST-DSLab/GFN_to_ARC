@@ -1,0 +1,53 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.9.13",
+    "heartbeatAt": "2023-12-28T12:29:42.935134",
+    "startedAt": "2023-12-28T12:29:41.873987",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Users\\sanha\\GFN_to_ARC\\gfn\\src\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": "https://github.com/hsh6449/GFN_to_ARC.git",
+        "commit": "ff66c9b0710c29d57e1963809b99deca2de0dba5"
+    },
+    "email": "57973170+hsh6449@users.noreply.github.com",
+    "root": "C:/Users/sanha/GFN_to_ARC/gfn/src",
+    "host": "DESKTOP-2DTJQL2",
+    "username": "sanha",
+    "executable": "C:\\Users\\sanha\\anaconda3\\envs\\gfn\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3801.0,
+        "min": 0.0,
+        "max": 3801.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3801.0,
+            "min": 0.0,
+            "max": 3801.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 1862.2851524353027,
+            "used": 482.5749740600586
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3060",
+            "memory_total": 12884901888
+        }
+    ],
+    "memory": {
+        "total": 59.89608383178711
+    }
+}
