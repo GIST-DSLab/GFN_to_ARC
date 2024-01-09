@@ -6,6 +6,7 @@ from torch.distributions import Categorical
 import numpy as np
 from .log import Log
 
+import segmentation_models_pytorch as smp
 
 class GFlowNet(nn.Module):
     def __init__(self, forward_policy, backward_policy, env=None, device='cuda'):
@@ -31,6 +32,17 @@ class GFlowNet(nn.Module):
 
             env: An environment defining a state space and an associated reward
             function"""
+        
+        self.conv2d = nn.Conv2d(1, 3, kernel_size=1, stride=1, padding=1).to(device)
+        self.relu = nn.ReLU()
+        self.Unet = smp.Unet(
+            encoder_name="resnet18",
+            encoder_weights=None,
+            in_channels=1,
+            classes=1,
+        ).to(device)
+
+        self.decode = nn.Conv2d(3,1, kernel_size=3, stride=1).to(device)
 
     def forward_probs(self, s):
         """
@@ -54,18 +66,32 @@ class GFlowNet(nn.Module):
             sampling process (e.g. the trajectory of each sample, the forward
             and backward probabilities, the actions taken, etc.)
         """
-        s = torch.tensor(s0["input"]).to(self.device)
+        s = torch.tensor(s0["input"], dtype=torch.float).to(self.device)
+        grid_dim = s.shape
+
         log = Log(s, self.backward_policy, self.total_flow,
                   self.env) if return_log else None
         is_done = False
 
         iter = 0
+        # selection_mode = "Unet" # one , Unet, whole
+
         while not is_done:
             iter += 1
-            probs = self.forward_probs(s)  # 랜덤액션?
-            selection = np.zeros((30, 30), dtype=bool)
-            selection[:s0["grid_dim"][0], :s0["grid_dim"][1]] = np.ones(
-                s0["grid_dim"], dtype=bool)
+            # probs = self.forward_probs(s)  # 랜덤액션?
+            probs, selection = self.forward_probs(s)
+
+            """if selection_mode == "whole":
+            ## 전체 grid 마스크 선택
+                selection = np.zeros((30, 30), dtype=bool)
+                selection[:grid_dim[0], :grid_dim[1]] = np.ones(
+                    grid_dim, dtype=bool)
+            elif selection_mode == "one":
+                selection = np.zeros((30, 30), dtype=bool)
+                #TODO
+            elif selection_mode == "Unet":
+                selection = self.select_mask(s)"""
+                
 
             self.actions["operation"] = int(Categorical(probs).sample())
             self.actions["selection"] = selection  # selection 어떻게
@@ -80,7 +106,7 @@ class GFlowNet(nn.Module):
             if return_log:
                 log.log(s=state, probs=probs, actions = self.actions, rewards=ime_reward, total_flow=self.total_flow, done=is_done)  # log에 저장
 
-            if iter > 100:  # max_length
+            if iter > 1000:  # max_length
                 return (s, log) if return_log else s
 
             if is_done:
@@ -145,5 +171,25 @@ class GFlowNet(nn.Module):
         mse_reward = 1 / (r.sum() + 1e-6) 
 
         # sparse reward
-        sparse_reward = torch.where((pad_terminal - s).sum(dim=1) == 0, 1, 0.1)
+        # sparse_reward = torch.where((pad_terminal - s).sum(dim=1) == 0, 1, 0.1)
         return mse_reward
+
+    def select_mask(self, s):
+
+        if type(s) is not torch.float :
+            s = s.to(torch.float)
+
+        s = self.conv2d(s.unsqueeze(0))
+        s = self.relu(s)
+
+        out = self.Unet(s.reshape(3,1,32,32))
+
+        out = self.decode(out.reshape(3,32,32))
+        out = self.relu(out)
+
+        out = out.sigmoid()
+        pred_mask = (out >= 0.5).float()
+        pred_mask = pred_mask.squeeze()
+
+        return np.array(pred_mask.detach().cpu(), dtype=bool)
+    

@@ -18,9 +18,9 @@ import time
 import pickle
 from typing import Dict, List, Tuple
 
-import wandb
+# import wandb
 
-wandb.init(project="gflow", entity="hsh6449")
+# wandb.init(project="gflow", entity="hsh6449")
 
 
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
@@ -32,7 +32,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 loader = ARCLoader()
 miniloader = MiniARCLoader()
 
-render_mode = None  # ansi
+render_mode = "ansi" # None  # ansi
 
 
 def train(num_epochs, device):
@@ -54,7 +54,7 @@ def train(num_epochs, device):
         state, info = env.reset()
         # s0 = torch.tensor(state, dtype=torch.float32).to(device)
         
-        for _ in range(10):
+        for _ in range(20):
             result = model.sample_states(state, return_log=True)
             
             if len(result) == 2:
@@ -75,7 +75,7 @@ def train(num_epochs, device):
                                         log.fwd_probs,
                                         log.back_probs)
             
-            wandb.log({"loss": loss.item()})
+            # wandb.log({"loss": loss.item()})
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
             opt.step()
@@ -91,11 +91,48 @@ def train(num_epochs, device):
     print("initial state\n" + s0)
     print("Final state\n" + s)
 
+    return model
+
+def eval(model):
+    env = gym.make('ARCLE/O2ARCv2Env-v0', render_mode=render_mode, data_loader=loader,
+                   max_grid_size=(30, 30), colors=10, max_episode_steps=None)
+    
+
+    for i in (p := tqdm(range(num_epochs))):
+        state, info = env.reset()
+        s0 = torch.tensor(state, dtype=torch.float32).to(device)
+        
+        
+        result = model.sample_states(s0, return_log=True)
+        
+        if len(result) == 2:
+            s, log = result
+        else:
+            s = result
+
+        probs = model.forward_probs(s)
+
+        model.actions["operation"] = int(torch.argmax(probs).item())
+        model.actions["selection"] = np.zeros((30, 30))
+
+        result = env.step(model.actions)
+        state, reward, is_done, _, info = result
+
+
+        # if i % 10 == 0:
+        # p.set_description(f"{loss.item():.3f}")
+        
+    state, _ = env.reset()
+    s0 = torch.tensor(state["input"]).to(device)
+    s = model.sample_states(s0, return_log=False)
+    print("initial state\n" + s0)
+    print("Final state\n" + s)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch_size", type=int, default=256)
-    parser.add_argument("--num_epochs", type=int, default=1000)
+    parser.add_argument("--num_epochs", type=int, default=28280)
 
     args = parser.parse_args()
     batch_size = args.batch_size
@@ -108,4 +145,5 @@ if __name__ == "__main__":
     train_dataloader = DataLoader(
         dataset, batch_size=batch_size, shuffle=False)"""
 
-    train(num_epochs, device)
+    model = train(num_epochs, device)
+    eval(model)

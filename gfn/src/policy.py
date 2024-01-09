@@ -2,6 +2,9 @@ import torch
 from torch import nn
 from torch.nn.functional import relu
 from torch.nn.functional import softmax
+
+import segmentation_models_pytorch as smp
+import numpy as np
 import pdb
 
 
@@ -11,6 +14,17 @@ class ForwardPolicy(nn.Module):
         self.dense1 = nn.Linear(state_dim*state_dim, hidden_dim)
         self.dense2 = nn.Linear(hidden_dim, hidden_dim)
         self.dense3 = nn.Linear(hidden_dim, num_actions)
+
+        self.conv2d = nn.Conv2d(1, 3, kernel_size=1, stride=1, padding=1)
+        self.relu = nn.ReLU()
+        self.Unet = smp.Unet(
+            encoder_name="resnet18",
+            encoder_weights=None,
+            in_channels=1,
+            classes=1,
+        )
+
+        self.decode = nn.Conv2d(3,1, kernel_size=3, stride=1)
 
     def forward(self, s):
         try :
@@ -23,11 +37,42 @@ class ForwardPolicy(nn.Module):
             x = relu(x)
             x = self.dense3(x)
 
-            return softmax(x, dim=0)
+            predicted_mask = self.select_mask(s, "Unet")
+
+
+            return softmax(x, dim=0), predicted_mask
         except :
             # pdb.set_trace()
             pass
             # return softmax(x, dim=0)
+        
+    def select_mask(self, s, mode="Unet"):
+        
+        if mode == "whole":
+            ## 전체 grid 마스크 선택
+            selection = np.zeros((30, 30), dtype=bool)
+            selection[:s.shape[0], :s.shape[1]] = np.ones(s.shape, dtype=bool)
+        elif mode == "one":
+                selection = np.zeros((30, 30), dtype=bool)
+                #TODO
+        elif mode == "Unet":
+                
+            if type(s) is not torch.float :
+                s = s.to(torch.float)
+
+            s = self.conv2d(s.unsqueeze(0))
+            s = self.relu(s)
+
+            out = self.Unet(s.reshape(3,1,32,32))
+
+            out = self.decode(out.reshape(3,32,32))
+            out = self.relu(out)
+
+            out = out.sigmoid()
+            pred_mask = (out >= 0.5).float()
+            pred_mask = pred_mask.squeeze()
+
+            return np.array(pred_mask.detach().cpu(), dtype=bool)
 
 class BackwardPolicy(nn.Module):
     def __init__(self, state_dim,hidden_dim, num_actions):
