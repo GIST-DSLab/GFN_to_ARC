@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.nn.parameter import Parameter
-from torch.distributions import Categorical
+from torch.distributions import Categorical, Normal
 
 import numpy as np
 from .log import Log
@@ -12,6 +12,7 @@ class GFlowNet(nn.Module):
     def __init__(self, forward_policy, backward_policy, env=None, device='cuda'):
         super().__init__()
         self.total_flow = Parameter(torch.tensor(1.0).to(device))
+        self.std = Parameter(torch.tensor([0.5]*35, dtype = torch.float32).to(device))
         self.forward_policy = forward_policy.to(device)
         self.backward_policy = backward_policy.to(device)
         self.env = env
@@ -92,8 +93,9 @@ class GFlowNet(nn.Module):
             elif selection_mode == "Unet":
                 selection = self.select_mask(s)"""
                 
-
-            self.actions["operation"] = int(Categorical(probs).sample())
+            # ac = int(Categorical(probs).rsample())
+            ac = int(Normal(probs, self.std).rsample().argmax())
+            self.actions["operation"] = ac
             self.actions["selection"] = selection  # selection 어떻게
             result = self.env.step(self.actions)
 
@@ -192,4 +194,6 @@ class GFlowNet(nn.Module):
         pred_mask = pred_mask.squeeze()
 
         return np.array(pred_mask.detach().cpu(), dtype=bool)
+    
+    ## 작은 그리드부터 해보기 
     

@@ -26,6 +26,8 @@ class ForwardPolicy(nn.Module):
 
         self.decode = nn.Conv2d(3,1, kernel_size=3, stride=1)
 
+        # self.decode_cor = 
+
     def forward(self, s):
         try :
             x = torch.flatten(s, 0)
@@ -53,8 +55,15 @@ class ForwardPolicy(nn.Module):
             selection = np.zeros((30, 30), dtype=bool)
             selection[:s.shape[0], :s.shape[1]] = np.ones(s.shape, dtype=bool)
         elif mode == "one":
-                selection = np.zeros((30, 30), dtype=bool)
-                #TODO
+            selection = np.zeros((30, 30), dtype=bool)
+            x = x.to(torch.float32)
+            x = self.dense1(x)
+            x = relu(x)
+            x = self.dense2(x)
+            x = relu(x)
+            x = self.dense3(x)
+
+            
         elif mode == "Unet":
                 
             if type(s) is not torch.float :
@@ -69,7 +78,7 @@ class ForwardPolicy(nn.Module):
             out = self.relu(out)
 
             out = out.sigmoid()
-            pred_mask = (out >= 0.5).float()
+            pred_mask = (out >= 0.6).float()
             pred_mask = pred_mask.squeeze()
 
             return np.array(pred_mask.detach().cpu(), dtype=bool)

@@ -56,7 +56,7 @@ class Log:
         # active = ~had_terminating_action
         # just_finished = had_terminating_action
 
-        state = torch.tensor(s["grid"])
+        state = torch.tensor(s["grid"], dtype=int)
         self._traj.append(torch.tensor(state))
         self._fwd_probs.append(probs.unsqueeze(0))
         self._actions.append(actions["operation"])
@@ -70,6 +70,12 @@ class Log:
         if type(self._traj) is list:
             # self._traj = torch.cat(self._traj, dim=1)[:, :-1, :]
             pass
+
+        terminal = torch.tensor(self.env.unwrapped.answer)
+        pad_terminal = torch.zeros(30,30)
+        pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
+        
+        self._traj[-1] = torch.tensor(pad_terminal, dtype=int)
         return self._traj
 
     @property
