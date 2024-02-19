@@ -50,8 +50,8 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-        had_terminating_action = (
-            actions["operation"] == 34)  # 34번이 sumbmit , reward는 어떻게 받는지
+        # had_terminating_action = (
+        #     actions["operation"] == 34)  # 34번이 sumbmit , reward는 어떻게 받는지
 
         # active = ~had_terminating_action
         # just_finished = had_terminating_action
@@ -71,11 +71,11 @@ class Log:
             # self._traj = torch.cat(self._traj, dim=1)[:, :-1, :]
             pass
 
-        terminal = torch.tensor(self.env.unwrapped.answer)
-        pad_terminal = torch.zeros(30,30)
-        pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
+        # terminal = torch.tensor(self.env.unwrapped.answer)
+        # pad_terminal = torch.zeros(30,30)
+        # pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
         
-        self._traj[-1] = torch.tensor(pad_terminal, dtype=int)
+        # self._traj[-1] = torch.tensor(pad_terminal, dtype=int)
         return self._traj
 
     @property
@@ -84,6 +84,7 @@ class Log:
             # self._fwd_probs = torch.cat(self._fwd_probs, dim=0)  # 여기 뭐가 들어가야하지
             pass
         # half_length = len(self._fwd_probs) // 2
+        # import pdb; pdb.set_trace()
         return self._fwd_probs
 
     @property
@@ -100,15 +101,19 @@ class Log:
 
         # s = self.traj[-2]  # 마지막에서 두번째 꺼
         # prev_s = self.traj[-1]  # 마지막 꺼
-        if type(self._back_probs) is list:
-            pass
-        actions = self.actions[-1]
-
-        terminated = (actions == 34) | (len(self.actions) == 100)
+        # if type(self._back_probs) is list:
+        #     pass
+        # actions = self.actions[-1]
+        # import pdb; pdb.set_trace()
+        # terminated = (actions == 34) | (len(self.actions) == 100)
+        
+        ### 원래 버전 : trajectory에서부터 마지막 state 부터 불러와서 back_probs를 계산하는 방식
         for t in range(len(self._traj)):
-            # if t == 0:
-            #     self._back_probs.append(torch.tensor(1.0))
-            
             self._back_probs.append(self.backward_policy(self.traj[-t].to("cuda")).unsqueeze(0))        
+        
+        ### 새로운 버전 : 정답을 시작으로 env step을 해서 back probs을 계산? (Goal conditioned backward policy)
+        ### 어차피 한 픽셀씩 변경 되기 때문에 정답 state만 계속 줘도 되지 않을까?
+        # for t in range(len(self._traj)):
+        #     self._back_probs.append(self.backward_policy(torch.tensor(self.env.unwrapped.answer).to("cuda")).unsqueeze(0))
 
         return self._back_probs
