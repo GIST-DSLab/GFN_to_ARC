@@ -10,6 +10,7 @@ from gymnasium import spaces
 from gymnasium.envs.registration import register
 from gymnasium.wrappers import TimeLimit
 from gymnasium.wrappers.flatten_observation import FlattenObservation
+from gymnasium.envs.registration import register
 
 
 import numpy as np
@@ -36,12 +37,13 @@ register(
 
 class CustomO2ARCEnv(O2ARCv2Env):
     
-    def __init__(self, data_loader: Loader = MiniARCLoader(), max_grid_size: Tuple[SupportsInt, SupportsInt] = (30,30), colors: SupportsInt = 10, max_trial: SupportsInt = -1, render_mode: str = None, render_size: Tuple[SupportsInt, SupportsInt] = None) -> None:
+    def __init__(self, data_loader: Loader = MiniARCLoader(), max_grid_size: Tuple[SupportsInt, SupportsInt] = (30,30), colors: SupportsInt = 10, max_trial: SupportsInt = -1, render_mode: str = "ansi", render_size: Tuple[SupportsInt, SupportsInt] = None, options : dict = {}) -> None:
         super().__init__(data_loader, max_grid_size, colors, max_trial, render_mode, render_size)
 
         self.reset_options = {
-            'adaptation': False, # Default is true (adaptation first!). To change this mode, call 'post_adaptation()'
-            'prob_index': None
+            'adaptation': True, # Default is true (adaptation first!). To change this mode, call 'post_adaptation()'
+            'prob_index': None,#options["prob_index"],
+            # 'subprob_index' : options["subprob_index"]
         }
     def create_operations(self) :
         from arcle.actions.critical import crop_grid
@@ -52,7 +54,9 @@ class CustomO2ARCEnv(O2ARCv2Env):
         return ops[0:10] + ops[20:] 
 
     def reset(self, seed = None, options= None):
-        obs, info = super().reset(seed, self.reset_options)
+        obs, info = super().reset(seed, options)
+
+        self.reset_options = options
         # rotate_k = np.random.randint(0,4)
         # permute = np.random.permutation(10)
         # f = lambda x: permute[int(x)]
@@ -151,20 +155,24 @@ class FilterO2ARC(gym.ObservationWrapper):
         ])
 # env = gym.make('ARCLE/ColorARCEnv', )
 
-def env_return(render, data):
+def env_return(render, data, options):
 
     #### 한픽셀씩 칠하는 env
 
     # env = gym.make('ARCLE/ColorARCEnv', render_mode=render, data_loader=data, max_grid_size=(5, 5), colors=10, max_episode_steps=None )
     # env = PointWrapper(env)
-
+    register(
+    id='O2ARCv2Env',
+    entry_point=__name__+':O2ARCNoFillEnv',
+    max_episode_steps=300, 
+)
     #### BBox env
-    env = CustomO2ARCEnv(max_trial=100)
+    env = gym.make('ARCLE/O2ARCv2Env', render_mode=render, data_loader=data, max_grid_size=(5, 5), colors=10, max_episode_steps=None )
+    env = CustomO2ARCEnv(max_trial=100,options=options)
     env = BBoxWrapper(env)
     # env = FlattenObservation(env)
     env = TimeLimit(env, max_episode_steps=100)
-        
-    return env
 
+    return env
 
 # env_return(env)

@@ -26,8 +26,8 @@ import arcle
 from arcle.envs import O2ARCv2Env
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
 
-import wandb
-wandb.init(project="gflow2", entity="hsh6449")
+# import wandb
+# wandb.init(project="gflow", entity="hsh6449")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -43,7 +43,8 @@ def train(num_epochs, device):
     # env = gym.make('ARCLE/O2ARCv2Env-v0', render_mode=render_mode, data_loader=loader,
     #                max_grid_size=(30, 30), colors=10, max_episode_steps=None)
 
-    env = env_return(render_mode, miniloader)
+    env = env_return(render_mode, miniloader, options= None)
+    
 
     forward_policy = ForwardPolicy(
         30, hidden_dim=32, num_actions=25).to(device)
@@ -58,10 +59,10 @@ def train(num_epochs, device):
     # state = env.env.reset(options= {'adaptation':False, 'prob_index':env.findbyname(env.traces_info[idx][0]), 'subprob_index': env.traces_info[idx][1]})
 
     for i in (p := tqdm(range(num_epochs))):
-        state, info = env.reset(options = {"prob_index" : 101, "adaptation" : False})
+        state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i})
         # s0 = torch.tensor(state, dtype=torch.float32).to(device)
         
-        for _ in tqdm(range(100000)):
+        for _ in tqdm(range(100)):
             result = model.sample_states(state, return_log=True)
             
             if len(result) == 2:
@@ -85,9 +86,7 @@ def train(num_epochs, device):
                                         log.back_probs,
                                         torch.tensor(env.unwrapped.answer).to("cuda"))
             
-            wandb.log({"loss": loss.item()})
-            wandb.log({"reward": re.item()})
-
+            # wandb.log({"loss": loss.item()})
             opt.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
@@ -95,29 +94,40 @@ def train(num_epochs, device):
             # if i % 10 == 0:
             p.set_description(f"{loss.item():.3f}")
     
+    env.post_adaptation()
     state, _ = env.reset()
     # s0 = torch.tensor(state["input"]).to(device)
-    s, log = model.sample_states(state, return_log=False)
-    print("initial state\n" + state["input"])
-    print("Final state\n" + s)
+    s, log = model.sample_states(state, return_log=True)
+    print("initial state : \n")
+    print(state["input"])
+    print("Final state : \n")
+    print(s)
 
-    return model
+    return model, env
 
 def eval(model):
 
-    env = env_return()
+    env = env_return(render_mode, miniloader)
+
+    env.post_adaptation()
         
-    state, _ = env.reset(options = {"prob_index" : 111, "adaptation" : False})
+    state, _ = env.reset(options = {"prob_index" : 101, "adaptation" : False})
     s0 = torch.tensor(state["input"]).to(device)
-    s, log = model.sample_states(s0, return_log=False)
-    print("initial state\n" + s0)
-    print("Final state\n" + s)
+    s, log = model.sample_states(state, return_log=True)
+    print("initial state : \n")
+    print(state["input"])
+    print("Final state : \n")
+    print(s)
+
+    print("=============")
+    print("Answer : \n")
+    print(env.unwrapped.answer)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch_size", type=int, default=256)
-    parser.add_argument("--num_epochs", type=int, default=1)
+    parser.add_argument("--num_epochs", type=int, default=3)
 
     args = parser.parse_args()
     batch_size = args.batch_size

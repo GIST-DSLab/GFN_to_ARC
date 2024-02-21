@@ -94,10 +94,10 @@ class GFlowNet(nn.Module):
             
             elif self.env_style == "bbox" :
                 # bbox 
-                x0 = torch.round(selection[0] * grid_dim[0])
-                y0 = torch.round(selection[1] * grid_dim[1])
-                x1 = torch.round(selection[2] * grid_dim[0])
-                y1 = torch.round(selection[3] * grid_dim[1])
+                x0 = selection[0] * grid_dim[0]
+                y0 = selection[1] * grid_dim[1]
+                x1 = selection[2] * grid_dim[0]
+                y1 = selection[3] * grid_dim[1]
 
                 selection = (x0,y0,x1,y1, ac)
 
@@ -107,7 +107,6 @@ class GFlowNet(nn.Module):
 
             # reward 는 spase reward 이기 때문에 따로 reward 함수를 만들어서 log에 저장하는 함수를 만들어야함
             state, reward, is_done, _, info = result
-            
             s = torch.tensor(state["grid"], dtype = torch.long).to(self.device)
 
             re = self.reward(s)
@@ -127,7 +126,7 @@ class GFlowNet(nn.Module):
                 break
 
         # return (s, log) if return_log else s
-        return s, log
+        return s, log if return_log else s
 
     def evaluate_trajectories(self, traj, actions):
         """
