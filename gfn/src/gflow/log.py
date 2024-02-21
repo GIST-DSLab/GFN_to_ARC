@@ -60,7 +60,7 @@ class Log:
         self._traj.append(torch.tensor(state))
         self._fwd_probs.append(probs.unsqueeze(0))
         self._actions.append(actions["operation"])
-        self.masks.append(actions["selection"])
+        # self.masks.append(actions["selection"])
         self.rewards.append(rewards)
         self.total_flow = self.total_flow
 
@@ -106,14 +106,11 @@ class Log:
         # actions = self.actions[-1]
         # import pdb; pdb.set_trace()
         # terminated = (actions == 34) | (len(self.actions) == 100)
-        
-        ### 원래 버전 : trajectory에서부터 마지막 state 부터 불러와서 back_probs를 계산하는 방식
         for t in range(len(self._traj)):
+            # if t == 0:
+            #     self._back_probs.append(torch.tensor(1.0))
+            
             self._back_probs.append(self.backward_policy(self.traj[-t].to("cuda")).unsqueeze(0))        
-        
-        ### 새로운 버전 : 정답을 시작으로 env step을 해서 back probs을 계산? (Goal conditioned backward policy)
-        ### 어차피 한 픽셀씩 변경 되기 때문에 정답 state만 계속 줘도 되지 않을까?
-        # for t in range(len(self._traj)):
-        #     self._back_probs.append(self.backward_policy(torch.tensor(self.env.unwrapped.answer).to("cuda")).unsqueeze(0))
-
+            
+        # import pdb;pdb.set_trace()
         return self._back_probs

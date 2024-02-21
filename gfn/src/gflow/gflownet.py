@@ -2,12 +2,11 @@ import torch
 from torch import nn
 from torch.nn.parameter import Parameter
 from torch.distributions import Categorical, Normal
-import torch.nn.functional as F
 
 import numpy as np
 from .log import Log
 
-# import segmentation_models_pytorch as smp
+import segmentation_models_pytorch as smp
 
 class GFlowNet(nn.Module):
     def __init__(self, forward_policy, backward_policy, env=None, device='cuda'):
@@ -19,7 +18,8 @@ class GFlowNet(nn.Module):
         self.env = env
         self.device = device
         self.actions = {}
-        self.epsilon = 0.8
+
+        self.env_style = "bbox" # "point", ...
 
         """
         Initializes a GFlowNet using the specified forward and backward policies
@@ -36,16 +36,16 @@ class GFlowNet(nn.Module):
             env: An environment defining a state space and an associated reward
             function"""
         
-        # self.conv2d = nn.Conv2d(1, 3, kernel_size=1, stride=1, padding=1).to(device)
-        # self.relu = nn.ReLU()
-        # self.Unet = smp.Unet(
-        #     encoder_name="resnet18",
-        #     encoder_weights=None,
-        #     in_channels=1,
-        #     classes=1,
-        # ).to(device)
+        self.conv2d = nn.Conv2d(1, 3, kernel_size=1, stride=1, padding=1).to(device)
+        self.relu = nn.ReLU()
+        self.Unet = smp.Unet(
+            encoder_name="resnet18",
+            encoder_weights=None,
+            in_channels=1,
+            classes=1,
+        ).to(device)
 
-        # self.decode = nn.Conv2d(3,1, kernel_size=3, stride=1).to(device)
+        self.decode = nn.Conv2d(3,1, kernel_size=3, stride=1).to(device)
 
     def forward_probs(self, s):
         """
@@ -70,6 +70,7 @@ class GFlowNet(nn.Module):
             and backward probabilities, the actions taken, etc.)
         """
         s = torch.tensor(s0["input"], dtype=torch.float).to(self.device)
+        # s = torch.tensor(s0, dtype=torch.float).to(self.device)
         grid_dim = s.shape
 
         log = Log(s, self.backward_policy, self.total_flow,
@@ -83,37 +84,44 @@ class GFlowNet(nn.Module):
             iter += 1
             # probs = self.forward_probs(s)  # 랜덤액션?
             probs, selection = self.forward_probs(s)
+            ac = int(Categorical(probs).sample())
 
-            ## epsilon greedy
-            if np.random.rand() < self.epsilon:
-                ac = int(Categorical(probs).sample())
-            else:
-                ac = int(torch.argmax(probs))
-                
-            # ac = int(Categorical(probs).sample())
-            # ac = int(torch.argmax(probs))
-            # ac = int(Normal(probs, self.std).rsample().argmax())
-
-            self.actions["operation"] = ac
-            self.actions["selection"] = selection  # selection 어떻게
+            if self.env_style == "point":
+                # ac = int(Normal(probs, self.std).rsample().argmax())
+                self.actions["operation"] = ac
+                self.actions["selection"] = selection  # selection 어떻게
+                result = self.env.step(self.actions)
             
+            elif self.env_style == "bbox" :
+                # bbox 
+                x0 = torch.round(selection[0] * grid_dim[0])
+                y0 = torch.round(selection[1] * grid_dim[1])
+                x1 = torch.round(selection[2] * grid_dim[0])
+                y1 = torch.round(selection[3] * grid_dim[1])
 
-            result = self.env.step(self.actions)
+                selection = (x0,y0,x1,y1, ac)
 
-            # reward 는 spaset reward 이기 때문에 따로 reward 함수를 만들어서 log에 저장하는 함수를 만들어야함
+            
+                self.actions["operation"] = selection
+                result = self.env.step(self.actions["operation"])
+
+            # reward 는 spase reward 이기 때문에 따로 reward 함수를 만들어서 log에 저장하는 함수를 만들어야함
             state, reward, is_done, _, info = result
+            
             s = torch.tensor(state["grid"], dtype = torch.long).to(self.device)
 
-            ime_reward = self.reward(s, mode="MSE")
+            re = self.reward(s)
+
+            ime_reward = re + reward
 
             if return_log:
                 log.log(s=state, probs=probs, actions = self.actions, rewards=ime_reward, total_flow=self.total_flow, done=is_done)  # log에 저장
 
-            if iter >= 25:  # max_length miniarc = 25, arc = 900
+            if iter >= 100:  # max_length miniarc = 25, arc = 900
                 return (s, log) if return_log else s
             
-            if selection[0] == 4 & selection[1] == 4:
-                return (s, log) if return_log else s
+            # if selection[0] == 4 & selection[1] == 4:
+            #     return (s, log) if return_log else s
 
             if is_done:
                 break
@@ -157,7 +165,7 @@ class GFlowNet(nn.Module):
 
         return fwd_probs, back_probs, rewards
     
-    def reward(self, s, mode="CE"):
+    def reward(self, s):
         """
         Returns the reward associated with a given state.
 
@@ -165,41 +173,39 @@ class GFlowNet(nn.Module):
             s: An NxD matrix representing N states
         """
         terminal = torch.tensor(self.env.unwrapped.answer).to("cuda")
-        s = s.to("cuda")
-        # pad_terminal = torch.zeros_like(s)
-        # pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
+        pad_terminal = torch.zeros_like(s)
+        pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
 
-        # MSE
-        if mode == "MSE": 
-            r = ((terminal - s)**2 + 1e-6) # pad_terminal은 ARC용
-            for i in range(len(r)):
-                for j in range(len(r[0])):
-                    if r[i][j] == float("inf"):
-                        r[i][j] = 0
-            reward = 1 / (r.sum() + 1e-3)
+        # MSE 
+        r = ((pad_terminal - s)**2 + 1e-6) # pad_terminal은 ARC용
+        for i in range(len(r)):
+            for j in range(len(r[0])):
+                if r[i][j] == float("inf"):
+                    r[i][j] = 0
+        mse_reward = 1 / (r.sum() + 1e-6) 
 
         # sparse reward
         # sparse_reward = torch.where((pad_terminal - s).sum(dim=1) == 0, 1, 0.1)
-        return reward
+        return mse_reward
 
-    # def select_mask(self, s):
+    def select_mask(self, s):
 
-    #     if type(s) is not torch.float :
-    #         s = s.to(torch.float)
+        if type(s) is not torch.float :
+            s = s.to(torch.float)
 
-    #     s = self.conv2d(s.unsqueeze(0))
-    #     s = self.relu(s)
+        s = self.conv2d(s.unsqueeze(0))
+        s = self.relu(s)
 
-    #     out = self.Unet(s.reshape(3,1,32,32))
+        out = self.Unet(s.reshape(3,1,32,32))
 
-    #     out = self.decode(out.reshape(3,32,32))
-    #     out = self.relu(out)
+        out = self.decode(out.reshape(3,32,32))
+        out = self.relu(out)
 
-    #     out = out.sigmoid()
-    #     pred_mask = (out >= 0.5).float()
-    #     pred_mask = pred_mask.squeeze()
+        out = out.sigmoid()
+        pred_mask = (out >= 0.5).float()
+        pred_mask = pred_mask.squeeze()
 
-    #     return np.array(pred_mask.detach().cpu(), dtype=bool)
+        return np.array(pred_mask.detach().cpu(), dtype=bool)
     
     ## 작은 그리드부터 해보기 
     

@@ -31,16 +31,14 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
     ### TODO 길이가 안맞아서 일단 51개씩 맞춰놨는데 (100개기준) 나중에 변경하기 
     ### TODO 35개의 길이를 가진 분포 형태로 나옴 (35개의 action) -> 이게 맞는지 확인 필요
 
-    ce_reward = torch.log(F.cross_entropy(fwd_probs, torch.flatten(answer,0), reduction="sum"))
-    rewards = (1 / (ce_reward + 1e-5)) + rewards
+    # ce_reward = torch.log(F.cross_entropy(fwd_probs, torch.flatten(answer,0), reduction="sum"))
+    # rewards = (1 / (ce_reward + 1e-5)) + rewards
     # reward = rewards
 
     # lhs = total_flow * torch.prod(fwd_probs, dim=1)
     # rhs = sum(rewards) * torch.prod(back_probs, dim=1)
     loss = torch.square(torch.log(total_flow) + torch.sum(torch.log(fwd_probs), dim=1) - torch.sum(torch.log(rewards)) - torch.sum(torch.log(back_probs), dim=1))
-    # loss = torch.log(lhs / rhs+1e-8)**2
-    ## TODO rewards sum하는게 아닌?
-    # loss = torch.log(loss+1e-8)**2
+    
 
     return loss.sum(), rewards
     

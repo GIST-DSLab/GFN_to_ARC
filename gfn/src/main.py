@@ -27,14 +27,14 @@ from arcle.envs import O2ARCv2Env
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
 
 import wandb
-wandb.init(project="gflow_collas", entity="hsh6449")
+wandb.init(project="gflow2", entity="hsh6449")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 loader = ARCLoader()
 miniloader = MiniARCLoader()
 
-render_mode = None # None  # ansi
+render_mode = "ansi" # None  # ansi
 
 
 
@@ -46,22 +46,19 @@ def train(num_epochs, device):
     env = env_return(render_mode, miniloader)
 
     forward_policy = ForwardPolicy(
-        5, hidden_dim=32, num_actions=10).to(device)
+        30, hidden_dim=32, num_actions=25).to(device)
 
-    backward_policy = BackwardPolicy(5, hidden_dim=32, num_actions=10).to(device)
+    backward_policy = BackwardPolicy(30, hidden_dim=32, num_actions=25).to(device)
 
     model = GFlowNet(forward_policy, backward_policy,
                      env=env).to(device)
     model.train()
 
-    # for param in model.parameters():
-    #     print(param.requires_grad)
-
-    opt = AdamW(model.parameters(), lr=1e-4)
+    opt = AdamW(model.parameters(), lr=5e-3)
     # state = env.env.reset(options= {'adaptation':False, 'prob_index':env.findbyname(env.traces_info[idx][0]), 'subprob_index': env.traces_info[idx][1]})
 
     for i in (p := tqdm(range(num_epochs))):
-        state, info = env.reset(options = {"prob_index" : 98, "adaptation" : False})
+        state, info = env.reset(options = {"prob_index" : 101, "adaptation" : False})
         # s0 = torch.tensor(state, dtype=torch.float32).to(device)
         
         for _ in tqdm(range(100000)):
@@ -72,31 +69,29 @@ def train(num_epochs, device):
             else:
                 s = result
 
+            # probs = model.forward_probs(s)
+
+            # model.actions["operation"] = int(torch.argmax(probs).item())
+            # model.actions["selection"] = np.zeros((30, 30))
+
+            # result = env.step(model.actions)
+            # state, reward, is_done, _, info = result
+
+            # pdb.set_trace()
 
             loss, re = trajectory_balance_loss(log.total_flow,
                                         log.rewards,
                                         log.fwd_probs,
                                         log.back_probs,
-                                        torch.tensor(env.unwrapped.answer).to("cuda")) # answer는 빼도됨 (MSE를 쓸경우 )
-            
+                                        torch.tensor(env.unwrapped.answer).to("cuda"))
             
             wandb.log({"loss": loss.item()})
-            wandb.log({"reward": re})
-
-            ## parameter update check
-            # a = list(model.parameters())[0]
-            # print("forward_prev : ", a.grad)
+            wandb.log({"reward": re.item()})
 
             opt.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
             opt.step()
-
-            # b = list(model.parameters())[0]
-            # print("forward_equal : ", torch.equal(a.data, b.data))
-
-
-            # opt.zero_grad()
             # if i % 10 == 0:
             p.set_description(f"{loss.item():.3f}")
     
@@ -111,11 +106,10 @@ def train(num_epochs, device):
 def eval(model):
 
     env = env_return()
-
-    state, _ = env.reset(options = {"prob_index" : 98, "adaptation" : False})
+        
+    state, _ = env.reset(options = {"prob_index" : 111, "adaptation" : False})
     s0 = torch.tensor(state["input"]).to(device)
     s, log = model.sample_states(s0, return_log=False)
-
     print("initial state\n" + s0)
     print("Final state\n" + s)
 
@@ -123,7 +117,7 @@ def eval(model):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch_size", type=int, default=256)
-    parser.add_argument("--num_epochs", type=int, default=3)
+    parser.add_argument("--num_epochs", type=int, default=1)
 
     args = parser.parse_args()
     batch_size = args.batch_size

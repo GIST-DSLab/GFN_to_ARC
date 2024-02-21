@@ -1,4 +1,5 @@
 gfn2/*
 gfn2/torchgfn/
-gfn/src/wandb/
-gfn/wandb/
+gfn/src/wandb/*
+gfn/wandb/*
+wandb/*
