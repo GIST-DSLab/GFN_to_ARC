@@ -1,4 +1,5 @@
 import torch
+from torch.distributions import Categorical
 
 
 class Log:
@@ -50,41 +51,31 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-        # had_terminating_action = (
-        #     actions["operation"] == 34)  # 34번이 sumbmit , reward는 어떻게 받는지
 
-        # active = ~had_terminating_action
-        # just_finished = had_terminating_action
-
-        state = torch.tensor(s["grid"], dtype=int)
-        self._traj.append(torch.tensor(state))
+        self._traj.append(s.detach())
         self._fwd_probs.append(probs.unsqueeze(0))
-        self._actions.append(actions["operation"])
-        # self.masks.append(actions["selection"])
-        self.rewards.append(rewards)
-        self.total_flow = self.total_flow
+        self._actions.append(actions)
+
+        if rewards is not None:
+            self.rewards.append(rewards.detach())
+        if done is not None:
+            self.is_terminals.append(done)
+        # Note: Assuming total_flow and other properties are handled correctly elsewhere
+        self._back_probs_computed = False  # Invalidate cached back_probs
 
 
     @property
     def traj(self):
         if type(self._traj) is list:
-            # self._traj = torch.cat(self._traj, dim=1)[:, :-1, :]
             pass
 
-        # terminal = torch.tensor(self.env.unwrapped.answer)
-        # pad_terminal = torch.zeros(30,30)
-        # pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
-        
-        # self._traj[-1] = torch.tensor(pad_terminal, dtype=int)
         return self._traj
 
     @property
     def fwd_probs(self):
         if type(self._fwd_probs) is list:
-            # self._fwd_probs = torch.cat(self._fwd_probs, dim=0)  # 여기 뭐가 들어가야하지
             pass
-        # half_length = len(self._fwd_probs) // 2
-        # import pdb; pdb.set_trace()
+
         return self._fwd_probs
 
     @property
@@ -96,21 +87,21 @@ class Log:
 
     @property
     def back_probs(self):
-        # if self._back_probs is not None:
-        #     return self._back_probs
 
-        # s = self.traj[-2]  # 마지막에서 두번째 꺼
-        # prev_s = self.traj[-1]  # 마지막 꺼
-        # if type(self._back_probs) is list:
-        #     pass
-        # actions = self.actions[-1]
-        # import pdb; pdb.set_trace()
-        # terminated = (actions == 34) | (len(self.actions) == 100)
-        for t in range(len(self._traj)):
-            # if t == 0:
-            #     self._back_probs.append(torch.tensor(1.0))
-            
-            self._back_probs.append(self.backward_policy(self.traj[-t].to("cuda")).unsqueeze(0))        
-            
-        # import pdb;pdb.set_trace()
+        if not self._back_probs_computed:
+            self._compute_back_probs()
+
         return self._back_probs
+    
+    def _compute_back_probs(self):
+
+        """
+        Computes the backward probabilities for the logged trajectories and actions.
+        This function is called lazily to ensure that it's computed only once.
+        """
+        self._back_probs = []
+        for t, (traj, action) in enumerate(zip(reversed(self._traj), reversed(self._actions))):
+            pb_s = self.backward_policy(traj.to("cuda")).unsqueeze(0)
+            pb = Categorical(logits=pb_s).log_prob(action)
+            self._back_probs.append(pb.detach())
+        self._back_probs_computed = True
