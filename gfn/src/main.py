@@ -55,13 +55,6 @@ def train(num_epochs, device):
     opt = AdamW(model.parameters(), lr=5e-3)
 
     for i in (p := tqdm(range(num_epochs))):
-<<<<<<< Updated upstream
-        state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i})
-        # s0 = torch.tensor(state, dtype=torch.float32).to(device)
-        
-        for _ in tqdm(range(100)):
-            result = model.sample_states(state, return_log=True)
-=======
         state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i}) 
         """ 4/13 수정
         state : dict , info : dict
@@ -69,7 +62,6 @@ def train(num_epochs, device):
         """    
         for _ in tqdm(range(10000)):
             result = model.sample_states(state, info, return_log=True) 
->>>>>>> Stashed changes
             
             if len(result) == 2:
                 s, log = result # s : tensor, log : GFlowNetLog

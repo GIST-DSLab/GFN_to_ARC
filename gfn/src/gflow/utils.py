@@ -40,14 +40,5 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
     loss = (torch.log(total_flow) + torch.sum(fwd_probs) - rewards.clip(0) - torch.sum(back_probs)).pow(2)
     # reward shape 확인하고 clip을 해야할지 안해야할지 확인
 
-<<<<<<< Updated upstream
-    # lhs = total_flow * torch.prod(fwd_probs, dim=1)
-    # rhs = sum(rewards) * torch.prod(back_probs, dim=1)
-    loss = torch.square(torch.log(total_flow) + torch.sum(torch.log(fwd_probs), dim=1) - torch.sum(torch.log(rewards)) - torch.sum(torch.log(back_probs), dim=1))
-    
-
-    return loss.sum(), rewards
-=======
     return loss.sum(), total_flow, rewards
->>>>>>> Stashed changes
     
