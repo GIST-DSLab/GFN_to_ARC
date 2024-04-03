@@ -5,12 +5,7 @@ from torch.distributions import Categorical, Normal
 
 import numpy as np
 from .log import Log
-<<<<<<< Updated upstream
-
-import segmentation_models_pytorch as smp
-=======
 from collections import OrderedDict
->>>>>>> Stashed changes
 
 class GFlowNet(nn.Module):
     def __init__(self, forward_policy, backward_policy, env=None, device='cuda'):
@@ -64,11 +59,6 @@ class GFlowNet(nn.Module):
             sampling process (e.g. the trajectory of each sample, the forward
             and backward probabilities, the actions taken, etc.)
         """
-<<<<<<< Updated upstream
-        s = torch.tensor(s0["input"], dtype=torch.float).to(self.device)
-        # s = torch.tensor(s0, dtype=torch.float).to(self.device)
-        grid_dim = s.shape
-=======
         iter = 0
         if self.dag is not None:
             self.dag = None
@@ -89,7 +79,6 @@ class GFlowNet(nn.Module):
 
 
         grid_dim = info["input_dim"]
->>>>>>> Stashed changes
 
         log = Log(s, self.backward_policy, self.total_flow,
                   self.env) if return_log else None
@@ -124,12 +113,7 @@ class GFlowNet(nn.Module):
 
             # reward 는 spase reward 이기 때문에 따로 reward 함수를 만들어서 log에 저장하는 함수를 만들어야함
             state, reward, is_done, _, info = result
-<<<<<<< Updated upstream
-            s = torch.tensor(state["grid"], dtype = torch.long).to(self.device)
-
-=======
             s = torch.tensor(state["grid"], dtype = torch.float).to(self.device)
->>>>>>> Stashed changes
             re = self.reward(s)
 
             ime_reward = re + reward
