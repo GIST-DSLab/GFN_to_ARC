@@ -38,14 +38,14 @@ class GFlowNet(nn.Module):
             env: An environment defining a state space and an associated reward
             function"""
         
-    def forward_probs(self, s):
+    def forward_probs(self, s, mask):
         """
         Returns a vector of probabilities over actions in a given state.
 
         Args:
             s: An NxD matrix representing N states
         """
-        probs = self.forward_policy(s)
+        probs = self.forward_policy(s, mask)
 
         return probs
 
@@ -73,14 +73,13 @@ class GFlowNet(nn.Module):
             self.dag = torch.zeros(20, 30, 30).to(self.device)
             self.dag[0] = s # 첫 번째 상태를 설정합니다.
 
-        # 이후의 상태 업데이트에는 아래와 같은 방식을 사용합니다.
         else:
             # 현재 상태 `s`를 dag에 추가합니다. 이전 상태들을 유지하면서 새로운 상태를 추가합니다.
             self.dag[iter] = s.clone() 
 
         # 마스크 행렬 초기화
         if self.mask is None or iter == 0:
-            self.mask = torch.zeros_like(s, dtype=torch.bool)
+            self.mask = torch.zeros((30,30), dtype=torch.bool) 
 
         grid_dim = info["input_dim"]
 
@@ -88,12 +87,10 @@ class GFlowNet(nn.Module):
                   self.env) if return_log else None
         is_done = False
 
-        # selection_mode = "Unet" # one , Unet, whole
-
         while not is_done:
             iter += 1
             # probs = self.forward_probs(s)  # 랜덤액션?
-            probs_s, selection = self.forward_probs(self.dag)
+            probs_s, selection = self.forward_probs(self.dag, self.mask)
             prob = Categorical(logits = probs_s)
             ac = prob.sample()
 
@@ -101,30 +98,21 @@ class GFlowNet(nn.Module):
                 self.actions["operation"] = ac
                 self.actions["selection"] = selection  # selection 어떻게
                 result = self.env.step(self.actions)
-            
-            elif self.env_style == "bbox" :
-                # bbox 
-                x0 = selection[0] * grid_dim[0]
-                y0 = selection[1] * grid_dim[1]
-                x1 = selection[2] * grid_dim[0]
-                y1 = selection[3] * grid_dim[1]
-
-                selection = (x0,y0,x1,y1, ac)
-
-            
-                self.actions["operation"] = selection
-                result = self.env.step(self.actions["operation"])
-
+        
             # reward 는 spase reward 이기 때문에 따로 reward 함수를 만들어서 log에 저장하는 함수를 만들어야함
             state, reward, is_done, _, info = result
             s = torch.tensor(state["grid"], dtype = torch.float).to(self.device)
             re = self.reward(s)
 
             ime_reward = re + reward
+
+            # 마스크 업데이트
+            self.mask[selection[0], selection[1]] = True
+            
             if return_log:
                 log.log(s=self.dag.clone(), probs=prob.log_prob(ac).squeeze(), actions = ac, rewards=ime_reward, total_flow=self.total_flow, done=is_done)  # log에 저장
 
-            if iter >= 19:  # max_length miniarc = 25, arc = 900
+            if iter >= 900:  # max_length miniarc = 25, arc = 900
                 return (s, log) if return_log else s
             
             # if selection[0] == 4 & selection[1] == 4:

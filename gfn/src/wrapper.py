@@ -25,7 +25,7 @@ class PointWrapper(gym.ActionWrapper):
         op = action["operation"]
         x, y = action["selection"]
         
-        selection = np.zeros((5, 5), dtype=np.uint8)
+        selection = np.zeros((30, 30), dtype=np.uint8)
         # selection = np.zeros(self.env.unwrapped.max_grid_size, dtype=np.uint8)
         selection[x, y] = 1
         return {'selection': selection, 'operation': op}

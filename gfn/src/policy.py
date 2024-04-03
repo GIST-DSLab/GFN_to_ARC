@@ -44,7 +44,6 @@ class ForwardPolicy(nn.Module):
         
         predicted_mask = x[self.num_action:]
         x = x[:self.num_action]
-        # predicted_mask = self.select_mask(s, "one")
 
 
         return x, predicted_mask
@@ -71,32 +70,8 @@ class ForwardPolicy(nn.Module):
             if self.coordinate[0] == 4 & self.coordinate[1] == 4 : 
                 self.coordinate = [0,-1]
 
-                
-
-            # selection[self.coordinate[0], self.coordinate[1]] = 1
-
             return coordinate
 
-
-            
-        elif mode == "Unet":
-                
-            if type(s) is not torch.float :
-                s = s.to(torch.float)
-
-            s = self.conv2d(s.unsqueeze(0))
-            s = self.relu(s)
-
-            out = self.Unet(s.reshape(3,1,32,32))
-
-            out = self.decode(out.reshape(3,32,32))
-            out = self.relu(out)
-
-            out = out.sigmoid()
-            pred_mask = (out >= 0.6).float()
-            pred_mask = pred_mask.squeeze()
-
-            return np.array(pred_mask.detach().cpu(), dtype=bool)
 
 class BackwardPolicy(nn.Module):
     def __init__(self, state_dim,hidden_dim, num_actions):
