@@ -4,8 +4,8 @@ from torch.optim import Adam, AdamW
 torch.autograd.set_detect_anomaly(True)
 
 
-from gflow.gflownet import GFlowNet
-from policy import ForwardPolicy, BackwardPolicy
+from gflow.gflownet_point import GFlowNet
+from policy_point import ForwardPolicy, BackwardPolicy
 from gflow.utils import trajectory_balance_loss
 
 # from ColorARCEnv import env_return # BBox는 ColorARCEnv로 변경
@@ -29,7 +29,7 @@ from arcle.envs import O2ARCv2Env
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
 
 import wandb
-# wandb.init(project="gflow_re", entity="hsh6449")
+wandb.init(project="gflow_re", entity="hsh6449")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -86,9 +86,9 @@ def train(num_epochs, device):
                                         log.back_probs,
                                         torch.tensor(env.unwrapped.answer).to("cuda"))
             
-            # wandb.log({"loss": loss.item()})
-            # wandb.log({"total_flow": total_flow.item()})
-            # wandb.log({"reward": re.item()})
+            wandb.log({"loss": loss.item()})
+            wandb.log({"total_flow": total_flow.item()})
+            wandb.log({"reward": re.item()})
 
             opt.zero_grad()
             loss.backward()

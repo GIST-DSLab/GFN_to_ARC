@@ -25,7 +25,7 @@ class ColorARCEnv(O2ARCv2Env):
     """
     def create_operations(self) -> List[Callable[..., Any]]:
         ops= super().create_operations()
-        return ops[0:10] + ops[20:] 
+        return ops[0:10]
 
 register(
     id='ARCLE/ColorARCEnv',
@@ -37,7 +37,7 @@ register(
 
 class CustomO2ARCEnv(O2ARCv2Env):
     
-    def __init__(self, data_loader: Loader = MiniARCLoader(), max_grid_size: Tuple[SupportsInt, SupportsInt] = (30,30), colors: SupportsInt = 10, max_trial: SupportsInt = -1, render_mode: str = None, render_size: Tuple[SupportsInt, SupportsInt] = None, options : dict = {}) -> None:
+    def __init__(self, data_loader: Loader = ARCLoader(), max_grid_size: Tuple[SupportsInt, SupportsInt] = (30,30), colors: SupportsInt = 10, max_trial: SupportsInt = -1, render_mode: str = None, render_size: Tuple[SupportsInt, SupportsInt] = None, options : dict = {}) -> None:
         super().__init__(data_loader, max_grid_size, colors, max_trial, render_mode, render_size)
 
         self.reset_options = {
@@ -171,10 +171,8 @@ def env_return(render, data, options):
     #### BBox env
     env = gym.make('ARCLE/O2ARCv2Env', render_mode=render, data_loader=data, max_grid_size=(5, 5), colors=10, max_episode_steps=None )
     env = CustomO2ARCEnv(max_trial=100,options=options)
-    env = BBoxWrapper(env)
+    env = PointWrapper(env)
     # env = FlattenObservation(env)
-    env = TimeLimit(env, max_episode_steps=100)
+    env = TimeLimit(env, max_episode_steps=20)
 
     return env
-
-# env_return(env)
