@@ -57,15 +57,27 @@ class CustomO2ARCEnv(O2ARCv2Env):
         obs, info = super().reset(seed, options)
 
         self.reset_options = options
+<<<<<<< Updated upstream
+=======
+        # 여기서부터
+>>>>>>> Stashed changes
         # rotate_k = np.random.randint(0,4)
         # permute = np.random.permutation(10)
         # f = lambda x: permute[int(x)]
         # ffv = np.vectorize(f)
+<<<<<<< Updated upstream
         ## augment
+=======
+        # # augment
+>>>>>>> Stashed changes
         
         # self.input_ = np.copy(np.rot90(ffv(self.input_),k=rotate_k).astype(np.int8))
         # self.answer = np.copy(np.rot90(ffv(self.answer),k=rotate_k).astype(np.int8))
         # self.input = np.copy(obs)
+<<<<<<< Updated upstream
+=======
+        #여기까지 빼도됨 (flatten 안쓸거면)
+>>>>>>> Stashed changes
         self.init_state(self.input_.copy(),options)
         return obs, info
 

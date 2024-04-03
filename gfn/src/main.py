@@ -26,22 +26,19 @@ import arcle
 from arcle.envs import O2ARCv2Env
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
 
-# import wandb
-# wandb.init(project="gflow", entity="hsh6449")
+import wandb
+wandb.init(project="gflow_re", entity="hsh6449")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 loader = ARCLoader()
 miniloader = MiniARCLoader()
 
-render_mode = "ansi" # None  # ansi
+render_mode = None # None  # ansi
 
 
 
 def train(num_epochs, device):
-
-    # env = gym.make('ARCLE/O2ARCv2Env-v0', render_mode=render_mode, data_loader=loader,
-    #                max_grid_size=(30, 30), colors=10, max_episode_steps=None)
 
     env = env_return(render_mode, miniloader, options= None)
     
@@ -56,19 +53,28 @@ def train(num_epochs, device):
     model.train()
 
     opt = AdamW(model.parameters(), lr=5e-3)
-    # state = env.env.reset(options= {'adaptation':False, 'prob_index':env.findbyname(env.traces_info[idx][0]), 'subprob_index': env.traces_info[idx][1]})
 
     for i in (p := tqdm(range(num_epochs))):
+<<<<<<< Updated upstream
         state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i})
         # s0 = torch.tensor(state, dtype=torch.float32).to(device)
         
         for _ in tqdm(range(100)):
             result = model.sample_states(state, return_log=True)
+=======
+        state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i}) 
+        """ 4/13 수정
+        state : dict , info : dict
+        prob index 바뀌는거 확인함
+        """    
+        for _ in tqdm(range(10000)):
+            result = model.sample_states(state, info, return_log=True) 
+>>>>>>> Stashed changes
             
             if len(result) == 2:
-                s, log = result
+                s, log = result # s : tensor, log : GFlowNetLog
             else:
-                s = result
+                s = result # s : tensor
 
             # probs = model.forward_probs(s)
 
@@ -80,13 +86,16 @@ def train(num_epochs, device):
 
             # pdb.set_trace()
 
-            loss, re = trajectory_balance_loss(log.total_flow,
+            loss, total_flow, re = trajectory_balance_loss(log.total_flow,
                                         log.rewards,
                                         log.fwd_probs,
                                         log.back_probs,
                                         torch.tensor(env.unwrapped.answer).to("cuda"))
             
-            # wandb.log({"loss": loss.item()})
+            wandb.log({"loss": loss.item()})
+            wandb.log({"total_flow": total_flow.item()})
+            wandb.log({"reward": re.item()})
+
             opt.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5)

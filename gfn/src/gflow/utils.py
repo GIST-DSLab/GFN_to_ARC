@@ -26,19 +26,28 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
         # back_probs = torch.cat(fwd_probs[half_length:], dim=0)
     back_probs = torch.cat(back_probs, dim=0)
     fwd_probs = torch.cat(fwd_probs, dim=0)
-    rewards = torch.tensor(rewards[-1]).to("cuda")
-    total_flow = torch.tensor(total_flow).to("cuda")
+    rewards = torch.tensor([rewards[-1]], device=total_flow.device)
+
+    # if rewards == 0 :
+    #     pass
+    # else:
+    #     rewards = torch.log(rewards*10)
+    # reward에 지수 함수 씌었다고 가정하고 log 붙이면 원래 값이 나오므로 일단 주석처리 
+
     ### TODO 길이가 안맞아서 일단 51개씩 맞춰놨는데 (100개기준) 나중에 변경하기 
     ### TODO 35개의 길이를 가진 분포 형태로 나옴 (35개의 action) -> 이게 맞는지 확인 필요
 
-    # ce_reward = torch.log(F.cross_entropy(fwd_probs, torch.flatten(answer,0), reduction="sum"))
-    # rewards = (1 / (ce_reward + 1e-5)) + rewards
-    # reward = rewards
+    loss = (torch.log(total_flow) + torch.sum(fwd_probs) - rewards.clip(0) - torch.sum(back_probs)).pow(2)
+    # reward shape 확인하고 clip을 해야할지 안해야할지 확인
 
+<<<<<<< Updated upstream
     # lhs = total_flow * torch.prod(fwd_probs, dim=1)
     # rhs = sum(rewards) * torch.prod(back_probs, dim=1)
     loss = torch.square(torch.log(total_flow) + torch.sum(torch.log(fwd_probs), dim=1) - torch.sum(torch.log(rewards)) - torch.sum(torch.log(back_probs), dim=1))
     
 
     return loss.sum(), rewards
+=======
+    return loss.sum(), total_flow, rewards
+>>>>>>> Stashed changes
     
