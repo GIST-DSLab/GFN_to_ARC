@@ -12,7 +12,7 @@ import pdb
 class ForwardPolicy(nn.Module):
     def __init__(self, state_dim, hidden_dim, num_actions):
         super().__init__()
-        self.dense1 = nn.Linear(state_dim*state_dim*10, hidden_dim*hidden_dim)
+        self.dense1 = nn.Linear(state_dim*state_dim*30, hidden_dim*hidden_dim)
         self.dense2 = nn.Linear(hidden_dim*hidden_dim, hidden_dim*hidden_dim)
         self.dense3 = nn.Linear(hidden_dim*hidden_dim, hidden_dim)
         
@@ -29,7 +29,7 @@ class ForwardPolicy(nn.Module):
 
         self.num_action = num_actions
 
-    def forward(self, s, mask=None):
+    def forward(self, s, mask):
         
         x = torch.flatten(s, 0)
         x = x.to(torch.float32)
@@ -47,19 +47,15 @@ class ForwardPolicy(nn.Module):
         ## selection mlp
         x_selection = self.selection_mlp(x)
         x_selection = relu(x_selection)
-
-        # # selection Categorical 분포화
+        # selection Categorical 분포화
         x_selection = softmax(x_selection, dim=0)
         x_selection = Categorical(x_selection)
 
-        if mask is not None:
-            # x_selection = x_selection.logits.masked_fill(mask.flatten(), -np.inf)
-            # x_selection = Categorical(softmax(x_selection, dim=0))
-            coordinate = self.select_mask(x_selection, mask)
-            return x_action, coordinate
         
-        else:
-            return x_action
+        coordinate = self.select_mask(x_selection, mask)
+
+        return x_action, coordinate
+        
 
 
     def select_mask(self, x, mask):
@@ -81,7 +77,7 @@ class ForwardPolicy(nn.Module):
 class BackwardPolicy(nn.Module):
     def __init__(self, state_dim,hidden_dim, num_actions):
         super().__init__()
-        self.dense1 = nn.Linear(state_dim*state_dim*10, hidden_dim*hidden_dim)
+        self.dense1 = nn.Linear(state_dim*state_dim*30, hidden_dim*hidden_dim)
         self.dense2 = nn.Linear(hidden_dim*hidden_dim, hidden_dim)
         self.dense3 = nn.Linear(hidden_dim, num_actions)
 

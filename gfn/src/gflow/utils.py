@@ -21,9 +21,6 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
         back_probs: The backward probabilities associated with each trajectory
     """
     
-        # half_length = len(fwd_probs) // 2
-
-        # back_probs = torch.cat(fwd_probs[half_length:], dim=0)
     back_probs = torch.cat(back_probs, dim=0)
     fwd_probs = torch.cat(fwd_probs, dim=0)
     rewards = torch.tensor([rewards[-1]], device=total_flow.device)
@@ -32,13 +29,72 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
     #     pass
     # else:
     #     rewards = torch.log(rewards*10)
-    # reward에 지수 함수 씌었다고 가정하고 log 붙이면 원래 값이 나오므로 일단 주석처리 
+    # reward에 지수 함수 씌었다고 가정하고 log 붙이면 원래 값이 나오므로 일단 주석처리  
+    loss = torch.square(torch.log(total_flow) + torch.sum(fwd_probs) - torch.log(rewards).clip(0) - torch.sum(back_probs))
 
-    ### TODO 길이가 안맞아서 일단 51개씩 맞춰놨는데 (100개기준) 나중에 변경하기 
-    ### TODO 35개의 길이를 가진 분포 형태로 나옴 (35개의 action) -> 이게 맞는지 확인 필요
+    # 만약 loss가 nan이면 100으로 대체
+    loss = loss.sum()
+    loss = loss.clamp(max=1e+6)
 
-    loss = (torch.log(total_flow) + torch.sum(fwd_probs) - rewards.clip(0) - torch.sum(back_probs)).pow(2)
-    # reward shape 확인하고 clip을 해야할지 안해야할지 확인
+    return loss, total_flow, rewards
 
-    return loss.sum(), total_flow, rewards
+
+def detailed_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
+    """
+    FM Loss와 마찬가지로, 전후방 확률을 매칭하는 것에 중심을 두는 loss입니다.
+    따라서 reward가 사용되지 않는다.
+    """
+    back_probs = torch.cat(back_probs, dim=0)
+    fwd_probs = torch.cat(fwd_probs, dim=0)
+    rewards = torch.tensor([rewards[-1]], device=total_flow.device)
+
+    # total_flow 값을 이용하여 forward_term과 backward_term 계산
+    forward_term = torch.sum(fwd_probs) * torch.exp(fwd_probs)  # F(s) * exp(log P_F(s'|s)) = F(s) * P_F(s'|s)
+    backward_term = torch.sum(back_probs) * torch.exp(back_probs)  # F(s') * exp(log P_B(s|s')) = F(s') * P_B(s|s')
+
+    loss = torch.square(torch.log(forward_term) - torch.log(backward_term))
+    loss = loss.mean()  # 모든 상태 쌍에 대한 평균을 계산
+
+    return loss, total_flow, rewards
+
+
+def subtrajectory_balance_loss(trajectories, fwd_probs, back_probs):
+    """
+    Calculate the Subtrajectory Balance Loss for given trajectories.
     
+    Parameters:
+    - trajectories: List of tuples (start_index, end_index, trajectory)
+    - flow: Function that returns the flow for a given state
+    - PF: Function that returns the forward transition probability log P_F(s'|s)
+    - PB: Function that returns the backward transition probability log P_B(s|s')
+    
+    Returns:
+    - Average subtrajectory balance loss
+
+    """
+    back_probs = torch.cat(back_probs, dim=0)
+    fwd_probs = torch.cat(fwd_probs, dim=0)
+    
+    losses = []
+    for trajectory in trajectories:
+        # Initialize products of probabilities
+        log_pf_product = 0
+        log_pb_product = 0
+        
+        # Extract the log probabilities for the trajectory
+        for i in range(len(trajectory) - 1):
+            log_pf_product += fwd_probs[i]
+            log_pb_product += back_probs[i]
+        
+        # Estimate flow for the start and end of the trajectory
+        flow_start = torch.exp(torch.sum(fwd_probs[:len(trajectory)//2]))  # Cumulative product approximation
+        flow_end = torch.exp(torch.sum(back_probs[len(trajectory)//2:]))   # Cumulative product approximation
+
+        # Calculate the log of the ratio of products of probabilities and flows
+        log_ratio = (torch.log(flow_start) + log_pf_product) - (torch.log(flow_end) + log_pb_product)
+        
+        # Square the log ratio and add to losses
+        losses.append(log_ratio ** 2)
+
+    # Return the mean of the losses
+    return torch.mean(torch.stack(losses))

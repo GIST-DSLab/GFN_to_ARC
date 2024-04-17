@@ -1,5 +1,5 @@
 import torch
-from torch.distributions import Categorical
+from torch.distributions import Categorical, Uniform
 
 
 class Log:
@@ -101,7 +101,17 @@ class Log:
         """
         self._back_probs = []
         for t, (traj, action) in enumerate(zip(reversed(self._traj), reversed(self._actions))):
+            # action은 1차원 벡터 (0~9)
+            # traj는 3차원 텐서 (E_len, 30, 30) 즉 state
+            # pb_s는 (1,10)
+
             pb_s = self.backward_policy(traj.to("cuda")).unsqueeze(0)
             pb = Categorical(logits=pb_s).log_prob(action)
+            # pb = Uniform(0, 9).log_prob(action)
+
+            if pb.dim() == 0:
+                pb = pb.unsqueeze(0)
+            pb = pb.clamp(min=-5, max=5)
+
             self._back_probs.append(pb.detach())
         self._back_probs_computed = True

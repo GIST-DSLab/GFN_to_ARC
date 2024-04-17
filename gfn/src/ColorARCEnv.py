@@ -43,7 +43,7 @@ class CustomO2ARCEnv(O2ARCv2Env):
         self.reset_options = {
             'adaptation': True, # Default is true (adaptation first!). To change this mode, call 'post_adaptation()'
             'prob_index': None,#options["prob_index"],
-            # 'subprob_index' : options["subprob_index"]
+            'subprob_index' : 0
         }
     def create_operations(self) :
         from arcle.actions.critical import crop_grid
