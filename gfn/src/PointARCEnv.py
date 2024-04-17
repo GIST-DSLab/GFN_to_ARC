@@ -42,8 +42,8 @@ class CustomO2ARCEnv(O2ARCv2Env):
 
         self.reset_options = {
             'adaptation': True, # Default is true (adaptation first!). To change this mode, call 'post_adaptation()'
-            'prob_index': None,#options["prob_index"],
-            # 'subprob_index' : options["subprob_index"]
+            'prob_index': None, #options["prob_index"],
+            # 'subprob_index' : 0
         }
     def create_operations(self) :
         from arcle.actions.critical import crop_grid
@@ -51,7 +51,21 @@ class CustomO2ARCEnv(O2ARCv2Env):
         ops = super().create_operations()
         ops[33] = reset_sel(crop_grid)
  
-        return ops[0:10] + ops[20:] 
+        return [ops[0], ops[2]] # ops[0:10] #+ ops[20:]
+
+    """
+    0 : 검정
+    1 : 파랑
+    2 : 빨강
+    3 : 초록
+    4 : 노랑
+    5 : 회색
+    6 : 보라
+    7 : 주황
+    8 : 하늘색
+    9 : 갈색 
+
+    """ 
 
     def reset(self, seed = None, options= None):
         obs, info = super().reset(seed, options)
@@ -107,7 +121,7 @@ class CustomO2ARCEnv(O2ARCv2Env):
         }
         super().reset(options=self.reset_options)
 
-    def init_adaptation(self):
+    def init_adaptation(self): 
         self.adaptation = True
         self.reset_options['adaptation'] = True
         super().reset(options=self.reset_options)
@@ -115,6 +129,8 @@ class CustomO2ARCEnv(O2ARCv2Env):
     def post_adaptation(self):
         self.adaptation = False
         self.reset_options['adaptation'] = False
+        self.reset_options['prob_index'] = self.options['prob_index']
+        self.reset_options['subprob_index'] = self.options['subprob_index']
         super().reset(options=self.reset_options)
 
 class FilterO2ARC(gym.ObservationWrapper):

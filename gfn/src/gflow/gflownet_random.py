@@ -69,7 +69,7 @@ class GFlowNet(nn.Module):
             s0 = s0["input"]
         s = torch.tensor(s0, dtype=torch.float).to(self.device)
 
-        self.dag = torch.zeros(10, 30, 30).to(self.device)
+        self.dag = torch.zeros(30, 30, 30).to(self.device)
         self.dag[0] = s # 첫 번째 상태를 설정합니다.
 
         # 마스크 행렬 초기화, info에서 input dimension 조회해서 input dimension 밖은 True로 설정
@@ -100,22 +100,12 @@ class GFlowNet(nn.Module):
             state, reward, is_done, _, info = result
             s = torch.tensor(state["grid"], dtype = torch.float).to(self.device)
             
-            terminal = torch.tensor(self.env.unwrapped.answer).to("cuda")
-            pad_terminal = torch.zeros_like(s)
-            pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
-            
-            ### s와 answer를 embedding space에 올려서 계산
-            
-            emb_s = self.embedding(s.long())
-            emb_terminal = self.embedding(pad_terminal.long())
-            
-            # mse = self.MSE_reward(s)
-            boltzman = self.boltzman_reward(emb_s, emb_terminal)
+            # mse = self.reward(s)
+            boltzman = self.boltzman_reward(s)
 
-            # alpha = 0.7
+            alpha = 0.7
             # ime_reward = alpha*mse + (1-alpha)*reward  #reward 조합 생각해보기 
-            # ime_reward = alpha*boltzman + (1-alpha)*reward
-            ime_reward = boltzman
+            ime_reward = alpha*boltzman + (1-alpha)*reward
 
             # 마스크 & DAG 업데이트
             self.mask[selection[0], selection[1]] = True
@@ -124,7 +114,7 @@ class GFlowNet(nn.Module):
             if return_log:
                 log.log(s=self.dag.clone(), probs=prob.log_prob(ac).squeeze(), actions = ac, rewards=ime_reward, total_flow=self.total_flow, done=is_done)  # log에 저장
 
-            if iter >= 9:  # max_length miniarc = 25, arc = 900
+            if iter >= 29:  # max_length miniarc = 25, arc = 900
                 return (s, log) if return_log else s
             
             # if selection[0] == 4 & selection[1] == 4:
@@ -172,13 +162,16 @@ class GFlowNet(nn.Module):
 
         return fwd_probs, back_probs, rewards
     
-    def MSE_reward(self, s, pad_terminal):
+    def reward(self, s):
         """
         Returns the reward associated with a given state.
 
         Args:
             s: An NxD matrix representing N states
         """
+        terminal = torch.tensor(self.env.unwrapped.answer).to("cuda")
+        pad_terminal = torch.zeros_like(s)
+        pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
 
         # MSE 
         r = ((pad_terminal - s)**2 + 1e-6) # pad_terminal은 ARC용
@@ -194,16 +187,19 @@ class GFlowNet(nn.Module):
 
         return mse_reward
     
-    def boltzman_reward(self, s, pad_terminal):
+    def boltzman_reward(self, s):
         """
         Returns the reward associated with a given state.
 
         Args:
-            s: embedding된 상태
+            s: An NxD matrix representing N states
         """
+        terminal = torch.tensor(self.env.unwrapped.answer).to("cuda")
+        pad_terminal = torch.zeros_like(s)
+        pad_terminal[:terminal.shape[0], :terminal.shape[1]] = terminal
 
         #boltzman energy
-        w_ij = 1.5  # 연결 강도
+        w_ij = 1.0  # 연결 강도
         b_i = -torch.abs(pad_terminal - s)   # 외부 필드
 
         # 볼츠만 에너지 계산
@@ -211,8 +207,7 @@ class GFlowNet(nn.Module):
 
         # 에너지를 기반으로 한 보상
         # 에너지가 낮을수록 보상이 높아집니다.
-        # e_reward = torch.exp(-energy) # nan이 발생하므로 일단 주석처리
-        e_reward = -energy # log를 씌웠다고 가정한 값
+        e_reward = torch.exp(-energy)
         if e_reward == float("inf"):
-            e_reward = torch.tensor(1e+10, device= energy.device)
+            e_reward = torch.tensor(10000, device= energy.device)
         return e_reward

@@ -4,9 +4,9 @@ from torch.optim import Adam, AdamW
 torch.autograd.set_detect_anomaly(True)
 
 
-from gflow.gflownet_point import GFlowNet
-from policy_point import ForwardPolicy, BackwardPolicy
-from gflow.utils import trajectory_balance_loss, detailed_balance_loss, subtrajectory_balance_loss
+from gflow.gflownet_random import GFlowNet
+from policy_random import ForwardPolicy, BackwardPolicy
+from gflow.utils import trajectory_balance_loss
 
 # from ColorARCEnv import env_return # BBox는 ColorARCEnv로 변경
 from PointARCEnv import env_return # Point는 PointARCEnv로 변경
@@ -29,25 +29,43 @@ from arcle.envs import O2ARCv2Env
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
 
 import wandb
-wandb.init(project="gflow_re", entity="hsh6449", name="TB_loss_step10_redOnly")
+# wandb.init(project="gflow_re", entity="hsh6449", name="Step_length_30")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 loader = ARCLoader()
 miniloader = MiniARCLoader()
 
-
 render_mode = None # None  # ansi
 
-LOSS = "trajectory_balance_loss" # "trajectory_balance_loss", "subtb_loss", "detailed_balance_loss"
+class TestLoader(Loader):
+    def __init__(self, size_x, size_y):
+        self.size_x = size_x
+        self.size_y = size_y
+        self.rng = np.random.default_rng(12345)
+        super().__init__(rng=self.rng)
+    def get_path(self):
+        return ['']
 
-def train(num_epochs, device):
+    def parse(self):
 
-    env = env_return(render_mode, miniloader, options= None)
+        ti= np.zeros((self.size_x,self.size_y), dtype=np.uint8)
+        to = np.zeros((self.size_x,self.size_y), dtype=np.uint8)
+        ei = np.zeros((self.size_x,self.size_y), dtype=np.uint8)
+        eo = np.zeros((self.size_x,self.size_y), dtype=np.uint8)
+
+        ti[0:self.size_x, 0:self.size_y] = self.rng.integers(0,10, size=[self.size_x,self.size_y])
+        to[0:self.size_x, 0:self.size_y] = self.rng.integers(0,10, size=[self.size_x,self.size_y])
+        ei[0:self.size_x, 0:self.size_y] = self.rng.integers(0,10, size=[self.size_x,self.size_y])
+        eo[0:self.size_x, 0:self.size_y] = self.rng.integers(0,10, size=[self.size_x,self.size_y])
+        return [([ti],[to],[ei],[eo], {'desc': "just for test"})]
+    def pick(self):
+        return self.parse()
     
+def train(num_epochs, device, env):
 
-    forward_policy = ForwardPolicy(30, hidden_dim=32, num_actions=2).to(device)
-    backward_policy = BackwardPolicy(30, hidden_dim=32, num_actions=2).to(device)
+    forward_policy = ForwardPolicy(30, hidden_dim=32, num_actions=10).to(device)
+    backward_policy = BackwardPolicy(30, hidden_dim=32, num_actions=10).to(device)
 
     model = GFlowNet(forward_policy, backward_policy,
                      env=env).to(device)
@@ -56,7 +74,7 @@ def train(num_epochs, device):
     opt = AdamW(model.parameters(), lr=5e-3)
 
     for i in (p := tqdm(range(num_epochs))):
-        state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i}) 
+        state, info = env.reset() 
         """ 4/13 수정
         state : dict , info : dict
         prob index 바뀌는거 확인함
@@ -69,35 +87,25 @@ def train(num_epochs, device):
             else:
                 s = result # s : tensor
 
-            if LOSS ==  "trajectory_balance_loss":
-                loss, total_flow, re = trajectory_balance_loss(log.total_flow,
+            # probs = model.forward_probs(s)
+
+            # model.actions["operation"] = int(torch.argmax(probs).item())
+            # model.actions["selection"] = np.zeros((30, 30))
+
+            # result = env.step(model.actions)
+            # state, reward, is_done, _, info = result
+
+            # pdb.set_trace()
+
+            loss, total_flow, re = trajectory_balance_loss(log.total_flow,
                                         log.rewards,
                                         log.fwd_probs,
                                         log.back_probs,
                                         torch.tensor(env.unwrapped.answer).to("cuda"))
-                wandb.log({"loss": loss.item()})
-                wandb.log({"total_flow": total_flow.item()})
-                wandb.log({"reward": re.item()})
-            elif LOSS == "detailed_balance_loss":
             
-                loss, total_flow, re = detailed_balance_loss(log.total_flow,
-                                        log.rewards,
-                                        log.fwd_probs,
-                                        log.back_probs,
-                                        torch.tensor(env.unwrapped.answer).to("cuda"))
-                
-                #wandb.log({"loss": loss.item()})
-                #wandb.log({"total_flow": total_flow.item()})
-                #wandb.log({"reward": re.item()})
-
-            elif LOSS == "subtb_loss":
-                loss = subtrajectory_balance_loss(log.traj, log.fwd_probs, log.back_probs)
-
-                re = log.rewards[-1]
-
-                # wandb.log({"loss": loss.item()})
-                # #wandb.log({"total_flow": total_flow.item()})
-                # wandb.log({"reward": re.item()})
+            # wandb.log({"loss": loss.item()})
+            # wandb.log({"total_flow": total_flow.item()})
+            # wandb.log({"reward": re.item()})
 
             opt.zero_grad()
             loss.backward()
@@ -105,9 +113,9 @@ def train(num_epochs, device):
             opt.step()
             # if i % 10 == 0:
             p.set_description(f"{loss.item():.3f}")
-            state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i})
+            state, info = env.reset()
     
-    env.post_adaptation()
+    # env.post_adaptation()
     state, _ = env.reset()
     # s0 = torch.tensor(state["input"]).to(device)
     s, log = model.sample_states(state, return_log=True)
@@ -120,9 +128,14 @@ def train(num_epochs, device):
 
 def eval(model):
 
-    env = env_return(render_mode, miniloader, options= None)
+    env = gym.make(
+            'ARCLE/O2ARCv2Env-v0', 
+            data_loader = TestLoader(5, 5), 
+            max_trial = 3,
+            max_grid_size=(5, 5), 
+            colors= 10)
 
-    env.post_adaptation()
+    # env.post_adaptation()
         
     state, _ = env.reset(options = {"prob_index" : 101, "adaptation" : False})
     s0 = torch.tensor(state["input"]).to(device)
@@ -148,10 +161,17 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    env = gym.make(
+            'ARCLE/O2ARCv2Env-v0', 
+            data_loader = TestLoader(5, 5), 
+            max_trial = 3,
+            max_grid_size=(5, 5), 
+            colors=10)
+    
     """dataset = ARCdataset(
         "/home/jovyan/Gflownet/ARCdataset/diagonal_flip_augment.data_2/")
     train_dataloader = DataLoader(
         dataset, batch_size=batch_size, shuffle=False)"""
 
-    model = train(num_epochs, device)
+    model = train(num_epochs, device, env)
     eval(model)
