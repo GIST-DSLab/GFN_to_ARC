@@ -211,3 +211,10 @@ class GFlowNet(nn.Module):
         if e_reward == float("inf"):
             e_reward = torch.tensor(10000, device= energy.device)
         return e_reward
+    
+
+    def human_reward(self):
+        #리워드를 지급해야할 때 사람이 직접 입력해서 리워드를 줌
+        reward = torch.tensor(input("input reward : "), dtype = torch.float32).to(self.device)
+
+        return reward

@@ -1,9 +1,9 @@
 import torch
+import numpy as np
 from torch.distributions import Categorical, Uniform
 
-
 class Log:
-    def __init__(self, s0, backward_policy, total_flow, env):
+    def __init__(self, s0, backward_policy, total_flow, env, emb_s=None):
         """
         Initializes a Stats object to record sampling statistics from a
         GFlowNet (e.g. trajectories, forward and backward probabilities,
@@ -33,8 +33,14 @@ class Log:
         self.num_samples = len(self._traj)
         self.is_terminals = []
         self.masks = []
+        self._emb_traj = []
+        
+        self._traj.append(s0)
 
-    def log(self, s, probs, actions, rewards=None, total_flow=None, done=None):
+        if emb_s is not None:
+            self._emb_traj.append(emb_s)
+
+    def log(self, s, probs, actions, rewards=None, embedding=None, done=None):
         """
         Logs relevant information about each sampling step
 
@@ -51,19 +57,28 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-
+        self._emb_traj.append(embedding.detach())
         self._traj.append(s.detach())
         self._fwd_probs.append(probs.unsqueeze(0))
         self._actions.append(actions)
+        
 
         if rewards is not None:
-            self.rewards.append(rewards.detach())
+            if isinstance(rewards, np.float64) or isinstance(rewards, np.float32):
+                self.rewards.append(rewards)
+            else:
+                self.rewards.append(rewards.detach())
         if done is not None:
             self.is_terminals.append(done)
         # Note: Assuming total_flow and other properties are handled correctly elsewhere
         self._back_probs_computed = False  # Invalidate cached back_probs
 
+    @property
+    def emb_traj(self):
+        if type(self._emb_traj) is list:
+            pass
 
+        return self._emb_traj
     @property
     def traj(self):
         if type(self._traj) is list:

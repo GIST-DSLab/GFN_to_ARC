@@ -5,7 +5,7 @@ torch.autograd.set_detect_anomaly(True)
 
 
 from gflow.gflownet_point import GFlowNet
-from policy_point import ForwardPolicy, BackwardPolicy
+from policy_point import MLPForwardPolicy, MLPBackwardPolicy, LSTMForwardPolicy
 from gflow.utils import trajectory_balance_loss, detailed_balance_loss, subtrajectory_balance_loss
 
 # from ColorARCEnv import env_return # BBox는 ColorARCEnv로 변경
@@ -29,7 +29,7 @@ from arcle.envs import O2ARCv2Env
 from arcle.loaders import ARCLoader, Loader, MiniARCLoader
 
 import wandb
-wandb.init(project="gflow_re", entity="hsh6449", name="TB_loss_step10_redOnly")
+wandb.init(project="gflow_re", entity="hsh6449", name="TB_loss_step10_redOnly_local_MSE+LSTM_2(logz)")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -45,9 +45,10 @@ def train(num_epochs, device):
 
     env = env_return(render_mode, miniloader, options= None)
     
+    # seed_everything(42)
 
-    forward_policy = ForwardPolicy(30, hidden_dim=32, num_actions=2).to(device)
-    backward_policy = BackwardPolicy(30, hidden_dim=32, num_actions=2).to(device)
+    forward_policy = LSTMForwardPolicy(30, hidden_dim=32, num_actions=2).to(device)
+    backward_policy = MLPBackwardPolicy(30, hidden_dim=32, num_actions=2).to(device)
 
     model = GFlowNet(forward_policy, backward_policy,
                      env=env).to(device)
@@ -61,7 +62,7 @@ def train(num_epochs, device):
         state : dict , info : dict
         prob index 바뀌는거 확인함
         """    
-        for _ in tqdm(range(1000000)):
+        for _ in tqdm(range(100000)):
             result = model.sample_states(state,info, return_log=True) 
             
             if len(result) == 2:
@@ -106,6 +107,23 @@ def train(num_epochs, device):
             # if i % 10 == 0:
             p.set_description(f"{loss.item():.3f}")
             state, info = env.reset(options = {"prob_index" : 101, "adaptation" : True, "subprob_index" : i})
+
+            ## evaluation 
+            if i % 10 == 0:
+                s, _ = model.sample_states(state,info, return_log=True)
+                print("initial state : \n")
+                print(state["input"][:info["input_dim"][0],:info["input_dim"][1]])
+                print("Final state : \n")
+                print(s[:info["input_dim"][0],:info["input_dim"][1]].long())
+                print("=============")
+                print("Answer : \n")
+                print(env.unwrapped.answer)
+                print("=============")
+
+                correct = np.equal(s.cpu().detach().numpy()[:info["input_dim"][0],:info["input_dim"][1]], env.unwrapped.answer)
+                acc = np.sum(correct) / (correct.shape[0]*correct.shape[1])
+                wandb.log({"accuracy": acc})
+                wandb.log({"true accuracy": 0 if acc < 1 else 1})
     
     env.post_adaptation()
     state, _ = env.reset()
@@ -136,6 +154,10 @@ def eval(model):
     print("Answer : \n")
     print(env.unwrapped.answer)
 
+def seed_everything(seed):
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -145,7 +167,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     batch_size = args.batch_size
     num_epochs = args.num_epochs
-
+    seed_everything(42)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     """dataset = ARCdataset(
