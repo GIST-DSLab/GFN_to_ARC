@@ -2,6 +2,9 @@ import torch
 import pdb
 import torch.nn.functional as F
 
+def normalize_probabilities(x):
+        return x / x.sum()
+
 def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
     """
     Computes the mean trajectory balance loss for a collection of samples. For
@@ -21,8 +24,9 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
         back_probs: The backward probabilities associated with each trajectory
     """
     
-    back_probs = torch.cat(back_probs, dim=0)
-    fwd_probs = torch.cat(fwd_probs, dim=0)
+    back_probs = normalize_probabilities(torch.cat(back_probs, dim=0))
+    fwd_probs = normalize_probabilities(torch.cat(fwd_probs, dim=0))
+    
     rewards = torch.tensor([rewards[-1]], device=total_flow.device)
 
     # if rewards == 0 :
@@ -30,7 +34,7 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
     # else:
     #     rewards = torch.log(rewards*10)
     # reward에 지수 함수 씌었다고 가정하고 log 붙이면 원래 값이 나오므로 일단 주석처리  
-    loss = torch.square(torch.log(total_flow) + torch.sum(fwd_probs) - torch.log(rewards).clip(0) - torch.sum(back_probs))
+    loss = torch.square(total_flow + torch.sum(fwd_probs) - torch.log(rewards).clip(0) - torch.sum(back_probs))
 
     # 만약 loss가 nan이면 100으로 대체
     loss = loss.sum()
@@ -98,3 +102,23 @@ def subtrajectory_balance_loss(trajectories, fwd_probs, back_probs):
 
     # Return the mean of the losses
     return torch.mean(torch.stack(losses))
+
+
+def guided_TB_loss(total_flow, rewards, fwd_probs, back_probs, answer):
+    
+    back_probs = torch.cat(back_probs, dim=0)
+    fwd_probs = torch.cat(fwd_probs, dim=0)
+    rewards = torch.tensor([rewards[-1]], device=total_flow.device)
+
+    # if rewards == 0 :
+    #     pass
+    # else:
+    #     rewards = torch.log(rewards*10)
+    # reward에 지수 함수 씌었다고 가정하고 log 붙이면 원래 값이 나오므로 일단 주석처리  
+    loss = torch.square(torch.log(total_flow) + torch.sum(fwd_probs) - torch.log(rewards).clip(0) - torch.sum(back_probs))
+
+    # 만약 loss가 nan이면 100으로 대체
+    loss = loss.sum()
+    loss = loss.clamp(max=1e+6)
+
+    return loss, total_flow, rewards
