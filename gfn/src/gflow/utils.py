@@ -27,7 +27,12 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
     back_probs = normalize_probabilities(torch.cat(back_probs, dim=0))
     fwd_probs = normalize_probabilities(torch.cat(fwd_probs, dim=0))
     
-    rewards = torch.tensor([rewards[-1]], device=total_flow.device)
+    if isinstance(rewards, list):
+        rewards = torch.tensor([rewards[-1]], device=total_flow.device)
+    else:
+        rewards = torch.tensor([rewards], device=total_flow.device)
+
+    total_flow = total_flow.clamp(min=0)
 
     # if rewards == 0 :
     #     pass

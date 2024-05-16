@@ -121,8 +121,8 @@ class Log:
             # pb_s는 (1,10)
 
             pb_s = self.backward_policy(traj.to("cuda")).unsqueeze(0)
-            pb = Categorical(logits=pb_s).log_prob(action)
-            # pb = Uniform(0, 9).log_prob(action)
+            # pb = Categorical(logits=pb_s).log_prob(action)
+            pb = Uniform(0, 3).log_prob(action) # Uniform
 
             if pb.dim() == 0:
                 pb = pb.unsqueeze(0)

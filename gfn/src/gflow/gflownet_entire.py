@@ -10,30 +10,8 @@ from scipy.spatial import distance
 from .log import Log
 from collections import OrderedDict
 
-
-class reward_model(nn.Module):
-    def __init__(self):
-        """
-        learnable reward model for GFlowNet
-        using x (trajectory)
-        label y (reward)
-        """
-        super().__init__()
-        self.fc1 = nn.Linear(128, 64)
-        self.fc2 = nn.Linear(64, 1)
-
-
-    
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x
-    
-    
-        
-
 class GFlowNet(nn.Module):
-    def __init__(self, forward_policy, backward_policy, env=None, device='cuda'):
+    def __init__(self, forward_policy, backward_policy, env=None, device='cuda', state_dim=3, hidden_dim=32, ep_len=2):
         super().__init__()
         self.total_flow = Parameter(torch.tensor(1.0).to(device))
         # self.std = Parameter(torch.tensor([0.5]*10, dtype = torch.float32).to(device))
@@ -43,23 +21,25 @@ class GFlowNet(nn.Module):
         self.device = device
         self.actions = {}
 
+        self.state_dim = state_dim
+        self.hidden_dim = hidden_dim
+        self.ep_len = ep_len
+
         self.env_style = "point" # "point","bbox" ...
         
         self.mask = None
         self.dag = None
         self.emb_dag = None
 
-        self.embedding = nn.Sequential(
-            nn.Conv2d(1, 30, kernel_size=1, stride=1, padding=0), 
-            nn.ReLU(),
-            nn.Conv2d(30, 30, kernel_size=1, stride=1, padding=0), 
-            nn.ReLU(),
-            nn.Flatten(), 
-            nn.Linear(30*30, 100) 
-        )
-        # self.embedding = nn.Embedding(11,32)
-        # for param in self.embedding.parameters():
-        #     param.requires_grad = False
+        # self.embedding = nn.Sequential(
+        #     nn.Conv2d(1, 3, kernel_size=1, stride=1, padding=0), 
+        #     nn.ReLU(),
+        #     nn.Conv2d(3, 9, kernel_size=1, stride=1, padding=0), 
+        #     nn.ReLU(),
+        #     nn.Flatten(), 
+        #     nn.Linear(3*3, 64) 
+        # )
+        self.embedding = nn.Embedding(11,128)
         """
         Initializes a GFlowNet using the specified forward and backward policies
         acting over an environment, i.e. a state space and a reward function.
@@ -89,44 +69,47 @@ class GFlowNet(nn.Module):
     def sample_states(self, s0, info=None, return_log=True, i=None):
 
         iter = 0
-        hreward = torch.tensor(0.0).to(self.device)
 
         if self.dag is not None:
             self.dag = None
             
         state = s0
-        s = torch.tensor(s0["input"], dtype=torch.float).to(self.device)
+        s = torch.tensor(s0[:3,:3], dtype=torch.float).to(self.device) # 해당태스크 특별한 세팅 
 
-        t_ = torch.tensor(self.env.unwrapped.answer).to(self.device)
-        pad_terminal = torch.zeros_like(s) 
-        pad_terminal[:t_.shape[0], :t_.shape[1]] = t_
+        terminal = torch.tensor(self.env.unwrapped.answer).to(self.device)
         
-        self.dag = torch.zeros(10, 30, 30).to(self.device)
+        self.dag = torch.zeros(self.ep_len+1, self.state_dim, self.state_dim).to(self.device) # max length + 1
         self.dag[0] = s # 첫 번째 상태를 설정합니다.
-        self.dag[9] = torch.tensor(pad_terminal).to(self.device) # 마지막 상태를 설정합니다.
+        self.dag[self.ep_len] = torch.tensor(terminal).to(self.device) # 마지막 상태를 설정합니다.
         
-        h, w = info["input_dim"]
-        ## Embedding을 해보자 
-        s[h:, w:] = 10  # input size 밖의 값은 10으로 채워넣기
-        
-        pad_terminal_2 = torch.ones_like(s) * 10
-        pad_terminal_2[:t_.shape[0], :t_.shape[1]] = t_
+        h, w = s.shape
 
-        # embedding 행렬을 만드는 방식 ep_len,size*size,embedding_dim 
+        """
+            ***nn.Embedding을 사용한 임베딩 방식, ep_len,size*size,embedding_dim
+        """
+
         emb_s = self.embedding(s.long().flatten().unsqueeze(0))
-        emb_terminal = self.embedding(pad_terminal_2.long().flatten().unsqueeze(0))
+        emb_terminal = self.embedding(terminal.long().flatten().unsqueeze(0))
 
+        self.emb_dag = self.embedding(self.dag.long().unsqueeze(0)) 
+
+        """
+            CNN Embedding
+        """
+        # emb_s = self.embedding(s.unsqueeze(0))
+        # emb_terminal = self.embedding(terminal.unsqueeze(0))
+
+        """
+            DAG Matrix Embedding
+        """
         # self.emb_dag = torch.zeros(10,900,128).to(self.device)
         # self.emb_dag[0,] = emb_s
         # self.emb_dag[9] = emb_terminal
 
-        # dag 행렬 자체를 pixel by pixel으로 embedding 하는 방식
-        self.emb_dag = self.embedding(self.dag.long().flatten().unsqueeze(0)) 
-
 
         # 마스크 행렬 초기화, info에서 input dimension 조회해서 input dimension 밖은 True로 설정
         if self.mask is None or iter == 0:
-            self.mask = torch.zeros((30,30), dtype=torch.bool) 
+            self.mask = torch.zeros((self.state_dim,self.state_dim), dtype=torch.bool) 
             self.mask[h:, w:] = True
 
         # grid_dim = info["input_dim"]
@@ -145,34 +128,18 @@ class GFlowNet(nn.Module):
             self.actions = {"operation": ac, "selection": selection}
             result = self.env.step(self.actions)
         
-            state, reward, is_done, _, info = result
+            info, _, _, _ = result
             
-            s = torch.tensor(state["grid"], dtype = torch.float).to(self.device)
-            s[state["input_dim"][0]:, state["input_dim"][1]:] = 10  # input size 밖의 값은 10으로 채워넣기
+            s = torch.tensor(info["grid"][:3,:3], dtype = torch.float).to(self.device)
+            # s[s.shape[0]:, s.shape[1]:] = 10  # input size 밖의 값은 10으로 채워넣기
             
             ### s와 answer를 embedding space에 올려서 계산
-            emb_s = self.embedding(s.long().flatten().unsqueeze(0))  
+            # emb_s = self.embedding(s.long().flatten().unsqueeze(0))           
+            reward = self.MSE_reward(emb_s, emb_terminal)
+            # reward = self.mahalanobis_reward(emb_s, emb_terminal)
+            # reward = self.pixel_Reward(s, pad_terminal_2)
+            # reward = self.boltzman_reward(emb_s, emb_terminal)
 
-            ## s와 pad_terminal이 같으면 계산 아니면 0 
-            mse = self.MSE_reward(emb_s, emb_terminal)
-            if torch.all(torch.eq(s, pad_terminal_2)):
-                reward = mse
-            else:
-                reward = torch.tensor(0.0).to(self.device)
-
-            # mse = self.MSE_reward(emb_s, emb_terminal)
-            # mse = self.mahalanobis_reward(emb_s, emb_terminal)
-            # mse = self.pixel_Reward(s, pad_terminal_2)
-            # boltzman = self.boltzman_reward(emb_s, emb_terminal)
-
-            # alpha = 0.7
-            # ime_reward = alpha*mse + (1-alpha)*reward  #reward 조합 생각해보기 
-            # # ime_reward = alpha*boltzman + (1-alpha)*reward
-            # # ime_reward = mse
-
-            # if iter == 9:
-            #     # hreward = self.human_reward()
-            #     hreward = self.task_specific_reward(s, pad_terminal_2, i)
 
             # 마스크 & DAG 업데이트
             self.mask[selection[0], selection[1]] = True
@@ -187,7 +154,7 @@ class GFlowNet(nn.Module):
             if return_log:
                 log.log(s=self.dag, probs=prob.log_prob(ac).squeeze(), actions = ac, rewards=reward, embedding=self.emb_dag, done=is_done)  # log에 저장
 
-            if iter >= 9:  # max_length miniarc = 25, arc = 900
+            if iter >= 2:  # max_length miniarc = 25, arc = 900
                 return (s, log) if return_log else s
             
             # if selection[0] == 4 & selection[1] == 4:
@@ -199,59 +166,19 @@ class GFlowNet(nn.Module):
         # return (s, log) if return_log else s
         return s, log if return_log else s
 
-    def evaluate_trajectories(self, traj, actions):
-        """
-        Returns the GFlowNet's estimated forward probabilities, backward
-        probabilities, and rewards for a collection of trajectories. This is
-        useful in an offline learning context where samples drawn according to
-        another policy (e.g. a random one) are used to train the model.
-
-        Args:
-            traj: The trajectory of each sample
-
-            actions: The actions that produced the trajectories in traj
-        """
-        num_samples = len(traj)
-        traj = traj.reshape(-1, traj.shape[-1])
-        actions = actions.flatten()
-        finals = traj[actions == len(actions) - 1]
-        zero_to_n = torch.arange(len(actions))
-
-        fwd_probs = self.forward_probs(traj)
-        fwd_probs = torch.where(
-            actions == -1, 1, fwd_probs[zero_to_n, actions])
-        fwd_probs = fwd_probs.reshape(num_samples, -1)
-
-        actions = actions.reshape(num_samples, -1)[:, :-1].flatten()
-
-        back_probs = self.backward_policy(traj)
-        back_probs = back_probs.reshape(num_samples, -1, back_probs.shape[1])
-        back_probs = back_probs[:, 1:, :].reshape(-1, back_probs.shape[2])
-        back_probs = torch.where((actions == -1) | (actions == 2), 1,
-                                 back_probs[zero_to_n[:-num_samples], actions])
-        back_probs = back_probs.reshape(num_samples, -1)
-
-        rewards = self.reward(finals)
-
-        return fwd_probs, back_probs, rewards
 
     
-    def MSE_reward(self, s, pad_terminal, scalefactor=100):
+    def MSE_reward(self, s, pad_terminal):
         """
         Returns the reward associated with a given state.
 
         Args:
             s: An NxD matrix representing N states
         """
+        # s = self.normalize(s)
+        # pad_terminal = self.normalize(pad_terminal)
 
         # MSE 
-        # r = ((pad_terminal.squeeze() - s.squeeze())**2 + 1e-6) # pad_terminal은 ARC용
-        # r[torch.isinf(r)] = 0
-        # mse_reward = 1 / (r.sum() + 1) 
-
-        # 만약 값이 inf 면 적당히 10000으로 대체
-        # if mse_reward == float("inf"):
-        #     mse_reward = 10000
         s = self.normalize(s)
         pad_terminal = self.normalize(pad_terminal)
 
@@ -279,7 +206,7 @@ class GFlowNet(nn.Module):
         pad_terminal = self.normalize(pad_terminal)
         #boltzman energy
         w_ij = 1.5  # 연결 강도
-        b_i = -torch.abs(pad_terminal - s)   # 외부 필드
+        b_i = -torch.abs(pad_terminal - s)   # 외부 필드, 유사할 수록 더 작은 음수 값
 
         # 볼츠만 에너지 계산
         energy = -torch.sum(w_ij * (s * pad_terminal)) - torch.sum(b_i * s)
