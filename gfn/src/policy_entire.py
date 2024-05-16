@@ -12,7 +12,8 @@ import pdb
 class MLPForwardPolicy(nn.Module):
     def __init__(self, state_dim, hidden_dim, num_actions):
         super().__init__()
-        self.dense1 = nn.Linear(state_dim*state_dim*10, hidden_dim*hidden_dim)
+        self.embedding = nn.Embedding(11,128)
+        self.dense1 = nn.Linear(state_dim*state_dim*3*128, hidden_dim*hidden_dim)
         self.dense2 = nn.Linear(hidden_dim*hidden_dim, hidden_dim*hidden_dim)
         self.dense3 = nn.Linear(hidden_dim*hidden_dim, hidden_dim)
         
@@ -81,7 +82,7 @@ class MLPForwardPolicy(nn.Module):
 class MLPBackwardPolicy(nn.Module):
     def __init__(self, state_dim,hidden_dim, num_actions):
         super().__init__()
-        self.dense1 = nn.Linear(state_dim*state_dim*10, hidden_dim*hidden_dim)
+        self.dense1 = nn.Linear(state_dim*state_dim*3, hidden_dim*hidden_dim)
         self.dense2 = nn.Linear(hidden_dim*hidden_dim, hidden_dim*hidden_dim)
         self.dense3 = nn.Linear(hidden_dim*hidden_dim, num_actions)
 
@@ -131,11 +132,10 @@ class LSTMForwardPolicy(nn.Module):
 
         coordinate = self.select_mask(x_selection, mask)
 
+        ## action mlp
         ac = self.action(x[iter,])
-        ac =  softmax(ac, dim=0).squeeze(0)
 
-        ac_prob = (ac + 1e-8) /  torch.sum((ac + 1e-8), dim=-1, keepdims=True)
-        return ac_prob, coordinate
+        return softmax(ac, dim=0).squeeze(0), coordinate
     
     def select_mask(self, x, mask):
         h, w = mask.shape  # mask의 높이와 너비를 가져옵니다.
