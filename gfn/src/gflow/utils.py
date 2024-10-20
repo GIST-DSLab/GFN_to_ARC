@@ -5,7 +5,19 @@ import torch.nn.functional as F
 def normalize_probabilities(x):
         return x / x.sum()
 
-def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
+# def process_rewards(rewards, device):
+#     b = rewards[0].shape[0]
+#     if isinstance(rewards, list):
+#         # 배치 학습의 경우: 각 에피소드의 마지막 리워드를 가져옴
+#         last_rewards = rewards[-1]
+#     else:
+#         # rewards가 이미 단일 값인 경우
+#         last_rewards = [rewards]
+
+#     # 텐서로 변환
+#     return torch.tensor(last_rewards, device=device)
+
+def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, batch_size=1):
     """
     Computes the mean trajectory balance loss for a collection of samples. For
     more information, see Bengio et al. (2022): https://arxiv.org/abs/2201.13259
@@ -24,26 +36,33 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
         back_probs: The backward probabilities associated with each trajectory
     """
     
-    back_probs = normalize_probabilities(torch.cat(back_probs, dim=0))
-    fwd_probs = normalize_probabilities(torch.cat(fwd_probs, dim=0))
-    
-    if isinstance(rewards, list):
-        rewards = torch.tensor([rewards[-1]], device=total_flow.device)
-    else:
-        rewards = torch.tensor([rewards], device=total_flow.device)
-
+    # back_probs = normalize_probabilities(torch.cat(back_probs, dim=0).reshape(-1, b).transpose(0, 1))
+    # fwd_probs = normalize_probabilities(torch.cat(fwd_probs, dim=0).reshape(-1, b).transpose(0, 1))
     total_flow = total_flow.clamp(min=0)
+    if isinstance(rewards, int or float):
+        rewards = torch.tensor([rewards], device=total_flow.device, dtype=torch.float)
 
-    # if rewards == 0 :
-    #     pass
-    # else:
-    #     rewards = torch.log(rewards*10)
-    # reward에 지수 함수 씌었다고 가정하고 log 붙이면 원래 값이 나오므로 일단 주석처리  
-    loss = torch.square(total_flow + torch.sum(fwd_probs) - torch.log(rewards).clip(0) - torch.sum(back_probs))
+    if batch_size > 1:
+        # fwd_probs = torch.stack([torch.sum(torch.stack(probs)) for probs in fwd_probs])
+        # back_probs = torch.stack([torch.sum(torch.stack(probs)) for probs in back_probs])
+        fwd_probs = torch.stack([torch.sum(torch.stack(probs)) for probs in fwd_probs])
+        back_probs = torch.stack([torch.sum(torch.stack(probs)) for probs in back_probs])
+        rewards = torch.tensor([r[-1] for r in rewards], device=total_flow.device)
+    else:
+        fwd_probs = torch.sum(torch.stack(fwd_probs))
+        back_probs = torch.sum(torch.stack(back_probs))
 
-    # 만약 loss가 nan이면 100으로 대체
-    loss = loss.sum()
-    loss = loss.clamp(max=1e+6)
+        if isinstance(rewards, list):
+            rewards = torch.tensor(rewards[-1], device=total_flow.device)
+        # else:
+        #     rewards = torch.tensor(rewards, device=total_flow.device)
+
+    log_rewards = torch.log(rewards).clip(-10)
+    loss = torch.square(total_flow + fwd_probs - log_rewards  - back_probs).clamp(max=1e+6)
+
+    # if torch.isnan(loss):
+    #     loss = loss.sum()
+#     loss = loss.clamp(max=1e+6)
 
     return loss, total_flow, rewards
 
