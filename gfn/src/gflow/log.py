@@ -3,7 +3,7 @@ import numpy as np
 from torch.distributions import Categorical, Uniform
 
 class Log:
-    def __init__(self, s0, backward_policy, total_flow, env, emb_s=None):
+    def __init__(self, s0, backward_policy, total_flow, env, emb_s=None, num_actions=12):
         """
         Initializes a Stats object to record sampling statistics from a
         GFlowNet (e.g. trajectories, forward and backward probabilities,
@@ -31,16 +31,17 @@ class Log:
         self._state_colors = []
         self.rewards = []
         self.num_samples = len(self._traj)
-        self.is_terminals = []
+        self._is_done = []
         self.masks = []
         self._emb_traj = []
+        self.num_actions = num_actions
         
         self._traj.append(s0)
 
         if emb_s is not None:
             self._emb_traj.append(emb_s)
 
-    def log(self, s, probs, actions, rewards=None, embedding=None, done=None):
+    def log(self, s, probs, back_probs, actions, rewards=None, done=None):
         """
         Logs relevant information about each sampling step
 
@@ -57,28 +58,28 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-        self._emb_traj.append(embedding.detach())
-        self._traj.append(s.detach())
+        self._traj.append(s)
         self._fwd_probs.append(probs.unsqueeze(0))
+        self._back_probs.append(back_probs)
         self._actions.append(actions)
+        self._is_done.append(done)
         
 
         if rewards is not None:
             if isinstance(rewards, np.float64) or isinstance(rewards, np.float32):
                 self.rewards.append(rewards)
             else:
-                self.rewards.append(rewards.detach())
+                self.rewards.append(rewards)
         if done is not None:
-            self.is_terminals.append(done)
+            self.is_done.append(done)
         # Note: Assuming total_flow and other properties are handled correctly elsewhere
         self._back_probs_computed = False  # Invalidate cached back_probs
-
     @property
-    def emb_traj(self):
-        if type(self._emb_traj) is list:
+    def is_done(self):
+        if type(self._is_done) is list:
             pass
-
-        return self._emb_traj
+        return self._is_done
+    
     @property
     def traj(self):
         if type(self._traj) is list:
@@ -102,31 +103,33 @@ class Log:
 
     @property
     def back_probs(self):
+        if type(self._back_probs) is list:
+            pass
 
-        if not self._back_probs_computed:
-            self._compute_back_probs()
+        # if not self._back_probs_computed:
+        #     self._compute_back_probs()
 
         return self._back_probs
     
-    def _compute_back_probs(self):
+    # def _compute_back_probs(self):
 
-        """
-        Computes the backward probabilities for the logged trajectories and actions.
-        This function is called lazily to ensure that it's computed only once.
-        """
-        self._back_probs = []
-        for t, (traj, action) in enumerate(zip(reversed(self._traj), reversed(self._actions))):
-            # action은 1차원 벡터 (0~9)
-            # traj는 3차원 텐서 (E_len, 30, 30) 즉 state
-            # pb_s는 (1,10)
+    #     """
+    #     Computes the backward probabilities for the logged trajectories and actions.
+    #     This function is called lazily to ensure that it's computed only once.
+    #     """
+    #     self._back_probs = []
+    #     for t, (traj, action) in enumerate(zip(reversed(self._traj), reversed(self._actions))):
+    #         # action은 1차원 벡터 (0~9)
+    #         # traj는 3차원 텐서 (E_len, 30, 30) 즉 state
+    #         # pb_s는 (1,10)
 
-            pb_s = self.backward_policy(traj.to("cuda")).unsqueeze(0)
-            # pb = Categorical(logits=pb_s).log_prob(action)
-            pb = Uniform(0, 3).log_prob(action) # Uniform
+    #         pb_s = self.backward_policy(traj.to("cuda")).unsqueeze(0)
+    #         # pb = Categorical(logits=pb_s).log_prob(action)
+    #         pb = Uniform(0, self.num_actions).log_prob(action) # Uniform
 
-            if pb.dim() == 0:
-                pb = pb.unsqueeze(0)
-            pb = pb.clamp(min=-5, max=5)
+    #         if pb.dim() == 0:
+    #             pb = pb.unsqueeze(0)
+    #         pb = pb.clamp(min=-5, max=5)
 
-            self._back_probs.append(pb.detach())
-        self._back_probs_computed = True
+    #         self._back_probs.append(pb.detach())
+    #     self._back_probs_computed = True
