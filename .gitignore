@@ -4,3 +4,7 @@ gfn/src/wandb/
 gfn/wandb/*
 wandb/
 data/
+gfn/src/wandb/*
+gfn/wandb/*
+wandb/*
+gfn/src/data/*
