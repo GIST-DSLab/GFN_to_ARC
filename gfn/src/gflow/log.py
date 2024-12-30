@@ -3,7 +3,7 @@ import numpy as np
 from torch.distributions import Categorical, Uniform
 
 class Log:
-    def __init__(self, s0, backward_policy, total_flow, env, emb_s=None, num_actions=12):
+    def __init__(self, s0, backward_policy, total_flow, env, tstate, emb_s=None, num_actions=12):
         """
         Initializes a Stats object to record sampling statistics from a
         GFlowNet (e.g. trajectories, forward and backward probabilities,
@@ -35,13 +35,16 @@ class Log:
         self.masks = []
         self._emb_traj = []
         self.num_actions = num_actions
+
+        self._tstate = []
         
         self._traj.append(s0)
+        self._tstate.append(tstate)
 
         if emb_s is not None:
             self._emb_traj.append(emb_s)
 
-    def log(self, s, probs, back_probs, actions, rewards=None, done=None):
+    def log(self, s, probs, back_probs, actions,tstate, rewards=None, done=None):
         """
         Logs relevant information about each sampling step
 
@@ -58,12 +61,12 @@ class Log:
             done: An Nx1 Boolean vector indicating which samples are complete
             (True) and which are incomplete (False)
         """
-        self._traj.append(s)
+        self._traj.append(s[:,:3,:3])
         self._fwd_probs.append(probs.unsqueeze(0))
         self._back_probs.append(back_probs)
         self._actions.append(actions)
         self._is_done.append(done)
-        
+        self._tstate.append(tstate)
 
         if rewards is not None:
             if isinstance(rewards, np.float64) or isinstance(rewards, np.float32):
@@ -87,6 +90,12 @@ class Log:
 
         return self._traj
 
+    @property
+    def tstates(self):
+        if type(self._tstate) is list:
+            pass
+
+        return self._tstate
     @property
     def fwd_probs(self):
         if type(self._fwd_probs) is list:

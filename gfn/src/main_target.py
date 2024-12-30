@@ -48,12 +48,12 @@ ACTIONNUM = 5
 LOSS = "trajectory_balance_loss"  # "trajectory_balance_loss", "subtb_loss", "detailed_balance_loss"
 
 WANDB_USE = True                
-FILENAME = f"geometric_rewardsum_10,10 task {TASKNUM}"                              
+FILENAME = f"geometric_10,5_taskg_rscale10_{TASKNUM}"                              
 
 if WANDB_USE:
     wandb.init(project="gflow_re", 
                entity="hsh6449", 
-               name=f"local+offpolicy cuda{CUDANUM}, ep10, a{ACTIONNUM}, reward, task {TASKNUM}, onpolicy")
+               name=f"local_cuda{CUDANUM},ep10,a{ACTIONNUM},enhanced_reward, task {TASKNUM}, onpolicy")
 
 
 class ReplayBuffer:
@@ -215,7 +215,7 @@ def train(num_epochs, batch_size, device, env_mode, prob_index, num_actions, arg
     train_start = False
     env = env_return(render=render_mode, data=loader, options=None, batch_size=1, mode=env_mode)
 
-    forward_policy = EnhancedMLPForwardPolicy(30, hidden_dim=256, num_actions=num_actions, batch_size=batch_size, embedding_dim=32, ep_len=args.ep_len, use_selection=use_selection).to(device)
+    forward_policy = EnhancedMLPForwardPolicy(30, hidden_dim=256, num_actions=num_actions, batch_size=batch_size, embedding_dim=16, ep_len=args.ep_len, use_selection=use_selection).to(device)
     # backward_policy = MLPBackwardPolicy(30, hidden_dim=512, num_actions=num_actions, batch_size=batch_size).to(device)
     total_flow = Parameter(torch.tensor(1.0).to(device)) # Log Z 
 
@@ -314,7 +314,7 @@ def train(num_epochs, batch_size, device, env_mode, prob_index, num_actions, arg
     for epoch in tqdm(range(num_epochs)):
         state, info = env.reset(options={"prob_index": prob_index, "adaptation": True, "subprob_index": epoch})
 
-        for step in tqdm(range(120000)):
+        for step in tqdm(range(20000)):
             if use_offpolicy:
                 
                 if sampling_model_use:
@@ -456,7 +456,7 @@ def train(num_epochs, batch_size, device, env_mode, prob_index, num_actions, arg
                 if LOSS == "trajectory_balance_loss":
                     loss, total_flow, re = trajectory_balance_loss(
                         log.total_flow,
-                        # log.rewards,
+                        # log.rewards[-1],
                         rewards,
                         log.fwd_probs,
                         log.back_probs,
@@ -499,7 +499,7 @@ def train(num_epochs, batch_size, device, env_mode, prob_index, num_actions, arg
                 num_samples = 100
 
                 for k in range(num_samples):
-                    eval_state, eval_info = env.reset(options={"prob_index": prob_index, "adaptation": True, "subprob_index": epoch})
+                    eval_state, eval_info = env.reset(options={"prob_index": prob_index, "adaptation": True, "subprob_index": 0})
                     """
                     adaptation true면 examples
                     adaptation false면 tests
@@ -533,13 +533,13 @@ def train(num_epochs, batch_size, device, env_mode, prob_index, num_actions, arg
                 if WANDB_USE:
                     wandb.log({"val_accuracy": val_acc})
 
-            if step % 10 == 0:
+            if step % 10000 == 0:
                 torch.save(model.state_dict(), f"model_{epoch}.pt")
             if step % 10000 == 0 :
                 eval_buffer.save(f"eval_samples_{FILENAME}_step_{step}.json")
                 eval_buffer.clear()
 
-            state, next_info = env.reset(options={"prob_index": prob_index, "adaptation": True, "subprob_index": epoch})
+            state, next_info = env.reset(options={"prob_index": prob_index, "adaptation": True, "subprob_index": 0})
 
     return model, sampling_model if use_offpolicy else None, env
 
@@ -566,6 +566,45 @@ def compute_importance_weights(current_log_probs, old_log_probs, batch_size):
     final_ratios = torch.mean(torch.stack(ratios))
 
     return torch.clamp(final_ratios, 0.8, 1.2)
+
+def save_gflownet_trajectories(num_trajectories, save_path, args):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model, _, env = train(
+        num_epochs=3, batch_size=1, device=device, 
+        env_mode=args.env_mode, prob_index=args.prob_index, 
+        num_actions=args.num_actions, args=args, use_offpolicy=False
+    )
+    trajectories = []
+    for _ in range(num_trajectories):
+        # state, info = env.reset(options={"prob_index": args.prob_index, "adaptation": True, "subprob_index": 0})
+        state, info = env.reset(options={"prob_index": args.prob_index, "adaptation": True})
+        _, log = model.sample_states(state, info, return_log=True, batch_size=1)
+        
+        def serialize_dict(d):
+            """딕셔너리 값을 JSON 직렬화 가능한 형태로 변환"""
+            serialized = {}
+            for key, value in d.items():
+                if isinstance(value, np.ndarray):
+                    serialized[key] = value.tolist()  # numpy 배열 -> 리스트
+                elif isinstance(value, torch.Tensor):
+                    serialized[key] = value.detach().cpu().tolist()  # PyTorch 텐서 -> 리스트
+                elif isinstance(value, dict):
+                    serialized[key] = serialize_dict(value)  # 재귀적으로 처리
+                else:
+                    serialized[key] = value  # 다른 값은 그대로 유지
+            return serialized
+        
+        trajectories.append({
+            "states": [traj.detach().cpu().tolist()[:10][:10] for traj in log.traj],
+            "actions": [a.detach().cpu().tolist() for a in log.actions],
+            "rewards": [r.detach().cpu().tolist() for r in log.rewards],
+            "states_full": [serialize_dict(s) for s in log.tstates]  # 딕셔너리 처리
+        })
+    
+    with open(save_path, 'w') as f:
+        json.dump(trajectories, f)
+    print(f"Saved {num_trajectories} trajectories to {save_path}")
+
 
 def seed_everything(seed):
     torch.manual_seed(seed)
@@ -648,7 +687,7 @@ def save_trajectory_and_rewards(trajectory, rewards, filename='data.json'):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch_size", type=int, default=5)
+    parser.add_argument("--batch_size", type=int, default=1)
     parser.add_argument("--num_epochs", type=int, default=1) 
     parser.add_argument("--env_mode", type=str, default= "entire")
     parser.add_argument("--prob_index", type=int, default=TASKNUM) # prob index는 0~399까지 있음 (o2arc문제 번호에서 -1 해야 함)
@@ -658,6 +697,10 @@ if __name__ == "__main__":
     parser.add_argument("--use_offpolicy", action="store_true", help="Use off-policy learning", default=False)
     parser.add_argument("--sampling_method", type=str, default="prt", choices=["prt", "fixed_ratio", "egreedy"],
                         help="Sampling method to use in replay buffer")
+    
+    parser.add_argument("--save_trajectories", type=str, default=None, help="Path to save GFlowNet trajectories")
+    parser.add_argument("--num_trajectories", type=int, default=100, help="Number of trajectories to save")
+
     args = parser.parse_args()
     
     batch_size = args.batch_size
@@ -667,8 +710,12 @@ if __name__ == "__main__":
     num_actions = args.num_actions
     # ep_len = args.ep_len
 
-    seed_everything(42) # seed 바꿔봄 원래 42
+    seed_everything(48) # seed 바꿔봄 원래 42
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model, env = train(num_epochs, batch_size, device, env_mode, prob_index,num_actions, args, use_offpolicy= args.use_offpolicy)#args.use_offpolicy)
+
+    if args.save_trajectories:
+        save_gflownet_trajectories(args.num_trajectories, args.save_trajectories, args)
+    else : 
+        model, env = train(num_epochs, batch_size, device, env_mode, prob_index,num_actions, args, use_offpolicy= args.use_offpolicy)#args.use_offpolicy)
     # eval(model)
