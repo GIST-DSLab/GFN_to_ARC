@@ -1,0 +1,42 @@
+env:
+  grid_x: 30
+  grid_y: 30
+  num_colors: 10
+  num_actions: 5
+  use_arc: false
+  ent_sel: true
+train:
+  nenvs: 64
+  nsteps: 50
+  ent_coef: 0.01
+  base_lr: 3.0e-05
+  vf_coef: 5
+  aux_coef: 0.5
+  max_grad_norm: 0.5
+  gamma: 0.9
+  lam: 0.95
+  log_interval: 1
+  nminibatches: 80
+  noptepochs: 4
+  cliprange: 0.1
+  save_interval: 0
+  total_timesteps: 102400
+  gpu_num: 1
+  weight_decay: 0.1
+  beta1: 0.9
+  beta2: 0.95
+  cliprew: 10
+  update_actor_after: 10
+  task: 179
+  pretrain_epochs: 10
+  batch_size: 32
+eval:
+  nenvs: 1
+  task: 179
+model:
+  n_layer: 12
+  n_head: 16
+  n_embd: 512
+  embd_pdrop: 0.1
+  resid_pdrop: 0.1
+  attn_pdrop: 0.1
