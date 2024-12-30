@@ -1,6 +1,25 @@
 import torch
 import pdb
 import torch.nn.functional as F
+import numpy as np
+import random
+import wandb
+
+def setup_wandb(project_name: str, entity: str, config: dict, run_name: str = None):
+    """
+    wandb 초기화 설정.
+    Args:
+        project_name (str): 프로젝트 이름.
+        entity (str): 팀 또는 사용자 이름.
+        config (dict): wandb에 저장할 설정값.
+        run_name (str): 실행 이름 (optional).
+    """
+    wandb.init(
+        project=project_name,
+        entity=entity,
+        config=config,
+        name=run_name
+    )
 
 def normalize_probabilities(x):
         return x / x.sum()
@@ -146,3 +165,34 @@ def guided_TB_loss(total_flow, rewards, fwd_probs, back_probs, answer):
     loss = loss.clamp(max=1e+6)
 
     return loss, total_flow, rewards
+
+def seed_everything(seed):
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+
+
+def detect_cycle(traj):
+    visited_states = set()
+    detect_count = 0 
+    for state in traj:
+        state_tuple = tuple(state.cpu().detach().numpy().flatten())  # state를 고유하게 변환하기 위해 tuple로 변환
+        if state_tuple in visited_states:
+            detect_count += 1  # cycle이 발견된 경우
+        visited_states.add(state_tuple)
+    return detect_count  # cycle이 없는 경우
+
+def compute_reward_with_penalty(traj, base_reward, penalty=0.1):
+    """
+    traj: 현재 에피소드의 trajectory (상태들의 리스트)
+    base_reward: 기본 보상
+    penalty: cycle이 감지되었을 때 적용할 페널티 (기본값 0.1)
+    """
+    detect_count = detect_cycle(traj)
+    if detect_count > 0:
+        # print("Cycle detected! Applying penalty.")
+        reward = base_reward - penalty*detect_count
+        if reward < 0:
+            return torch.tensor(0.0, device=reward.device) # 음수 보상은 허용하지 않음
+        return reward # 페널티 적용
+    return base_reward  # cycle이 없으면 기본 보상 유지

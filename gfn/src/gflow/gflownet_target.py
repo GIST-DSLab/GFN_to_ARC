@@ -14,7 +14,7 @@ class GFlowNet(nn.Module):
         # print("Initializing GFlowNet")
 
         if total_flow is None:
-            self.total_flow = nn.Parameter(torch.tensor(0.0))
+            self.total_flow = nn.Parameter(torch.tensor(1.0).to(device))
         else:
             self.total_flow = total_flow # Log Z 
 
@@ -72,13 +72,14 @@ class GFlowNet(nn.Module):
             logits[0] = logits[0] + 1e-20
             
         if sample:
-            # fwd_prob = Geometric(logits=logits[0])
-            fwd_prob = Categorical(logits=logits[0]) # logit으로 했을 때와 prob으로 했을 때의 차이? 
+            fwd_prob = Geometric(probs=logits[0])
+            # fwd_prob = Categorical(logits=logits[0]) # prob으로 해야함
             self.ac = fwd_prob.sample().argmin()
-            # fwd_prob_s = fwd_prob.log_prob(self.ac)[self.ac]
-            fwd_prob_s = fwd_prob.log_prob(self.ac)
+            # self.ac = fwd_prob.sample()
+            fwd_prob_s = fwd_prob.log_prob(self.ac)[self.ac]
+            # fwd_prob_s = fwd_prob.log_prob(self.ac)
         else : 
-            fwd_prob = Geometric(logits=logits[0])
+            fwd_prob = Geometric(probs=logits[0])
             self.ac = action
             fwd_prob_s = fwd_prob.log_prob(self.ac)
 
@@ -90,7 +91,7 @@ class GFlowNet(nn.Module):
     def logit_to_pb(self, logits):
         back_probs = logits
         back_probs_s = Categorical(logits=back_probs).log_prob(self.ac)
-        # back_probs_s = Geometric(probs=back_probs[0]).log_prob(ac)[ac]
+        # back_probs_s = Geometric(probs=back_probs[0]).log_prob(self.ac)[self.ac]
 
         if back_probs_s.dim() == 0:
             back_probs_s = back_probs_s.unsqueeze(0)
@@ -133,7 +134,7 @@ class GFlowNet(nn.Module):
                 self.mask = torch.zeros((30, 30), dtype=torch.bool).to(self.device)
                 self.mask[:h, :w] = True  # 단일 배치에 대해 mask 설정
 
-        log = Log(s, self.backward_policy, self.total_flow, self.env, emb_s=None, num_actions = self.num_actions) if return_log else None
+        log = Log(s[:,:3,:3], self.backward_policy, self.total_flow, self.env,tstate=s0, emb_s=None, num_actions = self.num_actions) if return_log else None
         is_done = torch.zeros(batch_size, dtype=torch.bool, device=self.device)
 
         while not is_done.all():
@@ -143,13 +144,13 @@ class GFlowNet(nn.Module):
                 active_mask = (~is_done).unsqueeze(1).unsqueeze(2)
                 probs_s, selection = self.forward_probs(s * active_mask, self.mask.clone() * active_mask, iter)
             
-                prob = Categorical(logits=probs_s)
+                prob = Categorical(probs=probs_s)
                 ac = prob.sample()
                 
                 actions = tuple([selection[i] for i in range(batch_size)] + [ac.cpu().numpy()])
 
             else:
-                probs, selection = self.forward_probs(s, self.mask)
+                probs, selection = self.forward_probs(s, self.mask, sample=True)
                 l = int(probs.shape[1]/2)
 
                 fwd_prob_s = self.logit_to_pf(probs[:,:l])
@@ -169,8 +170,8 @@ class GFlowNet(nn.Module):
             gamma = 0.9
 
             is_done = torch.tensor(dones, device=self.device) 
-            rewards = torch.tensor(rewards * (gamma**iter) , dtype=torch.float, device=self.device) #* 10 # discount factor 적용
-            # rewards = torch.tensor(rewards, dtype=torch.float, device=self.device)  # discount factor 적용 
+            # rewards = torch.tensor(rewards * (gamma**iter) , dtype=torch.float, device=self.device)  # discount factor 적용
+            rewards = torch.tensor(rewards, dtype=torch.float, device=self.device)  # discount factor 적용 안함
 
  
 
@@ -189,7 +190,7 @@ class GFlowNet(nn.Module):
                         self.mask[i, sel[0], sel[1]] = True
 
             if return_log:
-                log.log(s=s.clone(), probs=fwd_prob_s,back_probs= back_probs_s, actions=self.ac, rewards=rewards, done=is_done)
+                log.log(s=s.clone(), probs=fwd_prob_s,back_probs= back_probs_s, actions=self.ac, tstate=states, rewards=rewards, done=is_done)
 
             if (iter >= self.max_length) or is_done.all() :
                 

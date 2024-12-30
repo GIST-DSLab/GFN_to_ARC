@@ -311,6 +311,6 @@ class DiagonalARCEnv(O2ARCv2Env):
                 return 1
         else : 
             if np.all(state['grid'][0:h, 0:w] == self.answer):
-                return 10
+                return 10 
             else : 
-                return 1 
+                return 0
