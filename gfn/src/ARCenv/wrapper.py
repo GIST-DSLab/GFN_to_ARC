@@ -33,29 +33,6 @@ class PointWrapper(gym.ActionWrapper):
         if hasattr(self.env, 'set_batch_size'):
             self.env.set_batch_size(batch_size)
     
-    # def action(self, actions):
-
-    #     if self.batch_size is None or self.batch_size == 1:  # 단일 액션에 대한 처리
-    #         x, y, op = actions
-    #         selection = np.zeros((30, 30), dtype=np.uint8)
-    #         selection[x, y] = 1
-    #         return {'selection': selection, 'operation': op}
-    #     else:  # 배치 액션에 대한 처리
-    #         wrapped_actions = []
-    #         for x, y, op in zip(*actions):
-    #             selection = np.zeros((30, 30), dtype=np.uint8)
-    #             selection[x, y] = 1
-    #             wrapped_actions.append({'selection': selection, 'operation': op})
-    #         return wrapped_actions
-    
-    # def step(self, actions: List[tuple]):
-    #     print(f"PointWrapper step action: {actions}")
-    #     wrapped_action = self.action(actions)
-    #     if self.batch_size is None or self.batch_size == 1:
-    #         return self.env.step(wrapped_action)
-    #     else:
-    #         results = [self.env.step(action) for action in wrapped_action]
-    #         return zip(*results)
 
     def action(self, action):
         x, y, op = action
@@ -64,13 +41,7 @@ class PointWrapper(gym.ActionWrapper):
         return {'selection': selection, 'operation': op}
 
     def step(self, actions):
-        # if self.batch_size is not None:
-        #     for i in range(len(actions)):
-        #         # print(f"PointWrapper step action {i}: {actions[i]}")
 
-        # else:
-        #     # print(f"PointWrapper step action: {actions}")
-        #     pass
         return self.env.step(self.action(actions))
 
     # def reset(self, **kwargs):
@@ -148,10 +119,6 @@ class BBoxWrapper(gym.ActionWrapper):
         return {'selection': selection, 'operation': op}
     
 
-# class O2ARCNoFillEnv(O2ARCv2Env):
-#     def create_operations(self) -> List[Callable[..., Any]]:
-#         ops = super().create_operations()
-#         return ops[0:10] + ops[20:] 
 
 def make_env(render=None, data=None, options=None, batch_size=8, mode='Point'):
     def _init():
@@ -178,7 +145,7 @@ def env_return(render, data, options, batch_size=1, mode='Point', batch=False):
     # 환경 등록
     register(
         id='O2ARCv2Env',
-        entry_point='arcle.envs:O2ARCv2Env',  # 환경 클래스의 경로를 문자열로 지정
+        entry_point='arcle.envs:O2ARCv2Env',  # path of Env class as string
         max_episode_steps=300, 
     )
     

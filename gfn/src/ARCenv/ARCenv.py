@@ -47,8 +47,7 @@ class MiniArcEnv:
         self.Done = False
 
     def step(self, action):
-        pixel = action // self.num_actions  # action도 한 가지 값으로 나와야지 맞음
-        # 이게 0이나 1로 나와야함
+        pixel = action // self.num_actions  # action is sigle int
         is_obj = action % self.num_actions // (len(Direction) + NUM_COLORS)
         row, col = pixel // self.max_rows, pixel % self.max_rows
         if is_obj:

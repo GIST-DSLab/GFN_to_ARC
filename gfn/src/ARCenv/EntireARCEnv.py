@@ -78,7 +78,7 @@ class DiagonalARCEnv(O2ARCv2Env):
         self.current_states = [None] * batch_size
         self.last_action_ops = [None] * batch_size
         self.last_actions = [None] * batch_size
-        self.action_steps = 0 # 이걸하는게 맞는지 봐야함 
+        self.action_steps = 0 
         self.submit_counts = 0
         self.num_envs = batch_size
         print(f"---------------Complete to set batch size {batch_size}-----------------")

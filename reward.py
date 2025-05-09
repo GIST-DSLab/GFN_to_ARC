@@ -37,9 +37,9 @@ def MSE_energy_reward(self, s, pad_terminal):
     # pad_terminal = self.normalize(pad_terminal)
 
     # MSE 
-    r = ((pad_terminal.squeeze() - s.squeeze())**2 + 1e-6) # pad_terminal은 ARC용
+    r = ((pad_terminal.squeeze() - s.squeeze())**2 + 1e-6) # pad_terminal is for ARC
 
-    # inf 값이 있으면 0으로 대체
+    # if inf is detected, set it to 0
     r[torch.isinf(r)] = 0
     # for i in range(len(r)):
     #     for j in range(len(r[0])):
@@ -47,7 +47,7 @@ def MSE_energy_reward(self, s, pad_terminal):
     #             r[i][j] = 0
     mse_reward = 1 / (r.sum() + 1) 
 
-    # 만약 값이 inf 면 적당히 10000으로 대체
+    # if the value is inf, set it to 0
     # if mse_reward == float("inf"):
     #     mse_reward = 10000
 
@@ -55,7 +55,6 @@ def MSE_energy_reward(self, s, pad_terminal):
 
 def pixel_Reward(self, s, pad_terminal):
 
-    # 맞는 픽셀 맞췄을 때 보상
     reward = 0
     for i in range(len(s)):
         for j in range(len(s[0])):
@@ -65,7 +64,6 @@ def pixel_Reward(self, s, pad_terminal):
     return torch.tensor(reward, dtype = torch.float32).to(self.device)
 
 def human_reward(self):
-    #리워드를 지급해야할 때 사람이 직접 입력해서 리워드를 줌
     r = int(input("input reward : "))
     reward = torch.tensor(r, dtype = torch.float32).to(self.device)
 
