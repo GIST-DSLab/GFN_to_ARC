@@ -24,7 +24,7 @@ class Log:
         self.backward_policy = backward_policy
         self.total_flow = total_flow
         self.env = env
-        self._traj = []  # state value
+        self._traj = []  # state values
         self._fwd_probs = []
         self._back_probs = []
         self._actions = []
@@ -44,12 +44,12 @@ class Log:
         if emb_s is not None:
             self._emb_traj.append(emb_s)
 
-    def log(self, s, probs, back_probs, actions,tstate, rewards=None, done=None):
+    def log(self, s, probs, back_probs, actions, tstate, rewards=None, done=None):
         """
         Logs relevant information about each sampling step
 
         Args:
-            s: An NxD matrix containing he current state of complete and
+            s: An NxD matrix containing the current state of complete and
             incomplete samples
 
             probs: An NxA matrix containing the forward probabilities output by the
@@ -77,6 +77,7 @@ class Log:
             self.is_done.append(done)
         # Note: Assuming total_flow and other properties are handled correctly elsewhere
         self._back_probs_computed = False  # Invalidate cached back_probs
+
     @property
     def is_done(self):
         if type(self._is_done) is list:
@@ -87,26 +88,23 @@ class Log:
     def traj(self):
         if type(self._traj) is list:
             pass
-
         return self._traj
 
     @property
     def tstates(self):
         if type(self._tstate) is list:
             pass
-
         return self._tstate
+
     @property
     def fwd_probs(self):
         if type(self._fwd_probs) is list:
             pass
-
         return self._fwd_probs
 
     @property
     def actions(self):
         if type(self._actions) is list:
-            # self._actions = torch.cat(self._actions, dim=1)
             pass
         return self._actions
 
@@ -114,27 +112,22 @@ class Log:
     def back_probs(self):
         if type(self._back_probs) is list:
             pass
-
-        # if not self._back_probs_computed:
-        #     self._compute_back_probs()
-
         return self._back_probs
-    
-    # def _compute_back_probs(self):
 
+    # def _compute_back_probs(self):
     #     """
     #     Computes the backward probabilities for the logged trajectories and actions.
     #     This function is called lazily to ensure that it's computed only once.
     #     """
     #     self._back_probs = []
     #     for t, (traj, action) in enumerate(zip(reversed(self._traj), reversed(self._actions))):
-    #         # action은 1차원 벡터 (0~9)
-    #         # traj는 3차원 텐서 (E_len, 30, 30) 즉 state
-    #         # pb_s는 (1,10)
+    #         # action is a 1D vector (0~9)
+    #         # traj is a 3D tensor (E_len, 30, 30) representing the states
+    #         # pb_s is (1,10)
 
     #         pb_s = self.backward_policy(traj.to("cuda")).unsqueeze(0)
     #         # pb = Categorical(logits=pb_s).log_prob(action)
-    #         pb = Uniform(0, self.num_actions).log_prob(action) # Uniform
+    #         pb = Uniform(0, self.num_actions).log_prob(action)  # Uniform prior
 
     #         if pb.dim() == 0:
     #             pb = pb.unsqueeze(0)

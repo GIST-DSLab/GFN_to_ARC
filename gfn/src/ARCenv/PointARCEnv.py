@@ -57,7 +57,7 @@ class CustomO2ARCEnv(O2ARCv2Env):
         self.current_states = [None] * batch_size
         self.last_action_ops = [None] * batch_size
         self.last_actions = [None] * batch_size
-        self.action_steps = 0 # 이걸하는게 맞는지 봐야함 
+        self.action_steps = 0 
         self.submit_counts = 0
         print(f"---------------Complete to set batch size {batch_size}-----------------")
 
@@ -82,16 +82,16 @@ class CustomO2ARCEnv(O2ARCv2Env):
         33 : resize grid
         34 : submit
 
-        0 : 검정
-        1 : 파랑
-        2 : 빨강
-        3 : 초록
-        4 : 노랑
-        5 : 회색
-        6 : 보라
-        7 : 주황
-        8 : 하늘색
-        9 : 갈색 
+        0 : black
+        1 : blue
+        2 : red
+        3 : green
+        4 : yellow
+        5 : grey
+        6 : purple
+        7 : orange
+        8 : skyblq
+        9 : brown
     ''' 
     
     
@@ -103,7 +103,7 @@ class CustomO2ARCEnv(O2ARCv2Env):
     def reset(self, seed = None, options= None):
         obs, info = super().reset(seed, options)
         self.reset_options = options if options is not None else self.reset_options
-        # 여기서부터
+        
         # rotate_k = np.random.randint(0,4)
         # permute = np.random.permutation(10)
         # f = lambda x: permute[int(x)]
@@ -113,16 +113,17 @@ class CustomO2ARCEnv(O2ARCv2Env):
         # self.input_ = np.copy(np.rot90(ffv(self.input_),k=rotate_k).astype(np.int8))
         # self.answer = np.copy(np.rot90(ffv(self.answer),k=rotate_k).astype(np.int8))
         # self.input = np.copy(obs)
-        #여기까지 빼도됨 (flatten 안쓸거면)
+        
         self.init_state(self.input_.copy(),options)
 
         # if self.batch_size is not None:
-        # # 배치 크기에 맞게 obs와 info를 복제
+        # copy obs and info to match batch size
         #     obs = [obs.copy() for _ in range(self.batch_size)]
         #     info = [info.copy() for _ in range(self.batch_size)]
         #     self.current_states = [self.current_state.copy() for _ in range(self.batch_size)]
 
         return obs, info
+        
     # def reset(self, seed=None, options=None):
     #     if isinstance(options, (list, tuple)):
     #         options = dict(zip(['prob_index', 'adaptation', 'subprob_index'], options))

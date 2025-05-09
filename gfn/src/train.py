@@ -13,7 +13,7 @@ from config import CONFIG
 
 
 def save_gflownet_trajectories(num_trajectories, save_path, args):
-    """GFlowNet의 트래젝토리를 저장."""
+    """Save GFlowNet trajectories to a file."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, _, env = train_model(
         num_epochs=3, batch_size=1, device=device, 
@@ -27,7 +27,7 @@ def save_gflownet_trajectories(num_trajectories, save_path, args):
         _, log = model.sample_states(state, info, return_log=True, batch_size=1)
 
         def serialize_dict(d):
-            """딕셔너리 값을 JSON 직렬화 가능한 형태로 변환."""
+            """Convert dictionary values to JSON-serializable format."""
             if isinstance(d, dict):
                 return {k: serialize_dict(v) for k, v in d.items()}
             if isinstance(d, torch.Tensor):
@@ -49,12 +49,12 @@ def save_gflownet_trajectories(num_trajectories, save_path, args):
 
 
 def initialize_env(env_mode, prob_index, loader):
-    """환경 초기화."""
+    """Initialize ARC environment."""
     return env_return(render=None, data=loader, options=None, batch_size=1, mode=env_mode)
 
 
 def initialize_model(env, num_actions, batch_size, device, args):
-    """모델 및 옵티마 초기화."""
+    """Initialize model and optimizer."""
     forward_policy = EnhancedMLPForwardPolicy(
         input_dim=30, hidden_dim=256, num_actions=num_actions,
         batch_size=batch_size, embedding_dim=16, ep_len=args.ep_len
@@ -73,17 +73,17 @@ def initialize_model(env, num_actions, batch_size, device, args):
 
 
 def update_on_policy(model, optimizer, scheduler, state, info, args):
-    """On-policy 학습 업데이트."""
+    """Perform an on-policy training update."""
     result = model.sample_states(state, info, return_log=True, batch_size=1)
     log = result[1]
 
-    # 손실 계산
+    # Compute loss
     rewards = compute_reward_with_penalty(log.traj, log.rewards[-1])
     loss, _, _ = trajectory_balance_loss(
         log.total_flow, rewards, log.fwd_probs, log.back_probs
     )
 
-    # 모델 업데이트
+    # Model update
     optimizer.zero_grad()
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
@@ -94,9 +94,9 @@ def update_on_policy(model, optimizer, scheduler, state, info, args):
 
 
 def update_off_policy(model, optimizer, scheduler, replay_buffer, batch_size, args):
-    """Off-policy 학습 업데이트."""
+    """Perform an off-policy training update."""
     if len(replay_buffer) < batch_size:
-        return  # 버퍼에 데이터가 부족할 경우 스킵
+        return  # Skip if not enough data in buffer
 
     states, actions, rewards, log_probs, back_probs, trajs = replay_buffer.batch_sample(batch_size)
     loss, _, _ = trajectory_balance_loss(
@@ -111,7 +111,7 @@ def update_off_policy(model, optimizer, scheduler, replay_buffer, batch_size, ar
 
 
 def evaluate_model(model, env, num_samples=100):
-    """모델 평가."""
+    """Evaluate model accuracy."""
     correct = 0
     for _ in range(num_samples):
         eval_state, eval_info = env.reset(options={"adaptation": True})
@@ -123,20 +123,18 @@ def evaluate_model(model, env, num_samples=100):
 
 
 def train_model(num_epochs, batch_size, device, env_mode, prob_index, num_actions, args, use_offpolicy=False):
-    """학습 메인 루프"""
-    # 환경 및 모델 초기화
+    """Main training loop for GFlowNet."""
     loader = ARCLoader()
     env = initialize_env(env_mode, prob_index, loader)
     model, optimizer, scheduler = initialize_model(env, num_actions, batch_size, device, args)
 
     replay_buffer = ReplayBuffer(capacity=CONFIG["REPLAY_BUFFER_CAPACITY"], device=device) if use_offpolicy else None
 
-
     for epoch in range(num_epochs):
         state, info = env.reset(options={"prob_index": prob_index, "adaptation": True})
 
         for step in range(20000):
-            # On-policy 또는 Off-policy 업데이트
+            # Perform on-policy or off-policy update
             if use_offpolicy:
                 result = model.sample_states(state, info, return_log=True, batch_size=1)
                 log = result[1]
@@ -147,7 +145,7 @@ def train_model(num_epochs, batch_size, device, env_mode, prob_index, num_action
             else:
                 log = update_on_policy(model, optimizer, scheduler, state, info, args)
 
-            # wandb 로그 저장
+            # wandb logging
             if CONFIG["WANDB_USE"]:
                 wandb.log({
                     "epoch": epoch,
@@ -156,12 +154,12 @@ def train_model(num_epochs, batch_size, device, env_mode, prob_index, num_action
                     "total_flow": log.total_flow.exp().item(),
                 })
 
-            # 평가
+            # Evaluation
             if step % 1000 == 0:
                 accuracy = evaluate_model(model, env)
                 print(f"Epoch {epoch}, Step {step}, Accuracy: {accuracy:.2%}")
                 if CONFIG["WANDB_USE"]:
                     wandb.log({"accuracy": accuracy})
 
-            # 다음 상태로 전환
+            # Move to next state
             state, info = env.reset(options={"prob_index": prob_index})
