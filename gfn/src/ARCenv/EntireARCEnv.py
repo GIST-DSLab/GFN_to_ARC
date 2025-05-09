@@ -123,17 +123,6 @@ class DiagonalARCEnv(O2ARCv2Env):
         33 : resize grid
         34 : submit
 
-        0 : 검정
-        1 : 파랑
-        2 : 빨강
-        3 : 초록
-        4 : 노랑
-        5 : 회색
-        6 : 보라
-        7 : 주황
-        8 : 하늘색
-        9 : 갈색 
-
         '''
         from arcle.actions.object import (
             reset_sel, keep_sel,
