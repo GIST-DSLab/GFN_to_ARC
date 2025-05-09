@@ -10,3 +10,6 @@ wandb/*
 gfn/src/data/*
 <<<<<<< Updated upstream
 gfn/src/0.2.5
+=======
+gfn/src/0.2.5
+>>>>>>> Stashed changes
