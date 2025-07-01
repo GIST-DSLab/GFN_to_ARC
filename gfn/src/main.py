@@ -20,11 +20,12 @@ def parse_arguments():
                         choices=["prt", "fixed_ratio", "egreedy"])
     parser.add_argument("--save_trajectories", type=str, default=None)
     parser.add_argument("--num_trajectories", type=int, default=100)
+    parser.add_argument("--subtask_num", type=int, default=CONFIG["SUBTASKNUM"])
     return parser.parse_args()
 
 def main():
     args = parse_arguments()
-    seed_everything(48)
+    seed_everything(777)
     device = CONFIG["DEVICE"]
     use_offpolicy = CONFIG["USE_OFFPOLICY"]
 
@@ -34,11 +35,11 @@ def main():
             entity="hsh6449",
             config={
                 "num_epochs": args.num_epochs,
-                "batch_size": batch_size,
-                "env_mode": env_mode,
-                "prob_index": prob_index,
-                "num_actions": num_actions,
-                "use_offpolicy": use_offpolicy
+                "batch_size": args.batch_size,
+                "env_mode": args.env_mode,
+                "prob_index": args.prob_index,
+                "num_actions": args.num_actions,
+                "use_offpolicy": args.use_offpolicy
             },
             run_name=CONFIG["FILENAME"]
         )
@@ -46,15 +47,16 @@ def main():
     if args.save_trajectories:
         save_gflownet_trajectories(args.num_trajectories, args.save_trajectories, args)
     else:
-       model, env = train_model(
-        num_epochs=10,
-        batch_size=32,
+       model, _ = train_model(
+        num_epochs= CONFIG["NUM_EPOCHS"],
+        batch_size=CONFIG["BATCH_SIZE"],
         device=device,
-        env_mode="entire",
+        env_mode=CONFIG["ENV_MODE"],
         prob_index=CONFIG["TASKNUM"],
         num_actions=CONFIG["ACTIONNUM"],
         args=args,
-        use_offpolicy=use_offpolicy
+        use_offpolicy=use_offpolicy,
+        sub_task = CONFIG["SUBTASKNUM"]
     )
 if __name__ == "__main__":
     main()

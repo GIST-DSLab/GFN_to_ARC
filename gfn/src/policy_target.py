@@ -20,7 +20,7 @@ def make_mlp(dims):
     return nn.Sequential(*layers)
 
 class EnhancedMLPForwardPolicy(nn.Module):
-    def __init__(self, state_dim, hidden_dim, num_actions, batch_size, embedding_dim = 64, ep_len=3, use_selection=True):
+    def __init__(self, state_dim, hidden_dim, num_actions, batch_size, embedding_dim = 64, ep_len=3, use_selection=False):
         super().__init__()
 
         self.hidden_dim = hidden_dim

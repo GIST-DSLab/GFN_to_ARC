@@ -10,7 +10,7 @@ from gymnasium.vector import AsyncVectorEnv
 from gymnasium import spaces
 from gymnasium.envs.registration import register
 from gymnasium.wrappers import TimeLimit
-from gymnasium.wrappers.flatten_observation import FlattenObservation
+# from gymnasium.wrappers.flatten_observation import FlattenObservation
 from gymnasium.envs.registration import register
 
 import torch

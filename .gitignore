@@ -9,3 +9,15 @@ gfn/wandb/*
 wandb/*
 gfn/src/data/*
 gfn/src/0.2.5
+
+# Python Virtual Environment
+gfn/bin/
+gfn/include/
+gfn/lib/
+gfn/lib64
+gfn/share/
+
+
+# Python cache files
+__pycache__/
+*.pyc
