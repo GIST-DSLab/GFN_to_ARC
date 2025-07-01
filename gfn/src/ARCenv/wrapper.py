@@ -66,6 +66,11 @@ class Entirewrapper(gym.ActionWrapper):
         #     )
         # )
         self.env_mode = 'entire'
+        
+    def set_batch_size(self, batch_size: int):
+        self.batch_size = batch_size
+        if hasattr(self.env, 'set_batch_size'):
+            self.env.set_batch_size(batch_size)
     
     def action(self, action):
         # op = action

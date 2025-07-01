@@ -12,11 +12,12 @@ CONFIG = {
     "DEVICE": get_device(0),  # Set using the `get_device` function above
 
     # Training and environment settings
-    "TASKNUM": 178,  # ARC Task number
+    "TASKNUM": 240,  # ARC Task number
+    "SUBTASKNUM": 2,
     "ACTIONNUM": 5,  # Number of possible actions
     "EP_LEN": 10,  # Episode length
     "ENV_MODE": "entire",  # Environment mode ("entire", "partial")
-    "NUM_EPOCHS": 3,  # Number of training epochs
+    "NUM_EPOCHS": 1,  # Number of training epochs
     "BATCH_SIZE": 1,  # Batch size
 
     # Loss function settings

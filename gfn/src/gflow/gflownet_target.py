@@ -128,7 +128,7 @@ class GFlowNet(nn.Module):
 
             gamma = 0.9
             is_done = torch.tensor(dones, device=self.device)
-            rewards = torch.tensor(rewards, dtype=torch.float, device=self.device)
+            rewards = torch.tensor(rewards, dtype=torch.float, device=self.device) * 15 * (gamma ** iter)
 
             s = torch.where(~is_done, torch.tensor(states['grid'], dtype=torch.float, device=self.device).unsqueeze(0), s)
 

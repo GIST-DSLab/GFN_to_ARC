@@ -143,8 +143,8 @@ class DiagonalARCEnv(O2ARCv2Env):
 
         # # obj ops (8)
         # ops[20:24] = [gen_move(i) for i in range(4)] # [U,D,R,L]
-        # ops[24] = gen_rotate(1) # 반시계 90도 회전, 왼쪽회전
-        # ops[25] = gen_rotate(3) # 반시계 270도 회전, 오른쪽회전
+        # ops[24] = gen_rotate(1) # left rotate
+        # ops[25] = gen_rotate(3) # right rotate
         # ops[26] = gen_flip("H")
         # ops[27] = gen_flip("V")
         
@@ -295,11 +295,11 @@ class DiagonalARCEnv(O2ARCv2Env):
             if np.all(state['grid'][0:h, 0:w] == self.answer):
                 # If terminated by submit action, return 2, else return 1
                 # return 10 if int(self.last_action_ops) == len(self.operations) - 1 else 1
-                return 15
-            else :
-                return 1
+                return 10
+            else:
+                return 0
         else : 
             if np.all(state['grid'][0:h, 0:w] == self.answer):
-                return 10 
+                return 5 
             else : 
                 return 0

@@ -53,8 +53,9 @@ def trajectory_balance_loss(total_flow, rewards, fwd_probs, back_probs, batch_si
         if isinstance(rewards, list):
             rewards = torch.tensor(rewards[-1], device=total_flow.device)
 
-    log_rewards = torch.log(rewards).clip(-10)
-    loss = torch.square(total_flow + fwd_probs - log_rewards - back_probs).clamp(max=1e+6)
+
+    log_rewards = torch.log(rewards).clip(-1)
+    loss = torch.square(total_flow + fwd_probs - log_rewards - back_probs).clamp(max=10000)
     return loss, total_flow, rewards
 
 def detailed_balance_loss(total_flow, rewards, fwd_probs, back_probs, answer):
@@ -128,7 +129,7 @@ def detect_cycle(traj):
         visited_states.add(state_tuple)
     return detect_count
 
-def compute_reward_with_penalty(traj, base_reward, penalty=0.1):
+def compute_reward_with_penalty(traj, base_reward, penalty=1.0):
     """
     Compute reward with penalty applied if cycle is detected.
     
