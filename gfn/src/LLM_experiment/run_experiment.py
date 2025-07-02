@@ -121,7 +121,7 @@ def run_preprocessing(config: Dict, logger, force: bool = False):
     command = "python data_preprocessing.py"
     return run_command(command, "Data Preprocessing", logger)
 
-def run_training(config: Dict, logger, force: bool = False):
+def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False):
     """모델 학습 실행"""
     
     # 이미 학습된 모델이 있는지 확인
@@ -132,9 +132,11 @@ def run_training(config: Dict, logger, force: bool = False):
         return True
     
     command = "python training.py"
+    if gpu_ids:
+        command += f" --gpu_ids {gpu_ids}"
     return run_command(command, "Model Training", logger)
 
-def run_inference(config: Dict, logger, force: bool = False):
+def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False):
     """추론 및 평가 실행"""
     
     # 이미 평가 결과가 있는지 확인
@@ -145,6 +147,8 @@ def run_inference(config: Dict, logger, force: bool = False):
         return True
     
     command = "python inference.py"
+    if gpu_ids:
+        command += f" --gpu_ids {gpu_ids}"
     return run_command(command, "Inference and Evaluation", logger)
 
 def generate_summary_report(config: Dict, logger):
@@ -204,6 +208,7 @@ def generate_summary_report(config: Dict, logger):
 def main():
     parser = argparse.ArgumentParser(description="Run complete LLM experiment for ARC action sequence learning")
     parser.add_argument("--config", default="configs/config.yaml", help="Configuration file path")
+    parser.add_argument("--gpu_ids", nargs='+', type=int, default=None, help="Specific GPU IDs to use (e.g., --gpu_ids 6 7)")
     parser.add_argument("--skip-preprocessing", action="store_true", help="Skip data preprocessing step")
     parser.add_argument("--skip-training", action="store_true", help="Skip model training step")
     parser.add_argument("--skip-inference", action="store_true", help="Skip inference and evaluation step")
@@ -252,9 +257,12 @@ def main():
             logger.info("Preprocessing completed. Exiting as requested.")
             return 0
         
+        # GPU IDs 문자열 변환
+        gpu_ids_str = " ".join(map(str, args.gpu_ids)) if args.gpu_ids else None
+        
         # 학습 단계
         if success and not args.skip_training and (not args.preprocessing_only and not args.inference_only):
-            if not run_training(config, logger, args.force_training):
+            if not run_training(config, logger, gpu_ids_str, args.force_training):
                 success = False
                 logger.error("Training failed")
                 
@@ -264,7 +272,7 @@ def main():
         
         # 추론 및 평가 단계
         if success and not args.skip_inference and not args.preprocessing_only:
-            if not run_inference(config, logger, args.force_inference):
+            if not run_inference(config, logger, gpu_ids_str, args.force_inference):
                 success = False
                 logger.error("Inference failed")
         
