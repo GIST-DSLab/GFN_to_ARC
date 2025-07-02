@@ -48,6 +48,63 @@ def save_gflownet_trajectories(num_trajectories, save_path, args):
     print(f"Saved {num_trajectories} trajectories to {save_path}")
 
 
+def save_gflownet_trajectories_batch(model, env, num_trajectories, save_path_prefix, prob_index, subtask_num=0, batch_size=1000):
+    """Save GFlowNet trajectories in batches to manage memory."""
+    import os
+    os.makedirs(os.path.dirname(save_path_prefix), exist_ok=True)
+    
+    def serialize_dict(d):
+        """Convert dictionary values to JSON-serializable format."""
+        if isinstance(d, dict):
+            return {k: serialize_dict(v) for k, v in d.items()}
+        if isinstance(d, torch.Tensor):
+            return d.cpu().tolist()
+        if isinstance(d, np.ndarray):
+            return d.tolist()
+        return d
+    
+    total_saved = 0
+    batch_idx = 0
+    
+    while total_saved < num_trajectories:
+        current_batch_size = min(batch_size, num_trajectories - total_saved)
+        trajectories = []
+        
+        for i in range(current_batch_size):
+            state, info = env.reset(options={
+                "prob_index": prob_index, 
+                "adaptation": True, 
+                "subprob_index": subtask_num
+            })
+            _, log = model.sample_states(state, info, return_log=True, batch_size=1)
+            
+            trajectory = {
+                "trajectory_id": total_saved + i,
+                "problem_id": prob_index,
+                "states": [serialize_dict(t[:5, :5]) for t in log.traj],
+                "actions": [a.cpu().tolist() for a in log.actions],
+                "rewards": [r.cpu().tolist() for r in log.rewards],
+                "states_full": [serialize_dict(s) for s in log.tstates],
+            }
+            trajectories.append(trajectory)
+        
+        # Save batch
+        batch_file = f"{save_path_prefix}_batch_{batch_idx}.json"
+        with open(batch_file, 'w') as f:
+            json.dump(trajectories, f)
+        
+        total_saved += current_batch_size
+        batch_idx += 1
+        
+        print(f"Saved batch {batch_idx}: {current_batch_size} trajectories (Total: {total_saved}/{num_trajectories})")
+        
+        # Clear memory
+        if total_saved % 5000 == 0:
+            torch.cuda.empty_cache()
+    
+    return total_saved
+
+
 def initialize_env(env_mode, prob_index, loader):  
     """Initialize ARC environment."""
     return env_return(render=None, data=loader, options=None, batch_size=1, mode=env_mode)

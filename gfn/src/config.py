@@ -13,7 +13,7 @@ CONFIG = {
 
     # Training and environment settings
     "TASKNUM": 240,  # ARC Task number
-    "SUBTASKNUM": 2,
+    "SUBTASKNUM": 0,
     "ACTIONNUM": 5,  # Number of possible actions
     "EP_LEN": 10,  # Episode length
     "ENV_MODE": "entire",  # Environment mode ("entire", "partial")
