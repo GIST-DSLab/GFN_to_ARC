@@ -6,11 +6,14 @@
 import os
 import json
 import torch
+import torch.multiprocessing as mp
+from torch.nn.parallel import DataParallel
 import numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from typing import List, Dict, Tuple, Any
 import sys
 import copy
+import argparse
 
 # 현재 디렉토리의 상위 디렉토리들을 path에 추가
 sys.path.append('/home/ubuntu/GFN_to_ARC/gfn/src')
@@ -83,19 +86,26 @@ class ARCActionExecutor:
 class ARCInferenceEvaluator:
     """ARC 추론 및 평가기"""
     
-    def __init__(self, config: Dict, model_path: str):
+    def __init__(self, config: Dict, model_path: str, gpu_ids: List[int] = None):
         self.config = config
+        self.gpu_ids = gpu_ids
         self.logger = logging.getLogger(__name__)
         
         # 디바이스 설정
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        
-        # GPU 개수 확인
         if torch.cuda.is_available():
             self.num_gpus = torch.cuda.device_count()
             self.logger.info(f"Available GPUs: {self.num_gpus}")
+            
+            if gpu_ids:
+                # 특정 GPU 사용
+                self.device = torch.device(f"cuda:{gpu_ids[0]}")
+                self.logger.info(f"Using specified GPUs: {gpu_ids}")
+            else:
+                self.device = torch.device("cuda")
         else:
             self.num_gpus = 0
+            self.device = torch.device("cpu")
+            self.logger.info("Using CPU")
         
         # 모델과 토크나이저 로드
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -104,14 +114,21 @@ class ARCInferenceEvaluator:
             
         self.model = AutoModelForCausalLM.from_pretrained(
             model_path,
-            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map="auto" if self.num_gpus > 1 else None
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
         )
         
-        # 단일 GPU 사용시 수동으로 디바이스 설정
-        if self.num_gpus == 1:
-            self.model.to(self.device)
-            
+        # GPU 병렬화 설정
+        if torch.cuda.is_available() and self.num_gpus > 1:
+            if gpu_ids and len(gpu_ids) > 1:
+                # 특정 GPU들로 DataParallel
+                self.model = DataParallel(self.model, device_ids=gpu_ids)
+                self.logger.info(f"Using DataParallel on GPUs: {gpu_ids}")
+            elif not gpu_ids:
+                # 모든 GPU 사용
+                self.model = DataParallel(self.model)
+                self.logger.info(f"Using DataParallel on all {self.num_gpus} GPUs")
+        
+        self.model.to(self.device)
         self.model.eval()
         
         # 액션 실행기
@@ -291,9 +308,35 @@ class ARCInferenceEvaluator:
         save_json(results, output_file)
         self.logger.info(f"Results saved to {output_file}")
 
+def parse_args():
+    """명령행 인수 파싱"""
+    parser = argparse.ArgumentParser(description="ARC Action Sequence LLM Inference")
+    parser.add_argument("--gpu_ids", nargs='+', type=int, default=None,
+                       help="Specific GPU IDs to use (e.g., --gpu_ids 0 1 2)")
+    parser.add_argument("--config", type=str, default="configs/config.yaml",
+                       help="Path to config file")
+    parser.add_argument("--model_path", type=str, default=None,
+                       help="Path to trained model (auto-detected if not provided)")
+    parser.add_argument("--download_data", action="store_true",
+                       help="Download re-arc data before inference")
+    return parser.parse_args()
+
 def main():
+    args = parse_args()
+    
+    # 데이터 다운로드 (필요한 경우)
+    if args.download_data:
+        print("Downloading data...")
+        import subprocess
+        result = subprocess.run([sys.executable, "download_data.py"], 
+                              capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Data download failed: {result.stderr}")
+            return
+        print("Data download completed!")
+    
     # 설정 로드
-    config = load_config("configs/config.yaml")
+    config = load_config(args.config)
     
     # 로깅 설정
     log_dir = config.get('results_dir', './results')
@@ -301,16 +344,34 @@ def main():
     log_file = os.path.join(log_dir, "inference.log")
     logger = setup_logging(log_file)
     
+    # GPU 설정 정보 출력
+    if torch.cuda.is_available():
+        num_gpus = torch.cuda.device_count()
+        logger.info(f"Available GPUs: {num_gpus}")
+        for i in range(num_gpus):
+            logger.info(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+        
+        if args.gpu_ids:
+            logger.info(f"Using specific GPUs: {args.gpu_ids}")
+            os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(map(str, args.gpu_ids))
+        else:
+            logger.info("Using all available GPUs")
+    else:
+        logger.info("CUDA not available, using CPU")
+    
     # 모델 경로 확인
-    model_name_safe = config['model_name'].split('/')[-1].replace('.', '_')
-    model_path = os.path.join(config.get('model_save_dir', './models'), f"arc_action_model_{model_name_safe}", "final_model")
+    if args.model_path:
+        model_path = args.model_path
+    else:
+        model_name_safe = config['model_name'].split('/')[-1].replace('.', '_')
+        model_path = os.path.join(config.get('model_save_dir', './models'), f"arc_action_model_{model_name_safe}", "final_model")
     
     if not os.path.exists(model_path):
         logger.error(f"Model not found at {model_path}. Run training first.")
         return
     
     # 평가기 초기화 및 실행
-    evaluator = ARCInferenceEvaluator(config, model_path)
+    evaluator = ARCInferenceEvaluator(config, model_path, gpu_ids=args.gpu_ids)
     
     logger.info("Starting evaluation on ReARC dataset...")
     results = evaluator.evaluate_all_problems()

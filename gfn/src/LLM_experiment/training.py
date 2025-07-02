@@ -7,7 +7,10 @@ import os
 import json
 import torch
 import torch.nn as nn
+import torch.multiprocessing as mp
 from torch.utils.data import Dataset, DataLoader
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed import init_process_group, destroy_process_group
 from transformers import (
     AutoTokenizer, AutoModelForCausalLM, 
     TrainingArguments, Trainer,
@@ -20,6 +23,7 @@ from utils import *
 import logging
 import wandb
 from sklearn.model_selection import train_test_split
+import argparse
 
 class ARCActionDataset(Dataset):
     """ARC Action Sequence 데이터셋"""
@@ -75,18 +79,25 @@ class ARCActionDataset(Dataset):
         }
 
 class ARCActionTrainer:
-    def __init__(self, config: Dict):
+    def __init__(self, config: Dict, rank: int = 0, world_size: int = 1):
         self.config = config
+        self.rank = rank
+        self.world_size = world_size
         self.logger = logging.getLogger(__name__)
         
-        # 디바이스 설정
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.logger.info(f"Using device: {self.device}")
+        # DDP 설정
+        if world_size > 1:
+            self.device = torch.device(f"cuda:{rank}")
+            torch.cuda.set_device(self.device)
+        else:
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
+        self.logger.info(f"Rank {rank}: Using device: {self.device}")
         
         # GPU 개수 확인
         if torch.cuda.is_available():
             self.num_gpus = torch.cuda.device_count()
-            self.logger.info(f"Available GPUs: {self.num_gpus}")
+            self.logger.info(f"Available GPUs: {self.num_gpus}, World size: {world_size}")
         else:
             self.num_gpus = 0
         
@@ -98,11 +109,16 @@ class ARCActionTrainer:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             
         self.model = AutoModelForCausalLM.from_pretrained(
-            config['model_name']
+            config['model_name'],
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
         )
         
-        # 단일 GPU 사용 (멀티 GPU는 일단 비활성화)
+        # 모델을 디바이스로 이동
         self.model.to(self.device)
+        
+        # DDP 래핑 (멀티 GPU인 경우)
+        if world_size > 1:
+            self.model = DDP(self.model, device_ids=[rank])
         
     def load_training_data(self) -> Tuple[List[Dict], List[Dict]]:
         """학습 데이터 로드"""
@@ -270,29 +286,105 @@ class ARCActionTrainer:
         
         return actions
 
-def main():
-    # 설정 로드
-    config = load_config("configs/config.yaml")
+def setup_ddp(rank: int, world_size: int):
+    """DDP 초기화"""
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '12355'
+    init_process_group(backend="nccl", rank=rank, world_size=world_size)
+
+def cleanup_ddp():
+    """DDP 정리"""
+    destroy_process_group()
+
+def train_ddp(rank: int, world_size: int, config: Dict):
+    """DDP 학습 함수"""
+    setup_ddp(rank, world_size)
     
-    # 로깅 설정
-    log_dir = config.get('results_dir', './results')
-    os.makedirs(log_dir, exist_ok=True)
-    log_file = os.path.join(log_dir, "training.log")
-    logger = setup_logging(log_file)
-    
-    # GPU 사용 가능 여부 확인
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    logger.info(f"Using device: {device}")
-    if torch.cuda.is_available():
-        logger.info(f"Available GPUs: {torch.cuda.device_count()}")
-        for i in range(torch.cuda.device_count()):
-            logger.info(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+    # 로깅 설정 (rank 0에서만)
+    if rank == 0:
+        log_dir = config.get('results_dir', './results')
+        os.makedirs(log_dir, exist_ok=True)
+        log_file = os.path.join(log_dir, "training.log")
+        logger = setup_logging(log_file)
+        logger.info(f"Starting DDP training with {world_size} GPUs")
     
     # 트레이너 초기화 및 학습
-    trainer = ARCActionTrainer(config)
+    trainer = ARCActionTrainer(config, rank, world_size)
     trained_model = trainer.train()
     
-    logger.info("Training completed successfully!")
+    if rank == 0:
+        logger.info("DDP Training completed successfully!")
+    
+    cleanup_ddp()
+
+def parse_args():
+    """명령행 인수 파싱"""
+    parser = argparse.ArgumentParser(description="ARC Action Sequence LLM Training")
+    parser.add_argument("--gpus", type=int, default=1, 
+                       help="Number of GPUs to use (default: 1)")
+    parser.add_argument("--gpu_ids", nargs='+', type=int, default=None,
+                       help="Specific GPU IDs to use (e.g., --gpu_ids 0 1 2)")
+    parser.add_argument("--config", type=str, default="configs/config.yaml",
+                       help="Path to config file")
+    parser.add_argument("--download_data", action="store_true",
+                       help="Download re-arc data before training")
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+    
+    # 데이터 다운로드 (필요한 경우)
+    if args.download_data:
+        print("Downloading data...")
+        import subprocess
+        result = subprocess.run([sys.executable, "download_data.py"], 
+                              capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Data download failed: {result.stderr}")
+            return
+        print("Data download completed!")
+    
+    # 설정 로드
+    config = load_config(args.config)
+    
+    # GPU 설정
+    if torch.cuda.is_available():
+        num_gpus = torch.cuda.device_count()
+        print(f"Available GPUs: {num_gpus}")
+        for i in range(num_gpus):
+            print(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+        
+        # 사용할 GPU 개수 결정
+        if args.gpu_ids:
+            # 특정 GPU ID 지정
+            os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(map(str, args.gpu_ids))
+            world_size = len(args.gpu_ids)
+            print(f"Using specific GPUs: {args.gpu_ids}")
+        else:
+            # GPU 개수 지정
+            world_size = min(args.gpus, num_gpus)
+            print(f"Using {world_size} GPUs")
+    else:
+        world_size = 1
+        print("CUDA not available, using CPU")
+    
+    if world_size > 1:
+        # 멀티 GPU 학습
+        print(f"Starting multi-GPU training with {world_size} GPUs")
+        mp.spawn(train_ddp, args=(world_size, config), nprocs=world_size, join=True)
+    else:
+        # 단일 GPU/CPU 학습
+        print("Starting single GPU/CPU training")
+        log_dir = config.get('results_dir', './results')
+        os.makedirs(log_dir, exist_ok=True)
+        log_file = os.path.join(log_dir, "training.log")
+        logger = setup_logging(log_file)
+        
+        trainer = ARCActionTrainer(config)
+        trained_model = trainer.train()
+        
+        logger.info("Training completed successfully!")
 
 if __name__ == "__main__":
+    import sys
     main()
