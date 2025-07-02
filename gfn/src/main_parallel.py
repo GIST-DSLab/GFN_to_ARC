@@ -11,7 +11,7 @@ from gflow.utils import seed_everything, setup_wandb
 from train import train_model, save_gflownet_trajectories_batch
 
 # ARC 문제 리스트
-ARC_PROBLEMS = [178, 52, 86, 128, 139, 149, 154, 240, 379]
+ARC_PROBLEMS = [178, 86, 139]
 
 def parse_arguments():
     """Parse command-line arguments for parallel training."""
@@ -34,12 +34,16 @@ def parse_arguments():
     parser.add_argument("--subtask_num", type=int, default=CONFIG["SUBTASKNUM"])
     parser.add_argument("--output_dir", type=str, default="trajectories_output",
                         help="Directory to save trajectories")
-    parser.add_argument("--num_processes", type=int, default=2,
+    parser.add_argument("--num_processes", type=int, default=3,
                         help="Number of parallel processes")
     parser.add_argument("--checkpoint_interval", type=int, default=1000,
                         help="Save checkpoint every N trajectories")
     parser.add_argument("--gpu_ids", nargs='+', type=int, default=[5, 6],
                         help="List of GPU IDs to use (e.g., --gpu_ids 5 6)")
+    parser.add_argument("--save_models", action="store_true", default=True,
+                        help="Save trained models (default: True)")
+    parser.add_argument("--model_save_dir", type=str, default="models",
+                        help="Directory name for saving models within each problem directory")
     return parser.parse_args()
 
 def train_single_problem(args_dict):
@@ -184,6 +188,51 @@ def train_single_problem(args_dict):
         }, f)
     
     print(f"[Process {process_id}] Completed problem {prob_index}: {len(all_trajectories)} trajectories")
+    
+    # Save trained model (if enabled)
+    if args.save_models:
+        model_dir = os.path.join(problem_dir, args.model_save_dir)
+        os.makedirs(model_dir, exist_ok=True)
+        
+        model_path = os.path.join(model_dir, f"gflownet_problem_{prob_index}.pt")
+        try:
+            # Save model state dict and training info
+            model_checkpoint = {
+                'model_state_dict': model.state_dict(),
+                'problem_id': prob_index,
+                'num_trajectories': len(all_trajectories),
+                'training_args': {
+                    'num_epochs': args.num_epochs,
+                    'batch_size': args.batch_size,
+                    'env_mode': args.env_mode,
+                    'num_actions': args.num_actions,
+                    'ep_len': args.ep_len,
+                    'device': str(device)
+                },
+                'timestamp': datetime.now().isoformat()
+            }
+            
+            torch.save(model_checkpoint, model_path)
+            print(f"[Process {process_id}] ✅ Model saved: {model_path}")
+            
+            # Also save model architecture info
+            model_info_path = os.path.join(model_dir, f"model_info_problem_{prob_index}.json")
+            model_info = {
+                'model_class': model.__class__.__name__,
+                'forward_policy_class': model.forward_policy.__class__.__name__,
+                'model_parameters': sum(p.numel() for p in model.parameters()),
+                'trainable_parameters': sum(p.numel() for p in model.parameters() if p.requires_grad),
+                'model_config': model_checkpoint['training_args']
+            }
+            
+            with open(model_info_path, 'w') as f:
+                json.dump(model_info, f, indent=2)
+            print(f"[Process {process_id}] 📋 Model info saved: {model_info_path}")
+            
+        except Exception as e:
+            print(f"[Process {process_id}] ⚠️  Warning: Failed to save model: {e}")
+    else:
+        print(f"[Process {process_id}] Model saving disabled (--save_models=False)")
     
     # Close wandb run
     wandb.finish()
