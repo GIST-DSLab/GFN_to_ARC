@@ -1,0 +1,29 @@
+# LLM Experiment Requirements
+
+# Core ML libraries
+torch>=2.0.0
+transformers>=4.40.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+accelerate>=0.20.0
+
+# Data processing
+pandas>=2.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Configuration and utilities
+PyYAML>=6.0
+tqdm>=4.65.0
+wandb>=0.15.0
+datasets>=2.14.0
+
+# HuggingFace ecosystem
+huggingface_hub>=0.17.0
+tokenizers>=0.13.0
+safetensors>=0.3.0
+
+# ARC environment dependencies (already installed in main project)
+# arcle
+# gymnasium
+# pillow

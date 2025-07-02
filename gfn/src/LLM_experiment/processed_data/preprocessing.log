@@ -1,0 +1,22 @@
+2025-07-03 00:56:18,599 - INFO - Starting trajectory data preprocessing...
+2025-07-03 00:56:18,599 - WARNING - Trajectory file not found: ../trajectories_output/problem_52/trajectories_0_1000.json
+2025-07-03 00:56:18,599 - INFO - Processing problem 86
+2025-07-03 00:56:24,429 - INFO - Loaded 1000 trajectories from ../trajectories_output/problem_86/trajectories_0_1000.json
+2025-07-03 00:56:24,505 - INFO - Successfully processed 1000/1000 trajectories for problem 86
+2025-07-03 00:56:24,571 - WARNING - Trajectory file not found: ../trajectories_output/problem_128/trajectories_0_1000.json
+2025-07-03 00:56:24,571 - INFO - Processing problem 139
+2025-07-03 00:56:30,450 - INFO - Loaded 1000 trajectories from ../trajectories_output/problem_139/trajectories_0_1000.json
+2025-07-03 00:56:30,759 - INFO - Successfully processed 1000/1000 trajectories for problem 139
+2025-07-03 00:56:30,824 - WARNING - Trajectory file not found: ../trajectories_output/problem_149/trajectories_0_1000.json
+2025-07-03 00:56:30,824 - WARNING - Trajectory file not found: ../trajectories_output/problem_154/trajectories_0_1000.json
+2025-07-03 00:56:30,824 - INFO - Processing problem 178
+2025-07-03 00:56:36,552 - INFO - Loaded 1000 trajectories from ../trajectories_output/problem_178/trajectories_0_1000.json
+2025-07-03 00:56:36,852 - INFO - Successfully processed 1000/1000 trajectories for problem 178
+2025-07-03 00:56:36,915 - WARNING - Trajectory file not found: ../trajectories_output/problem_240/trajectories_0_1000.json
+2025-07-03 00:56:36,916 - WARNING - Trajectory file not found: ../trajectories_output/problem_379/trajectories_0_1000.json
+2025-07-03 00:56:36,971 - INFO - Total training samples: 3000
+2025-07-03 00:56:37,240 - INFO - Training samples: 2700, Validation samples: 300
+2025-07-03 00:56:37,240 - INFO - Preprocessing completed successfully!
+2025-07-03 00:56:37,240 - INFO - Total problems processed: 9
+2025-07-03 00:56:37,240 - INFO - Total training samples: 2700
+2025-07-03 00:56:37,240 - INFO - Total validation samples: 300

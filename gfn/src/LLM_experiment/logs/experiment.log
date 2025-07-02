@@ -1,0 +1,193 @@
+2025-07-03 00:56:10,491 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 00:56:10,491 - INFO - Configuration: configs/config.yaml
+2025-07-03 00:56:10,491 - INFO - Model: microsoft/DialoGPT-small
+2025-07-03 00:56:10,491 - INFO - Checking prerequisites...
+2025-07-03 00:56:10,492 - WARNING - Missing trajectory files: ['../trajectories_output/problem_52/trajectories_0_1000.json', '../trajectories_output/problem_128/trajectories_0_1000.json', '../trajectories_output/problem_149/trajectories_0_1000.json', '../trajectories_output/problem_154/trajectories_0_1000.json', '../trajectories_output/problem_240/trajectories_0_1000.json', '../trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-03 00:56:10,492 - WARNING - Some problems will be skipped during processing
+2025-07-03 00:56:13,777 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-03 00:56:13,777 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-03 00:56:13,777 - INFO - NumExpr defaulting to 16 threads.
+2025-07-03 00:56:16,471 - INFO - ✅ All prerequisites checked
+2025-07-03 00:56:16,471 - INFO - Created/verified directory: ./processed_data
+2025-07-03 00:56:16,471 - INFO - Created/verified directory: ./models
+2025-07-03 00:56:16,472 - INFO - Created/verified directory: ./results
+2025-07-03 00:56:16,472 - INFO - Created/verified directory: ./logs
+2025-07-03 00:56:16,472 - INFO - ==================================================
+2025-07-03 00:56:16,472 - INFO - Starting: Data Preprocessing
+2025-07-03 00:56:16,472 - INFO - Command: python data_preprocessing.py
+2025-07-03 00:56:16,472 - INFO - ==================================================
+2025-07-03 00:56:37,685 - INFO - ✅ Completed: Data Preprocessing (21.21s)
+2025-07-03 00:56:37,685 - WARNING - STDERR:\n2025-07-03 00:56:18,599 - INFO - Starting trajectory data preprocessing...
+2025-07-03 00:56:18,599 - WARNING - Trajectory file not found: ../trajectories_output/problem_52/trajectories_0_1000.json
+2025-07-03 00:56:18,599 - INFO - Processing problem 86
+2025-07-03 00:56:24,429 - INFO - Loaded 1000 trajectories from ../trajectories_output/problem_86/trajectories_0_1000.json
+2025-07-03 00:56:24,505 - INFO - Successfully processed 1000/1000 trajectories for problem 86
+2025-07-03 00:56:24,571 - WARNING - Trajectory file not found: ../trajectories_output/problem_128/trajectories_0_1000.json
+2025-07-03 00:56:24,571 - INFO - Processing problem 139
+2025-07-03 00:56:30,450 - INFO - Loaded 1000 trajectories from ../trajectories_output/problem_139/trajectories_0_1000.json
+2025-07-03 00:56:30,759 - INFO - Successfully processed 1000/1000 trajectories for problem 139
+2025-07-03 00:56:30,824 - WARNING - Trajectory file not found: ../trajectories_output/problem_149/trajectories_0_1000.json
+2025-07-03 00:56:30,824 - WARNING - Trajectory file not found: ../trajectories_output/problem_154/trajectories_0_1000.json
+2025-07-03 00:56:30,824 - INFO - Processing problem 178
+2025-07-03 00:56:36,552 - INFO - Loaded 1000 trajectories from ../trajectories_output/problem_178/trajectories_0_1000.json
+2025-07-03 00:56:36,852 - INFO - Successfully processed 1000/1000 trajectories for problem 178
+2025-07-03 00:56:36,915 - WARNING - Trajectory file not found: ../trajectories_output/problem_240/trajectories_0_1000.json
+2025-07-03 00:56:36,916 - WARNING - Trajectory file not found: ../trajectories_output/problem_379/trajectories_0_1000.json
+2025-07-03 00:56:36,971 - INFO - Total training samples: 3000
+2025-07-03 00:56:37,240 - INFO - Training samples: 2700, Validation samples: 300
+2025-07-03 00:56:37,240 - INFO - Preprocessing completed successfully!
+2025-07-03 00:56:37,240 - INFO - Total problems processed: 9
+2025-07-03 00:56:37,240 - INFO - Total training samples: 2700
+2025-07-03 00:56:37,240 - INFO - Total validation samples: 300
+
+2025-07-03 00:56:37,685 - INFO - Preprocessing completed. Exiting as requested.
+2025-07-03 00:56:50,203 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 00:56:50,204 - INFO - Configuration: configs/config.yaml
+2025-07-03 00:56:50,204 - INFO - Model: microsoft/DialoGPT-small
+2025-07-03 00:56:50,204 - INFO - Checking prerequisites...
+2025-07-03 00:56:50,204 - WARNING - Missing trajectory files: ['../trajectories_output/problem_52/trajectories_0_1000.json', '../trajectories_output/problem_128/trajectories_0_1000.json', '../trajectories_output/problem_149/trajectories_0_1000.json', '../trajectories_output/problem_154/trajectories_0_1000.json', '../trajectories_output/problem_240/trajectories_0_1000.json', '../trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-03 00:56:50,204 - WARNING - Some problems will be skipped during processing
+2025-07-03 00:56:51,383 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-03 00:56:51,383 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-03 00:56:51,383 - INFO - NumExpr defaulting to 16 threads.
+2025-07-03 00:56:52,668 - INFO - ✅ All prerequisites checked
+2025-07-03 00:56:52,669 - INFO - Created/verified directory: ./processed_data
+2025-07-03 00:56:52,669 - INFO - Created/verified directory: ./models
+2025-07-03 00:56:52,669 - INFO - Created/verified directory: ./results
+2025-07-03 00:56:52,669 - INFO - Created/verified directory: ./logs
+2025-07-03 00:56:52,669 - INFO - ==================================================
+2025-07-03 00:56:52,669 - INFO - Starting: Model Training
+2025-07-03 00:56:52,669 - INFO - Command: python training.py
+2025-07-03 00:56:52,669 - INFO - ==================================================
+2025-07-03 00:57:39,648 - ERROR - ❌ Failed: Model Training (46.98s)
+2025-07-03 00:57:39,648 - ERROR - Exit code: 1
+2025-07-03 00:57:39,648 - ERROR - STDOUT:\n[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-small[0m at: [34mhttps://wandb.ai/joungju257-gwangju-institute-of-science-and-technology/arc-action-sequence/runs/2rng55kb[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_005729-2rng55kb/logs[0m
+
+2025-07-03 00:57:39,648 - ERROR - STDERR:\n/data/miniforge3/lib/python3.10/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2025-07-03 00:57:09,410 - INFO - Using device: cuda
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+2025-07-03 00:57:17,818 - WARNING - Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+The new embeddings will be initialized from a multivariate normal distribution that has old embeddings' mean and covariance. As described in this article: https://nlp.stanford.edu/~johnhew/vocab-expansion.html. To disable this, use `mean_resizing=False`
+2025-07-03 00:57:28,321 - INFO - Starting model training...
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Currently logged in as: joungju257 (joungju257-gwangju-institute-of-science-and-technology) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.19.9
+wandb: Run data is saved locally in /home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_005729-2rng55kb
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-small
+wandb: ⭐️ View project at https://wandb.ai/joungju257-gwangju-institute-of-science-and-technology/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/joungju257-gwangju-institute-of-science-and-technology/arc-action-sequence/runs/2rng55kb
+2025-07-03 00:57:35,330 - INFO - Loaded 2700 training samples, 300 validation samples
+Traceback (most recent call last):
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 276, in <module>
+    main()
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 271, in main
+    trained_model = trainer.train()
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 186, in train
+    training_args = self.setup_training_arguments()
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 131, in setup_training_arguments
+    training_args = TrainingArguments(
+TypeError: TrainingArguments.__init__() got an unexpected keyword argument 'evaluation_strategy'
+
+2025-07-03 00:57:39,649 - ERROR - Training failed
+2025-07-03 00:57:39,649 - INFO - Training completed. Exiting as requested.
+2025-07-03 00:58:00,963 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 00:58:00,963 - INFO - Configuration: configs/config.yaml
+2025-07-03 00:58:00,963 - INFO - Model: microsoft/DialoGPT-small
+2025-07-03 00:58:00,963 - INFO - Checking prerequisites...
+2025-07-03 00:58:00,963 - WARNING - Missing trajectory files: ['../trajectories_output/problem_52/trajectories_0_1000.json', '../trajectories_output/problem_128/trajectories_0_1000.json', '../trajectories_output/problem_149/trajectories_0_1000.json', '../trajectories_output/problem_154/trajectories_0_1000.json', '../trajectories_output/problem_240/trajectories_0_1000.json', '../trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-03 00:58:00,963 - WARNING - Some problems will be skipped during processing
+2025-07-03 00:58:02,863 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-03 00:58:02,864 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-03 00:58:02,864 - INFO - NumExpr defaulting to 16 threads.
+2025-07-03 00:58:04,632 - INFO - ✅ All prerequisites checked
+2025-07-03 00:58:04,632 - INFO - Created/verified directory: ./processed_data
+2025-07-03 00:58:04,632 - INFO - Created/verified directory: ./models
+2025-07-03 00:58:04,632 - INFO - Created/verified directory: ./results
+2025-07-03 00:58:04,632 - INFO - Created/verified directory: ./logs
+2025-07-03 00:58:04,632 - INFO - ==================================================
+2025-07-03 00:58:04,633 - INFO - Starting: Model Training
+2025-07-03 00:58:04,633 - INFO - Command: python training.py
+2025-07-03 00:58:04,633 - INFO - ==================================================
+2025-07-03 00:58:41,321 - ERROR - ❌ Failed: Model Training (36.69s)
+2025-07-03 00:58:41,321 - ERROR - Exit code: 1
+2025-07-03 00:58:41,321 - ERROR - STDOUT:\n[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-small[0m at: [34mhttps://wandb.ai/joungju257-gwangju-institute-of-science-and-technology/arc-action-sequence/runs/5h6uytbt[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_005822-5h6uytbt/logs[0m
+
+2025-07-03 00:58:41,321 - ERROR - STDERR:\n/data/miniforge3/lib/python3.10/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2025-07-03 00:58:17,532 - INFO - Using device: cuda
+The new embeddings will be initialized from a multivariate normal distribution that has old embeddings' mean and covariance. As described in this article: https://nlp.stanford.edu/~johnhew/vocab-expansion.html. To disable this, use `mean_resizing=False`
+2025-07-03 00:58:21,569 - INFO - Starting model training...
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Currently logged in as: joungju257 (joungju257-gwangju-institute-of-science-and-technology) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: creating run
+wandb: Tracking run with wandb version 0.19.9
+wandb: Run data is saved locally in /home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_005822-5h6uytbt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-small
+wandb: ⭐️ View project at https://wandb.ai/joungju257-gwangju-institute-of-science-and-technology/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/joungju257-gwangju-institute-of-science-and-technology/arc-action-sequence/runs/5h6uytbt
+2025-07-03 00:58:25,321 - INFO - Loaded 2700 training samples, 300 validation samples
+Traceback (most recent call last):
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 276, in <module>
+    main()
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 271, in main
+    trained_model = trainer.train()
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 206, in train
+    trainer.train()
+  File "/data/miniforge3/lib/python3.10/site-packages/transformers/trainer.py", line 2245, in train
+    return inner_training_loop(
+  File "/data/miniforge3/lib/python3.10/site-packages/transformers/trainer.py", line 2330, in _inner_training_loop
+    self.create_optimizer_and_scheduler(num_training_steps=max_steps)
+  File "/data/miniforge3/lib/python3.10/site-packages/transformers/trainer.py", line 1181, in create_optimizer_and_scheduler
+    self.create_optimizer()
+  File "/data/miniforge3/lib/python3.10/site-packages/transformers/trainer.py", line 1246, in create_optimizer
+    self.optimizer = optimizer_cls(optimizer_grouped_parameters, **optimizer_kwargs)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/optim/adamw.py", line 58, in __init__
+    if not 0.0 <= lr:
+TypeError: '<=' not supported between instances of 'float' and 'str'
+
+2025-07-03 00:58:41,321 - ERROR - Training failed
+2025-07-03 00:58:41,321 - INFO - Training completed. Exiting as requested.
+2025-07-03 01:07:07,984 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 01:07:07,985 - INFO - Configuration: configs/config.yaml
+2025-07-03 01:07:07,985 - INFO - Model: microsoft/DialoGPT-small
+2025-07-03 01:07:07,985 - INFO - Checking prerequisites...
+2025-07-03 01:07:07,985 - WARNING - Missing trajectory files: ['../trajectories_output/problem_52/trajectories_0_1000.json', '../trajectories_output/problem_128/trajectories_0_1000.json', '../trajectories_output/problem_149/trajectories_0_1000.json', '../trajectories_output/problem_154/trajectories_0_1000.json', '../trajectories_output/problem_240/trajectories_0_1000.json', '../trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-03 01:07:07,985 - WARNING - Some problems will be skipped during processing
+2025-07-03 01:07:09,531 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-03 01:07:09,532 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-03 01:07:09,532 - INFO - NumExpr defaulting to 16 threads.
+2025-07-03 01:07:11,448 - INFO - ✅ All prerequisites checked
+2025-07-03 01:07:11,448 - INFO - Created/verified directory: ./processed_data
+2025-07-03 01:07:11,448 - INFO - Created/verified directory: ./models
+2025-07-03 01:07:11,448 - INFO - Created/verified directory: ./results
+2025-07-03 01:07:11,448 - INFO - Created/verified directory: ./logs
+2025-07-03 01:07:11,448 - INFO - Evaluation results already exist. Skipping inference.
+2025-07-03 01:07:11,448 - INFO - Use --force-inference to re-evaluate.
+2025-07-03 01:07:11,449 - INFO - \n============================================================
+2025-07-03 01:07:11,449 - INFO - EXPERIMENT SUMMARY REPORT
+2025-07-03 01:07:11,449 - INFO - ============================================================
+2025-07-03 01:07:11,449 - INFO - Model: microsoft/DialoGPT-small
+2025-07-03 01:07:11,449 - INFO - Problems Trained: 9
+2025-07-03 01:07:11,449 - INFO - Overall Accuracy: 0.000
+2025-07-03 01:07:11,449 - INFO - Total Tests: 9
+2025-07-03 01:07:11,449 - INFO - Total Correct: 0
+2025-07-03 01:07:11,449 - INFO - \nProblem Breakdown:
+2025-07-03 01:07:11,449 - INFO -   25ff71a9: 0.000 (0/2)
+2025-07-03 01:07:11,450 - INFO -   5582e5ca: 0.000 (0/1)
+2025-07-03 01:07:11,450 - INFO -   6150a2bd: 0.000 (0/1)
+2025-07-03 01:07:11,450 - INFO -   67a3c6ac: 0.000 (0/1)
+2025-07-03 01:07:11,450 - INFO -   68b16354: 0.000 (0/1)
+2025-07-03 01:07:11,450 - INFO -   74dd1130: 0.000 (0/1)
+2025-07-03 01:07:11,450 - INFO -   9dfd6313: 0.000 (0/1)
+2025-07-03 01:07:11,450 - INFO -   ed36ccf7: 0.000 (0/1)
+2025-07-03 01:07:11,450 - INFO - ============================================================
+2025-07-03 01:07:11,450 - INFO - Summary saved to: ./results/experiment_summary.json
+2025-07-03 01:07:11,450 - INFO - 🎉 Experiment completed successfully! Total time: 3.47s (0.1m)

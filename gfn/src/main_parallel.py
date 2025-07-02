@@ -29,10 +29,10 @@ def parse_arguments():
                         choices=["prt", "fixed_ratio", "egreedy"])
     parser.add_argument("--save_trajectories", action="store_true", 
                         help="Save trajectories for each problem")
-    parser.add_argument("--num_trajectories", type=int, default=10000,
+    parser.add_argument("--num_trajectories", type=int, default=100000,
                         help="Number of trajectories per problem")
     parser.add_argument("--subtask_num", type=int, default=CONFIG["SUBTASKNUM"])
-    parser.add_argument("--output_dir", type=str, default="trajectories_output",
+    parser.add_argument("--output_dir", type=str, default="./LLM_experiment/data/trajectories_output",
                         help="Directory to save trajectories")
     parser.add_argument("--num_processes", type=int, default=3,
                         help="Number of parallel processes")
