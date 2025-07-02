@@ -51,30 +51,30 @@ class GFlowNet(nn.Module):
             return logpf, logpb
 
     def logit_to_pf(self, logits, sample=True, action=None):
-        # Clone logits to avoid in-place operations
-        logits = logits.clone()
+        # Create a completely new tensor to avoid in-place operations
+        logits_processed = logits.detach().clone()
         
-        # Handle NaN values
-        if torch.isnan(logits[0]).any():
+        # Handle NaN values - create new tensor
+        if torch.isnan(logits_processed[0]).any():
             print("Warning: NaN detected in logits, replacing with uniform distribution")
-            logits[0] = torch.ones_like(logits[0]) / logits[0].shape[0]
+            logits_processed = torch.ones_like(logits_processed) / logits_processed[0].shape[0]
         
-        # Handle zero values
-        if 0.0 in logits[0]:
-            logits[0] = logits[0] + 1e-20
+        # Handle zero values - create new tensor
+        if 0.0 in logits_processed[0]:
+            logits_processed = logits_processed + 1e-20
             
-        # Ensure values are in valid range [0, 1]
-        logits[0] = torch.clamp(logits[0], min=1e-20, max=1.0 - 1e-20)
+        # Ensure values are in valid range [0, 1] - create new tensor
+        logits_processed = torch.clamp(logits_processed, min=1e-20, max=1.0 - 1e-20)
         
-        # Normalize to ensure they sum to valid probability
-        logits[0] = logits[0] / logits[0].sum()
+        # Normalize to ensure they sum to valid probability - create new tensor
+        logits_processed = logits_processed / logits_processed[0].sum()
 
         if sample:
-            fwd_prob = Geometric(probs=logits[0])
+            fwd_prob = Geometric(probs=logits_processed[0])
             self.ac = fwd_prob.sample().argmin()
             fwd_prob_s = fwd_prob.log_prob(self.ac)[self.ac]
         else:
-            fwd_prob = Geometric(probs=logits[0])
+            fwd_prob = Geometric(probs=logits_processed[0])
             self.ac = action
             fwd_prob_s = fwd_prob.log_prob(self.ac)
 

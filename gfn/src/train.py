@@ -131,42 +131,49 @@ def initialize_model(env, num_actions, batch_size, device, args):
 
 def update_on_policy(model, optimizer, scheduler, state, info, args):
     """Perform an on-policy training update."""
-    result = model.sample_states(state, info, return_log=True, batch_size=1)
-    log = result[1]
+    try:
+        result = model.sample_states(state, info, return_log=True, batch_size=1)
+        log = result[1]
 
-    # Compute loss
-    rewards = compute_reward_with_penalty(log.traj, log.rewards[-1])
-    loss, _, _ = trajectory_balance_loss(
-        log.total_flow, rewards, log.fwd_probs, log.back_probs
-    )
+        # Compute loss
+        rewards = compute_reward_with_penalty(log.traj, log.rewards[-1])
+        loss, _, _ = trajectory_balance_loss(
+            log.total_flow, rewards, log.fwd_probs, log.back_probs
+        )
 
-    # Model update
-    optimizer.zero_grad()
-    
-    # Check for NaN in loss
-    if torch.isnan(loss):
-        print("Warning: NaN detected in loss, skipping update")
+        # Model update
+        optimizer.zero_grad()
+        
+        # Check for NaN in loss
+        if torch.isnan(loss) or torch.isinf(loss):
+            print("Warning: NaN/Inf detected in loss, skipping update")
+            return log
+        
+        # Use retain_graph=False and create_graph=False for safety
+        loss.backward(retain_graph=False, create_graph=False)
+        
+        # Check for NaN in gradients
+        has_nan_grad = False
+        for param in model.parameters():
+            if param.grad is not None and (torch.isnan(param.grad).any() or torch.isinf(param.grad).any()):
+                has_nan_grad = True
+                break
+        
+        if has_nan_grad:
+            print("Warning: NaN/Inf detected in gradients, skipping update")
+            optimizer.zero_grad()
+            return log
+        
+        # Clip gradients more conservatively
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
+        optimizer.step()
+
         return log
     
-    loss.backward()
-    
-    # Check for NaN in gradients
-    has_nan_grad = False
-    for param in model.parameters():
-        if param.grad is not None and torch.isnan(param.grad).any():
-            has_nan_grad = True
-            break
-    
-    if has_nan_grad:
-        print("Warning: NaN detected in gradients, skipping update")
+    except RuntimeError as e:
+        print(f"RuntimeError in update_on_policy: {e}")
         optimizer.zero_grad()
         return log
-    
-    # Clip gradients more conservatively
-    torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
-    optimizer.step()
-
-    return log
 
 
 def update_off_policy(model, optimizer, scheduler, replay_buffer, batch_size, args):
