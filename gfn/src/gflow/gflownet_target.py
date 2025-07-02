@@ -51,9 +51,23 @@ class GFlowNet(nn.Module):
             return logpf, logpb
 
     def logit_to_pf(self, logits, sample=True, action=None):
+        # Clone logits to avoid in-place operations
+        logits = logits.clone()
+        
+        # Handle NaN values
+        if torch.isnan(logits[0]).any():
+            print("Warning: NaN detected in logits, replacing with uniform distribution")
+            logits[0] = torch.ones_like(logits[0]) / logits[0].shape[0]
+        
+        # Handle zero values
         if 0.0 in logits[0]:
-            logits = logits.clone()
             logits[0] = logits[0] + 1e-20
+            
+        # Ensure values are in valid range [0, 1]
+        logits[0] = torch.clamp(logits[0], min=1e-20, max=1.0 - 1e-20)
+        
+        # Normalize to ensure they sum to valid probability
+        logits[0] = logits[0] / logits[0].sum()
 
         if sample:
             fwd_prob = Geometric(probs=logits[0])
