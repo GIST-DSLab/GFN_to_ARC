@@ -1,0 +1,10 @@
+# Model files and checkpoints
+models/
+wandb/
+logs/
+
+# Temporary files
+*.tmp
+*.log
+__pycache__/
+*.pyc
