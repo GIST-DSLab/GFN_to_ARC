@@ -148,32 +148,51 @@ class TrajectoryProcessor:
         all_training_data = []
         
         for problem_id in self.problem_mapping.keys():
-            trajectory_file = os.path.join(
+            problem_dir = os.path.join(
                 self.config['trajectory_data_dir'],
-                f"problem_{problem_id}",
-                "trajectories_0_1000.json"
+                f"problem_{problem_id}"
             )
             
-            if not os.path.exists(trajectory_file):
-                self.logger.warning(f"Trajectory file not found: {trajectory_file}")
+            if not os.path.exists(problem_dir):
+                self.logger.warning(f"Problem directory not found: {problem_dir}")
                 continue
                 
             self.logger.info(f"Processing problem {problem_id}")
             
-            # trajectory 데이터 로드
-            trajectories = self.load_trajectory_data(trajectory_file)
+            # 해당 문제의 모든 trajectory 파일 찾기
+            trajectory_files = []
+            for file in os.listdir(problem_dir):
+                if file.startswith("trajectories_") and file.endswith(".json"):
+                    trajectory_files.append(os.path.join(problem_dir, file))
             
-            # 각 trajectory 전처리
-            processed_trajectories = []
-            for traj in trajectories:
-                processed = self.preprocess_single_trajectory(traj)
-                if processed:
-                    processed_trajectories.append(processed)
+            if not trajectory_files:
+                self.logger.warning(f"No trajectory files found in {problem_dir}")
+                continue
+                
+            trajectory_files.sort()  # 파일 순서 정렬
+            self.logger.info(f"Found {len(trajectory_files)} trajectory files for problem {problem_id}")
             
-            self.logger.info(f"Successfully processed {len(processed_trajectories)}/{len(trajectories)} trajectories for problem {problem_id}")
+            # 각 trajectory 파일 처리
+            all_processed_trajectories = []
+            total_trajectories_loaded = 0
+            
+            for trajectory_file in trajectory_files:
+                self.logger.info(f"Processing file: {os.path.basename(trajectory_file)}")
+                
+                # trajectory 데이터 로드
+                trajectories = self.load_trajectory_data(trajectory_file)
+                total_trajectories_loaded += len(trajectories)
+                
+                # 각 trajectory 전처리
+                for traj in trajectories:
+                    processed = self.preprocess_single_trajectory(traj)
+                    if processed:
+                        all_processed_trajectories.append(processed)
+            
+            self.logger.info(f"Successfully processed {len(all_processed_trajectories)}/{total_trajectories_loaded} trajectories for problem {problem_id}")
             
             # LLM 학습용 데이터 생성
-            training_data = self.create_llm_training_data(processed_trajectories)
+            training_data = self.create_llm_training_data(all_processed_trajectories)
             all_training_data.extend(training_data)
             
             # 문제별로 중간 저장
