@@ -69,9 +69,21 @@ class EnhancedMLPForwardPolicy(nn.Module):
         
         # Action probabilities
         action_logits = self.action_mlp(features)
-        # print(f"action_logits: {action_logits}")
+        
+        # Check for NaN in action_logits
+        if torch.isnan(action_logits).any():
+            print("Warning: NaN detected in action_logits, replacing with zeros")
+            action_logits = torch.zeros_like(action_logits)
+        
+        # Clamp logits to prevent overflow/underflow
+        action_logits = torch.clamp(action_logits, min=-10, max=10)
+        
         action_probs = F.softmax(action_logits, dim=-1)
-        # print(f"action_logits shape: {action_logits.shape}, requires_grad: {action_logits.requires_grad}")
+        
+        # Additional safety check for softmax output
+        if torch.isnan(action_probs).any():
+            print("Warning: NaN detected in action_probs, replacing with uniform distribution")
+            action_probs = torch.ones_like(action_probs) / action_probs.shape[-1]
         
         if self.use_selection:
             # Selection probabilities

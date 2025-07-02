@@ -141,12 +141,30 @@ def update_on_policy(model, optimizer, scheduler, state, info, args):
     )
 
     # Model update
+    optimizer.zero_grad()
+    
+    # Check for NaN in loss
+    if torch.isnan(loss):
+        print("Warning: NaN detected in loss, skipping update")
+        return log
     
     loss.backward()
-    torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
+    
+    # Check for NaN in gradients
+    has_nan_grad = False
+    for param in model.parameters():
+        if param.grad is not None and torch.isnan(param.grad).any():
+            has_nan_grad = True
+            break
+    
+    if has_nan_grad:
+        print("Warning: NaN detected in gradients, skipping update")
+        optimizer.zero_grad()
+        return log
+    
+    # Clip gradients more conservatively
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
     optimizer.step()
-    # scheduler.step()
-    optimizer.zero_grad()
 
     return log
 
