@@ -44,6 +44,8 @@ def parse_arguments():
 
 def train_single_problem(args_dict):
     """Train GFlowNet on a single ARC problem and save trajectories."""
+    import numpy as np  # Import numpy for serialize_dict function
+    
     prob_index = args_dict['prob_index']
     args = args_dict['args']
     process_id = args_dict['process_id']
