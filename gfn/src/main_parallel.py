@@ -34,10 +34,12 @@ def parse_arguments():
     parser.add_argument("--subtask_num", type=int, default=CONFIG["SUBTASKNUM"])
     parser.add_argument("--output_dir", type=str, default="trajectories_output",
                         help="Directory to save trajectories")
-    parser.add_argument("--num_processes", type=int, default=3,
+    parser.add_argument("--num_processes", type=int, default=2,
                         help="Number of parallel processes")
     parser.add_argument("--checkpoint_interval", type=int, default=1000,
                         help="Save checkpoint every N trajectories")
+    parser.add_argument("--gpu_ids", nargs='+', type=int, default=[5, 6],
+                        help="List of GPU IDs to use (e.g., --gpu_ids 5 6)")
     return parser.parse_args()
 
 def train_single_problem(args_dict):
@@ -45,10 +47,10 @@ def train_single_problem(args_dict):
     prob_index = args_dict['prob_index']
     args = args_dict['args']
     process_id = args_dict['process_id']
+    gpu_id = args_dict['gpu_id']
     
-    # Set device - when CUDA_VISIBLE_DEVICES is set, always use cuda:0
-    # as it maps to the visible device
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # Set specific GPU device
+    device = torch.device(f"cuda:{gpu_id}" if torch.cuda.is_available() else "cpu")
     
     print(f"[Process {process_id}] Starting problem {prob_index} on {device}")
     
@@ -63,6 +65,7 @@ def train_single_problem(args_dict):
         config={
             "problem_id": prob_index,
             "process_id": process_id,
+            "gpu_id": gpu_id,
             "device": str(device),
             "num_epochs": args.num_epochs,
             "batch_size": args.batch_size,
@@ -193,20 +196,35 @@ def main():
     # Create output directory
     os.makedirs(args.output_dir, exist_ok=True)
     
-    # Prepare arguments for each problem
+    # Prepare arguments for each problem with GPU assignment
     problem_args = []
     for i, prob_index in enumerate(args.problems):
+        gpu_id = args.gpu_ids[i % len(args.gpu_ids)]  # Cycle through available GPUs
         problem_args.append({
             'prob_index': prob_index,
             'args': args,
-            'process_id': i
+            'process_id': i,
+            'gpu_id': gpu_id
         })
+    
+    # Update num_processes to match number of available GPUs if not specified
+    if args.num_processes > len(args.gpu_ids):
+        print(f"Warning: num_processes ({args.num_processes}) > available GPUs ({len(args.gpu_ids)})")
+        print(f"Setting num_processes to {len(args.gpu_ids)}")
+        args.num_processes = len(args.gpu_ids)
     
     # Run parallel training
     print(f"Starting parallel training on {len(args.problems)} problems with {args.num_processes} processes")
     print(f"Problems: {args.problems}")
+    print(f"Available GPUs: {args.gpu_ids}")
     print(f"Trajectories per problem: {args.num_trajectories}")
     print(f"Output directory: {args.output_dir}")
+    
+    # Show GPU assignment
+    print("\nGPU Assignment:")
+    for i, prob_index in enumerate(args.problems):
+        gpu_id = args.gpu_ids[i % len(args.gpu_ids)]
+        print(f"  Problem {prob_index} -> GPU {gpu_id}")
     
     start_time = time.time()
     
