@@ -1,0 +1,42 @@
+2025-07-04 05:00:41,124 - INFO - Starting ARC Trajectory Transformer Experiment: arc_transformer_small_20250704_050041
+2025-07-04 05:00:41,124 - INFO - Configuration: small
+2025-07-04 05:00:41,125 - INFO - Experiment directory: ./experiments/arc_transformer_small_20250704_050041
+2025-07-04 05:00:41,125 - INFO - Checking prerequisites...
+2025-07-04 05:00:41,125 - INFO - ✓ Found: data_preprocessing.py
+2025-07-04 05:00:41,125 - INFO - ✓ Found: training.py
+2025-07-04 05:00:41,125 - INFO - ✓ Found: inference.py
+2025-07-04 05:00:41,125 - INFO - ✓ Found: models/arc_transformer.py
+2025-07-04 05:00:41,125 - INFO - ✓ Found: utils/data_utils.py
+2025-07-04 05:00:41,125 - INFO - ✓ Found: configs/arc_config.py
+2025-07-04 05:00:41,125 - INFO - ✓ Found: ../LLM_experiment/data/trajectories_output
+2025-07-04 05:00:41,125 - INFO - ✓ Found: ../LLM_experiment/data/re-arc
+2025-07-04 05:00:41,125 - INFO - === STEP 1: Data Preprocessing ===
+2025-07-04 05:00:41,125 - INFO - ✓ Preprocessed data already exists, skipping preprocessing
+2025-07-04 05:00:41,125 - INFO - Found: ./processed_data/arc_trajectory_data.json
+2025-07-04 05:00:41,125 - INFO - Use --force_preprocessing to rerun preprocessing
+2025-07-04 05:00:41,125 - INFO - === STEP 2: Model Training ===
+2025-07-04 05:00:41,125 - INFO - ✓ Trained model already exists, skipping training
+2025-07-04 05:00:41,125 - INFO - Found: ./models/checkpoint_best.pt
+2025-07-04 05:00:41,126 - INFO - Use --force_training to retrain model
+2025-07-04 05:00:41,140 - INFO - Existing models copied to ./experiments/arc_transformer_small_20250704_050041/models
+2025-07-04 05:00:41,141 - INFO - === STEP 3: Model Inference & Evaluation ===
+2025-07-04 05:00:41,141 - INFO - Starting: Model inference and evaluation
+2025-07-04 05:00:41,141 - INFO - Command: python inference.py --config small --model_path ./experiments/arc_transformer_small_20250704_050041/models/checkpoint_best.pt --output_dir ./experiments/arc_transformer_small_20250704_050041/evaluation
+2025-07-04 05:01:06,495 - INFO - SUCCESS: Model inference and evaluation (took 25.4s)
+2025-07-04 05:01:06,495 - INFO - Output: 
+=== Evaluation Summary ===
+Overall Accuracy: 0.000
+Correct: 0/0
+Results saved to: ./experiments/arc_transformer_small_20250704_050041/evaluation/evaluation_results.json
+
+2025-07-04 05:01:06,495 - INFO - === STEP 4: Generating Experiment Report ===
+2025-07-04 05:01:06,496 - INFO - 
+============================================================
+2025-07-04 05:01:06,496 - INFO - EXPERIMENT COMPLETED: arc_transformer_small_20250704_050041
+2025-07-04 05:01:06,496 - INFO - ============================================================
+2025-07-04 05:01:06,496 - INFO - Overall Accuracy: 0.000
+2025-07-04 05:01:06,496 - INFO - Correct Predictions: 0/0
+2025-07-04 05:01:06,496 - INFO - Problems Evaluated: 7
+2025-07-04 05:01:06,496 - INFO - Experiment Report: ./experiments/arc_transformer_small_20250704_050041/experiment_report.json
+2025-07-04 05:01:06,496 - INFO - ============================================================
+2025-07-04 05:01:06,496 - INFO - Total experiment time: 0.4 minutes

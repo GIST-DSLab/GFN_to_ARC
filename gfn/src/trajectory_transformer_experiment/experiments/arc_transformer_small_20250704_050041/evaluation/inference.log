@@ -1,0 +1,25 @@
+2025-07-04 05:00:53,724 - INFO - Loading model from ./experiments/arc_transformer_small_20250704_050041/models/checkpoint_best.pt
+2025-07-04 05:01:00,191 - INFO - Model loaded successfully
+2025-07-04 05:01:00,192 - INFO - Training epoch: 9
+2025-07-04 05:01:00,192 - INFO - Best validation loss: 1.6615440597136815
+2025-07-04 05:01:00,192 - INFO - Inference engine initialized on cuda
+2025-07-04 05:01:00,192 - INFO - Starting evaluation on problems: [86, 139, 178, 149, 154, 240, 379]
+2025-07-04 05:01:00,241 - INFO - Loaded problem 86 (25ff71a9) with 1000 examples
+2025-07-04 05:01:00,397 - INFO - Loaded problem 139 (6150a2bd) with 1000 examples
+2025-07-04 05:01:00,442 - INFO - Loaded problem 178 (74dd1130) with 1000 examples
+2025-07-04 05:01:00,493 - INFO - Loaded problem 149 (67a3c6ac) with 1000 examples
+2025-07-04 05:01:00,690 - INFO - Loaded problem 154 (68b16354) with 1000 examples
+2025-07-04 05:01:00,757 - INFO - Loaded problem 240 (9dfd6313) with 1000 examples
+2025-07-04 05:01:00,808 - INFO - Loaded problem 379 (ed36ccf7) with 1000 examples
+2025-07-04 05:01:00,813 - INFO - Evaluation completed!
+2025-07-04 05:01:00,813 - INFO - Overall accuracy: 0.000 (0/0)
+2025-07-04 05:01:00,813 - INFO - Results saved to: ./experiments/arc_transformer_small_20250704_050041/evaluation/evaluation_results.json
+2025-07-04 05:01:00,813 - INFO - 
+Per-problem results:
+2025-07-04 05:01:00,813 - INFO -   Problem 86: 0.000 (0/0)
+2025-07-04 05:01:00,813 - INFO -   Problem 139: 0.000 (0/0)
+2025-07-04 05:01:00,813 - INFO -   Problem 178: 0.000 (0/0)
+2025-07-04 05:01:00,813 - INFO -   Problem 149: 0.000 (0/0)
+2025-07-04 05:01:00,813 - INFO -   Problem 154: 0.000 (0/0)
+2025-07-04 05:01:00,813 - INFO -   Problem 240: 0.000 (0/0)
+2025-07-04 05:01:00,814 - INFO -   Problem 379: 0.000 (0/0)

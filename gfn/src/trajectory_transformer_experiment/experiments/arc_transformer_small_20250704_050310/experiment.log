@@ -1,0 +1,13 @@
+2025-07-04 05:03:10,369 - INFO - Starting ARC Trajectory Transformer Experiment: arc_transformer_small_20250704_050310
+2025-07-04 05:03:10,369 - INFO - Configuration: small
+2025-07-04 05:03:10,369 - INFO - Experiment directory: ./experiments/arc_transformer_small_20250704_050310
+2025-07-04 05:03:10,369 - INFO - === STEP 3: Model Inference & Evaluation ===
+2025-07-04 05:03:10,369 - INFO - Starting: Model inference and evaluation
+2025-07-04 05:03:10,370 - INFO - Command: python inference.py --config small --model_path ./models/checkpoint_best.pt --output_dir ./experiments/arc_transformer_small_20250704_050310/evaluation
+2025-07-04 05:03:34,037 - INFO - SUCCESS: Model inference and evaluation (took 23.7s)
+2025-07-04 05:03:34,037 - INFO - Output: 
+=== Evaluation Summary ===
+Overall Accuracy: 0.000
+Correct: 0/21
+Results saved to: ./experiments/arc_transformer_small_20250704_050310/evaluation/evaluation_results.json
+

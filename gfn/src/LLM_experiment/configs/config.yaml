@@ -8,7 +8,7 @@ model_save_dir: "./models"
 results_dir: "./results"
 
 # Training parameters
-model_name: "meta-llama/Llama-3.1-8B-Instruct" # Start with smaller model for testing
+model_name: "microsoft/DialoGPT-medium" # Start with smaller model for testing
 max_length: 1024
 batch_size: 1
 learning_rate: 0.00005

@@ -174,29 +174,24 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False)
         num_gpus = len(gpu_list)
         
         if num_gpus > 1:
-            # 멀티 GPU: mp.spawn 사용
-            logger.info(f"Using DDP with mp.spawn on {num_gpus} GPUs: {gpu_ids}")
+            # 멀티 GPU: torchrun 사용
+            logger.info(f"Using DDP with torchrun on {num_gpus} GPUs: {gpu_ids}")
             os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(gpu_list)
             
-            # mp.spawn을 통한 DDP 학습 직접 실행
-            try:
-                import torch.multiprocessing as mp
-                from training import train_ddp
-                
-                mp.spawn(train_ddp, args=(num_gpus, config), nprocs=num_gpus, join=True)
-                logger.info("✅ DDP training completed successfully!")
-                return True
-            except Exception as e:
-                logger.error(f"❌ DDP training failed: {e}")
-                return False
+            # torchrun을 통한 DDP 학습 (gflow-llm 환경 사용)
+            python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+            command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config configs/config.yaml"
+            return run_command(command, "Model Training", logger, capture_output=False)
         else:
-            # 단일 GPU: 일반 python 사용
+            # 단일 GPU: 일반 python 사용 (gflow-llm 환경)
             logger.info(f"Using single GPU: {gpu_ids}")
-            command = f"python training.py --gpu_ids {gpu_ids} --config configs/config.yaml"
+            python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+            command = f"{python_path} training.py --gpu_ids {gpu_ids} --config configs/config.yaml"
             return run_command(command, "Model Training", logger, capture_output=False)
     else:
-        # GPU 지정 없음: 일반 python 사용
-        command = "python training.py --config configs/config.yaml"
+        # GPU 지정 없음: 일반 python 사용 (gflow-llm 환경)
+        python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+        command = f"{python_path} training.py --config configs/config.yaml"
         return run_command(command, "Model Training", logger, capture_output=False)
 
 def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False):

@@ -1,0 +1,122 @@
+2025-07-04 05:03:21,960 - INFO - Loading model from ./models/checkpoint_best.pt
+2025-07-04 05:03:22,379 - INFO - Model loaded successfully
+2025-07-04 05:03:22,380 - INFO - Training epoch: 9
+2025-07-04 05:03:22,380 - INFO - Best validation loss: 1.6615440597136815
+2025-07-04 05:03:22,380 - INFO - Inference engine initialized on cuda
+2025-07-04 05:03:22,381 - INFO - Starting evaluation on problems: [86, 139, 178, 149, 154, 240, 379]
+2025-07-04 05:03:22,428 - INFO - Loaded problem 86 (25ff71a9) with 1000 examples
+2025-07-04 05:03:22,574 - INFO - Loaded problem 139 (6150a2bd) with 1000 examples
+2025-07-04 05:03:22,618 - INFO - Loaded problem 178 (74dd1130) with 1000 examples
+2025-07-04 05:03:22,666 - INFO - Loaded problem 149 (67a3c6ac) with 1000 examples
+2025-07-04 05:03:22,846 - INFO - Loaded problem 154 (68b16354) with 1000 examples
+2025-07-04 05:03:22,904 - INFO - Loaded problem 240 (9dfd6313) with 1000 examples
+2025-07-04 05:03:22,947 - INFO - Loaded problem 379 (ed36ccf7) with 1000 examples
+2025-07-04 05:03:27,793 - INFO - Problem 86, Test 0: INCORRECT (confidence: 0.160, actions: 0)
+2025-07-04 05:03:27,795 - ERROR - Error evaluating problem 86, test 1: The size of tensor a (128) must match the size of tensor b (233) at non-singleton dimension 3
+2025-07-04 05:03:28,232 - ERROR - Error evaluating problem 86, test 2: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,233 - ERROR - Error evaluating problem 139, test 0: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,233 - ERROR - Error evaluating problem 139, test 1: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,234 - ERROR - Error evaluating problem 139, test 2: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,234 - ERROR - Error evaluating problem 178, test 0: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,234 - ERROR - Error evaluating problem 178, test 1: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,235 - ERROR - Error evaluating problem 178, test 2: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,235 - ERROR - Error evaluating problem 149, test 0: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,235 - ERROR - Error evaluating problem 149, test 1: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,236 - ERROR - Error evaluating problem 149, test 2: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,236 - ERROR - Error evaluating problem 154, test 0: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,236 - ERROR - Error evaluating problem 154, test 1: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,237 - ERROR - Error evaluating problem 154, test 2: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,237 - ERROR - Error evaluating problem 240, test 0: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,237 - ERROR - Error evaluating problem 240, test 1: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,238 - ERROR - Error evaluating problem 240, test 2: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,238 - ERROR - Error evaluating problem 379, test 0: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,238 - ERROR - Error evaluating problem 379, test 1: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,239 - ERROR - Error evaluating problem 379, test 2: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+2025-07-04 05:03:28,240 - INFO - Evaluation completed!
+2025-07-04 05:03:28,240 - INFO - Overall accuracy: 0.000 (0/21)
+2025-07-04 05:03:28,240 - INFO - Results saved to: ./experiments/arc_transformer_small_20250704_050310/evaluation/evaluation_results.json
+2025-07-04 05:03:28,240 - INFO - 
+Per-problem results:
+2025-07-04 05:03:28,240 - INFO -   Problem 86: 0.000 (0/3)
+2025-07-04 05:03:28,240 - INFO -   Problem 139: 0.000 (0/3)
+2025-07-04 05:03:28,240 - INFO -   Problem 178: 0.000 (0/3)
+2025-07-04 05:03:28,240 - INFO -   Problem 149: 0.000 (0/3)
+2025-07-04 05:03:28,240 - INFO -   Problem 154: 0.000 (0/3)
+2025-07-04 05:03:28,240 - INFO -   Problem 240: 0.000 (0/3)
+2025-07-04 05:03:28,240 - INFO -   Problem 379: 0.000 (0/3)

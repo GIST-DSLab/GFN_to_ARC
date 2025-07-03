@@ -4258,3 +4258,313 @@ torch.distributed.DistNetworkError: The server socket has failed to listen on an
 2025-07-04 04:23:35,648 - INFO - Created/verified directory: ./logs
 2025-07-04 04:23:35,649 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
 2025-07-04 04:23:38,884 - INFO - PyTorch version 2.7.1 available.
+2025-07-04 04:35:37,958 - ERROR - ❌ DDP training failed: 
+
+-- Process 1 terminated with the following error:
+Traceback (most recent call last):
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 90, in _wrap
+    fn(i, *args)
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 413, in train_ddp
+    trained_model = trainer.train()
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 327, in train
+    trainer.train()
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/transformers/trainer.py", line 2207, in train
+    return inner_training_loop(
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/transformers/trainer.py", line 2549, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/transformers/trainer.py", line 3750, in training_step
+    loss = self.compute_loss(model, inputs, num_items_in_batch=num_items_in_batch)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/transformers/trainer.py", line 3837, in compute_loss
+    outputs = model(**inputs)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1633, in forward
+    inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1529, in _pre_forward
+    self._sync_buffers()
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 2166, in _sync_buffers
+    self._sync_module_buffers(authoritative_rank)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 2170, in _sync_module_buffers
+    self._default_broadcast_coalesced(authoritative_rank=authoritative_rank)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 2192, in _default_broadcast_coalesced
+    self._distributed_broadcast_coalesced(bufs, bucket_size, authoritative_rank)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 2107, in _distributed_broadcast_coalesced
+    dist._broadcast_coalesced(
+torch.distributed.DistBackendError: [1] is setting up NCCL communicator and retrieving ncclUniqueId from [0] via c10d key-value store by key '1', but store->get('1') got error: wait timeout after 600000ms, keys: /default_pg/0//cuda//1
+Exception raised from doWait at /pytorch/torch/csrc/distributed/c10d/TCPStore.cpp:589 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7f646e7785e8 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5b2100e (0x7f6457e4e00e in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x13638f5 (0x7f64536908f5 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: c10d::TCPStore::doGet(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x33 (0x7f6457ed2fa3 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0xab (0x7f6457ed408b in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: c10d::PrefixStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x2f (0x7f6457e8294f in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #6: c10d::PrefixStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x2f (0x7f6457e8294f in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #7: c10d::PrefixStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x2f (0x7f6457e8294f in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #8: c10d::ProcessGroupNCCL::broadcastUniqueNCCLID(ncclUniqueId*, bool, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int) + 0x16d (0x7f64195c8e7d in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #9: c10d::ProcessGroupNCCL::initNCCLComm(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, c10::Device&, c10d::OpType, int, bool) + 0x16bf (0x7f64195d8f6f in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #10: c10d::ProcessGroupNCCL::broadcast(std::vector<at::Tensor, std::allocator<at::Tensor> >&, c10d::BroadcastOptions const&) + 0x13a8 (0x7f64195e2268 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #11: <unknown function> + 0x5b44b32 (0x7f6457e71b32 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #12: <unknown function> + 0x5b54c11 (0x7f6457e81c11 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #13: <unknown function> + 0x52125b0 (0x7f645753f5b0 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #14: <unknown function> + 0x5b5efb5 (0x7f6457e8bfb5 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #15: <unknown function> + 0x5b6fad0 (0x7f6457e9cad0 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #16: c10d::broadcast_coalesced(c10::intrusive_ptr<c10d::ProcessGroup, c10::detail::intrusive_target_default_null_type<c10d::ProcessGroup> > const&, c10::ArrayRef<at::Tensor>, unsigned long, int) + 0x816 (0x7f6457ef1fa6 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #17: <unknown function> + 0xc4fc20 (0x7f6466da5c20 in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_python.so)
+frame #18: <unknown function> + 0x3896be (0x7f64664df6be in /data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/lib/libtorch_python.so)
+frame #19: <unknown function> + 0x13bc66 (0x55ef2206cc66 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #20: _PyObject_MakeTpCall + 0x2d3 (0x55ef22066023 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #21: _PyEval_EvalFrameDefault + 0x51f6 (0x55ef220622a6 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #22: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #23: _PyEval_EvalFrameDefault + 0x49b5 (0x55ef22061a65 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #24: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #25: _PyEval_EvalFrameDefault + 0x1340 (0x55ef2205e3f0 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #26: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #27: _PyEval_EvalFrameDefault + 0x49b5 (0x55ef22061a65 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #28: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #29: _PyEval_EvalFrameDefault + 0x49b5 (0x55ef22061a65 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #30: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #31: PyObject_Call + 0xbc (0x55ef22078e4c in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #32: _PyEval_EvalFrameDefault + 0x2ba5 (0x55ef2205fc55 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #33: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #34: PyObject_Call + 0xbc (0x55ef22078e4c in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #35: _PyEval_EvalFrameDefault + 0x2ba5 (0x55ef2205fc55 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #36: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #37: PyObject_Call + 0xbc (0x55ef22078e4c in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #38: _PyEval_EvalFrameDefault + 0x2ba5 (0x55ef2205fc55 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #39: _PyFunction_Vectorcall + 0x6c (0x55ef2206d0ec in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #40: _PyObject_FastCallDictTstate + 0x187 (0x55ef22065567 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #41: _PyObject_Call_Prepend + 0x69 (0x55ef22076ab9 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #42: <unknown function> + 0x205949 (0x55ef22136949 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #43: PyObject_Call + 0x20f (0x55ef22078f9f in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #44: _PyEval_EvalFrameDefault + 0x2ba5 (0x55ef2205fc55 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #45: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #46: _PyEval_EvalFrameDefault + 0x1340 (0x55ef2205e3f0 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #47: _PyFunction_Vectorcall + 0x6c (0x55ef2206d0ec in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #48: _PyEval_EvalFrameDefault + 0x700 (0x55ef2205d7b0 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #49: <unknown function> + 0x1474b2 (0x55ef220784b2 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #50: PyObject_Call + 0xbc (0x55ef22078e4c in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #51: <unknown function> + 0x1ff69d (0x55ef2213069d in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #52: _PyObject_MakeTpCall + 0x2d3 (0x55ef22066023 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #53: _PyEval_EvalFrameDefault + 0x1340 (0x55ef2205e3f0 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #54: _PyFunction_Vectorcall + 0x6c (0x55ef2206d0ec in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #55: _PyEval_EvalFrameDefault + 0x700 (0x55ef2205d7b0 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #56: _PyFunction_Vectorcall + 0x6c (0x55ef2206d0ec in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #57: _PyEval_EvalFrameDefault + 0x700 (0x55ef2205d7b0 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #58: _PyFunction_Vectorcall + 0x6c (0x55ef2206d0ec in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #59: _PyEval_EvalFrameDefault + 0x2ba5 (0x55ef2205fc55 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #60: _PyFunction_Vectorcall + 0x6c (0x55ef2206d0ec in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #61: _PyEval_EvalFrameDefault + 0x2ba5 (0x55ef2205fc55 in /data/miniforge3/envs/gflow-llm/bin/python)
+frame #62: _PyFunction_Vectorcall + 0x6c (0x55ef2206d0ec in /data/miniforge3/envs/gflow-llm/bin/python)
+. This may indicate a possible application crash on rank 0 or a network set up issue.
+
+2025-07-04 04:35:37,958 - ERROR - Training failed
+2025-07-04 04:35:37,958 - INFO - Training completed. Exiting as requested.
+2025-07-04 04:42:33,219 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:42:33,219 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:42:33,219 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:42:33,219 - INFO - Checking prerequisites...
+2025-07-04 04:42:33,219 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:42:33,219 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:42:37,333 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:42:37,334 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:42:37,334 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:42:41,706 - INFO - ✅ All prerequisites checked
+2025-07-04 04:42:41,706 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:42:41,706 - INFO - Created/verified directory: ./models
+2025-07-04 04:42:41,706 - INFO - Created/verified directory: ./results
+2025-07-04 04:42:41,706 - INFO - Created/verified directory: ./logs
+2025-07-04 04:42:41,707 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:44:44,203 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:44:44,203 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:44:44,203 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:44:44,203 - INFO - Checking prerequisites...
+2025-07-04 04:44:44,203 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:44:44,203 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:44:45,679 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:44:45,679 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:44:45,679 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:44:47,332 - INFO - ✅ All prerequisites checked
+2025-07-04 04:44:47,332 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:44:47,332 - INFO - Created/verified directory: ./models
+2025-07-04 04:44:47,332 - INFO - Created/verified directory: ./results
+2025-07-04 04:44:47,332 - INFO - Created/verified directory: ./logs
+2025-07-04 04:44:47,332 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:44:51,531 - INFO - PyTorch version 2.6.0 available.
+2025-07-04 04:45:02,134 - ERROR - ❌ DDP training failed: 
+
+-- Process 1 terminated with the following error:
+Traceback (most recent call last):
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 414, in setup_ddp
+    init_process_group(backend="nccl", rank=rank, world_size=world_size, timeout=datetime.timedelta(minutes=30))
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+    return func(*args, **kwargs)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/c10d_logger.py", line 95, in wrapper
+    func_return = func(*args, **kwargs)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py", line 1714, in init_process_group
+    store, rank, world_size = next(rendezvous_iterator)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/rendezvous.py", line 271, in _env_rendezvous_handler
+    master_port = int(_get_env_or_raise("MASTER_PORT"))
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/rendezvous.py", line 248, in _get_env_or_raise
+    raise _env_error(env_var)
+ValueError: Error initializing torch.distributed using env:// rendezvous: environment variable MASTER_PORT expected, but not set
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 90, in _wrap
+    fn(i, *args)
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 426, in train_ddp
+    setup_ddp(rank, world_size)
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 418, in setup_ddp
+    init_process_group(backend="gloo", rank=rank, world_size=world_size)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+    return func(*args, **kwargs)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/c10d_logger.py", line 95, in wrapper
+    func_return = func(*args, **kwargs)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py", line 1714, in init_process_group
+    store, rank, world_size = next(rendezvous_iterator)
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/rendezvous.py", line 271, in _env_rendezvous_handler
+    master_port = int(_get_env_or_raise("MASTER_PORT"))
+  File "/data/miniforge3/lib/python3.10/site-packages/torch/distributed/rendezvous.py", line 248, in _get_env_or_raise
+    raise _env_error(env_var)
+ValueError: Error initializing torch.distributed using env:// rendezvous: environment variable MASTER_PORT expected, but not set
+
+2025-07-04 04:45:02,135 - ERROR - Training failed
+2025-07-04 04:45:02,135 - INFO - Training completed. Exiting as requested.
+2025-07-04 04:45:26,197 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:45:26,197 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:45:26,197 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:45:26,197 - INFO - Checking prerequisites...
+2025-07-04 04:45:26,197 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:45:26,197 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:45:27,356 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:45:27,356 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:45:27,356 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:45:28,648 - INFO - ✅ All prerequisites checked
+2025-07-04 04:45:28,648 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:45:28,648 - INFO - Created/verified directory: ./models
+2025-07-04 04:45:28,648 - INFO - Created/verified directory: ./results
+2025-07-04 04:45:28,648 - INFO - Created/verified directory: ./logs
+2025-07-04 04:45:28,648 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:45:31,162 - INFO - PyTorch version 2.6.0 available.
+2025-07-04 04:50:13,289 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:50:13,289 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:50:13,289 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:50:13,289 - INFO - Checking prerequisites...
+2025-07-04 04:50:13,289 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:50:13,289 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:50:18,706 - INFO - ✅ All prerequisites checked
+2025-07-04 04:50:18,707 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:50:18,707 - INFO - Created/verified directory: ./models
+2025-07-04 04:50:18,707 - INFO - Created/verified directory: ./results
+2025-07-04 04:50:18,707 - INFO - Created/verified directory: ./logs
+2025-07-04 04:50:18,707 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:50:21,974 - INFO - PyTorch version 2.7.1 available.
+2025-07-04 04:52:56,007 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:52:56,007 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:52:56,007 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:52:56,007 - INFO - Checking prerequisites...
+2025-07-04 04:52:56,007 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:52:56,007 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:52:57,706 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:52:57,706 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:52:57,707 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:52:59,535 - INFO - ✅ All prerequisites checked
+2025-07-04 04:52:59,535 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:52:59,535 - INFO - Created/verified directory: ./models
+2025-07-04 04:52:59,535 - INFO - Created/verified directory: ./results
+2025-07-04 04:52:59,535 - INFO - Created/verified directory: ./logs
+2025-07-04 04:52:59,535 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:53:03,825 - INFO - PyTorch version 2.6.0 available.
+2025-07-04 05:01:26,761 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 05:01:26,762 - INFO - Configuration: configs/config.yaml
+2025-07-04 05:01:26,762 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 05:01:26,762 - INFO - Checking prerequisites...
+2025-07-04 05:01:26,762 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 05:01:26,762 - WARNING - Some problems will be skipped during processing
+2025-07-04 05:01:28,323 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 05:01:28,323 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 05:01:28,323 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 05:01:29,983 - INFO - ✅ All prerequisites checked
+2025-07-04 05:01:29,983 - INFO - Created/verified directory: ./processed_data
+2025-07-04 05:01:29,983 - INFO - Created/verified directory: ./models
+2025-07-04 05:01:29,983 - INFO - Created/verified directory: ./results
+2025-07-04 05:01:29,984 - INFO - Created/verified directory: ./logs
+2025-07-04 05:01:29,984 - INFO - Using DDP with torchrun on 2 GPUs: 4 5
+2025-07-04 05:01:29,984 - INFO - ==================================================
+2025-07-04 05:01:29,984 - INFO - Starting: Model Training
+2025-07-04 05:01:29,984 - INFO - Command: python -m torch.distributed.run --nproc-per-node=2 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-04 05:01:29,984 - INFO - ==================================================
+2025-07-04 05:01:29,984 - INFO - 🚀 Running command with live output...
+2025-07-04 05:08:24,904 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 05:08:24,904 - INFO - Configuration: configs/config.yaml
+2025-07-04 05:08:24,904 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 05:08:24,904 - INFO - Checking prerequisites...
+2025-07-04 05:08:24,904 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 05:08:24,905 - WARNING - Some problems will be skipped during processing
+2025-07-04 05:08:30,263 - INFO - ✅ All prerequisites checked
+2025-07-04 05:08:30,264 - INFO - Created/verified directory: ./processed_data
+2025-07-04 05:08:30,264 - INFO - Created/verified directory: ./models
+2025-07-04 05:08:30,264 - INFO - Created/verified directory: ./results
+2025-07-04 05:08:30,264 - INFO - Created/verified directory: ./logs
+2025-07-04 05:08:30,264 - INFO - Using DDP with torchrun on 2 GPUs: 4 5
+2025-07-04 05:08:30,264 - INFO - ==================================================
+2025-07-04 05:08:30,264 - INFO - Starting: Model Training
+2025-07-04 05:08:30,264 - INFO - Command: /data/miniforge3/envs/gflow-llm/bin/python -m torch.distributed.run --nproc-per-node=2 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-04 05:08:30,264 - INFO - ==================================================
+2025-07-04 05:08:30,264 - INFO - 🚀 Running command with live output...
+2025-07-04 05:16:48,792 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 05:16:48,792 - INFO - Configuration: configs/config.yaml
+2025-07-04 05:16:48,792 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-04 05:16:48,792 - INFO - Checking prerequisites...
+2025-07-04 05:16:48,792 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 05:16:48,792 - WARNING - Some problems will be skipped during processing
+2025-07-04 05:16:53,820 - INFO - ✅ All prerequisites checked
+2025-07-04 05:16:53,821 - INFO - Created/verified directory: ./processed_data
+2025-07-04 05:16:53,821 - INFO - Created/verified directory: ./models
+2025-07-04 05:16:53,821 - INFO - Created/verified directory: ./results
+2025-07-04 05:16:53,821 - INFO - Created/verified directory: ./logs
+2025-07-04 05:16:53,821 - INFO - Using DDP with torchrun on 2 GPUs: 2 3
+2025-07-04 05:16:53,821 - INFO - ==================================================
+2025-07-04 05:16:53,821 - INFO - Starting: Model Training
+2025-07-04 05:16:53,821 - INFO - Command: /data/miniforge3/envs/gflow-llm/bin/python -m torch.distributed.run --nproc-per-node=2 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-04 05:16:53,821 - INFO - ==================================================
+2025-07-04 05:16:53,821 - INFO - 🚀 Running command with live output...
+2025-07-04 05:24:33,982 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 05:24:33,982 - INFO - Configuration: configs/config.yaml
+2025-07-04 05:24:33,983 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-04 05:24:33,983 - INFO - Checking prerequisites...
+2025-07-04 05:24:33,983 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 05:24:33,983 - WARNING - Some problems will be skipped during processing
+2025-07-04 05:24:39,336 - INFO - ✅ All prerequisites checked
+2025-07-04 05:24:39,337 - INFO - Created/verified directory: ./processed_data
+2025-07-04 05:24:39,337 - INFO - Created/verified directory: ./models
+2025-07-04 05:24:39,337 - INFO - Created/verified directory: ./results
+2025-07-04 05:24:39,337 - INFO - Created/verified directory: ./logs
+2025-07-04 05:24:39,337 - INFO - Using DDP with torchrun on 2 GPUs: 4 5
+2025-07-04 05:24:39,337 - INFO - ==================================================
+2025-07-04 05:24:39,337 - INFO - Starting: Model Training
+2025-07-04 05:24:39,337 - INFO - Command: /data/miniforge3/envs/gflow-llm/bin/python -m torch.distributed.run --nproc-per-node=2 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-04 05:24:39,337 - INFO - ==================================================
+2025-07-04 05:24:39,337 - INFO - 🚀 Running command with live output...
+2025-07-04 05:25:45,561 - INFO - Experiment interrupted by user
+2025-07-04 05:26:41,474 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 05:26:41,474 - INFO - Configuration: configs/config.yaml
+2025-07-04 05:26:41,475 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-04 05:26:41,475 - INFO - Checking prerequisites...
+2025-07-04 05:26:41,475 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 05:26:41,475 - WARNING - Some problems will be skipped during processing
+2025-07-04 05:26:46,269 - INFO - ✅ All prerequisites checked
+2025-07-04 05:26:46,269 - INFO - Created/verified directory: ./processed_data
+2025-07-04 05:26:46,269 - INFO - Created/verified directory: ./models
+2025-07-04 05:26:46,269 - INFO - Created/verified directory: ./results
+2025-07-04 05:26:46,269 - INFO - Created/verified directory: ./logs
+2025-07-04 05:26:46,269 - INFO - Using DDP with torchrun on 2 GPUs: 3 4
+2025-07-04 05:26:46,269 - INFO - ==================================================
+2025-07-04 05:26:46,269 - INFO - Starting: Model Training
+2025-07-04 05:26:46,270 - INFO - Command: /data/miniforge3/envs/gflow-llm/bin/python -m torch.distributed.run --nproc-per-node=2 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-04 05:26:46,270 - INFO - ==================================================
+2025-07-04 05:26:46,270 - INFO - 🚀 Running command with live output...
+2025-07-04 05:29:18,812 - INFO - Experiment interrupted by user

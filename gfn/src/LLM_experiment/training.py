@@ -11,10 +11,11 @@ os.environ["FLASH_ATTENTION_SKIP_CUDA_BUILD"] = "TRUE"
 
 import torch
 import torch.nn as nn
-import torch.multiprocessing as mp
+# import torch.multiprocessing as mp  # mp.spawn 대신 torchrun 사용
 from torch.utils.data import Dataset, DataLoader
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
+import datetime
 from transformers import (
     AutoTokenizer, AutoModelForCausalLM, 
     TrainingArguments, Trainer,
@@ -376,46 +377,15 @@ class ARCActionTrainer:
         return actions
 
 def setup_ddp(rank: int, world_size: int):
-    """DDP 초기화"""
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '12360'
-    
-    # NCCL 설정 최적화
-    os.environ['NCCL_DEBUG'] = 'WARN'  # 로그 레벨 낮춤
-    os.environ['NCCL_TIMEOUT'] = '3600'  # 1시간 타임아웃
-    os.environ['NCCL_IB_DISABLE'] = '1'
-    os.environ['NCCL_P2P_DISABLE'] = '1'
-    os.environ['NCCL_SOCKET_TIMEOUT'] = '3600'
-    os.environ['TORCH_NCCL_BLOCKING_WAIT'] = '1'
-    os.environ['CUDA_LAUNCH_BLOCKING'] = '1'  # CUDA 동기화
-    
-    # CUDA 백엔드 사용 (GPU용)
-    init_process_group(backend="nccl", rank=rank, world_size=world_size)
+    """torchrun을 통한 DDP 초기화"""
+    print(f"Rank {rank}: Initializing DDP with gloo backend...")
+    # torchrun이 이미 환경변수를 설정해줌 (MASTER_ADDR, MASTER_PORT 등)
+    init_process_group(backend="gloo", timeout=datetime.timedelta(minutes=30))
+    print(f"Rank {rank}: DDP initialized successfully")
 
 def cleanup_ddp():
     """DDP 정리"""
     destroy_process_group()
-
-def train_ddp(rank: int, world_size: int, config: Dict):
-    """DDP 학습 함수"""
-    setup_ddp(rank, world_size)
-    
-    # 로깅 설정 (rank 0에서만)
-    if rank == 0:
-        log_dir = config.get('results_dir', './results')
-        os.makedirs(log_dir, exist_ok=True)
-        log_file = os.path.join(log_dir, "training.log")
-        logger = setup_logging(log_file)
-        logger.info(f"Starting DDP training with {world_size} GPUs")
-    
-    # 트레이너 초기화 및 학습
-    trainer = ARCActionTrainer(config, rank, world_size)
-    trained_model = trainer.train()
-    
-    if rank == 0:
-        logger.info("DDP Training completed successfully!")
-    
-    cleanup_ddp()
 
 def parse_args():
     """명령행 인수 파싱"""
@@ -447,28 +417,64 @@ def main():
     # 설정 로드
     config = load_config(args.config)
     
-    # GPU 설정
-    if torch.cuda.is_available():
-        num_gpus = torch.cuda.device_count()
-        print(f"Available GPUs: {num_gpus}")
-        for i in range(num_gpus):
-            print(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+    # torchrun 사용 여부 확인 (환경변수 RANK, WORLD_SIZE로 판단)
+    if "RANK" in os.environ and "WORLD_SIZE" in os.environ:
+        # torchrun 모드: 각 프로세스에서 개별 실행
+        rank = int(os.environ["RANK"])
+        world_size = int(os.environ["WORLD_SIZE"])
+        local_rank = int(os.environ.get("LOCAL_RANK", rank))
         
-        # 사용할 GPU 개수 결정
-        if args.gpu_ids:
-            # 특정 GPU ID 지정
-            os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(map(str, args.gpu_ids))
-            world_size = len(args.gpu_ids)
-            print(f"Using specific GPUs: {args.gpu_ids}")
-        else:
-            # GPU 개수 지정
-            world_size = min(args.gpus, num_gpus)
-            print(f"Using {world_size} GPUs")
+        print(f"torchrun mode: rank={rank}, world_size={world_size}, local_rank={local_rank}")
+        
+        # DDP 초기화 - gloo 백엔드 사용
+        setup_ddp(rank, world_size)
+        
+        # 로깅 설정 (rank 0에서만)
+        if rank == 0:
+            log_dir = config.get('results_dir', './results')
+            os.makedirs(log_dir, exist_ok=True)
+            log_file = os.path.join(log_dir, "training.log")
+            logger = setup_logging(log_file)
+            logger.info(f"Starting torchrun DDP training with {world_size} GPUs")
+        
+        # 트레이너 초기화 및 학습
+        trainer = ARCActionTrainer(config, rank, world_size)
+        trained_model = trainer.train()
+        
+        if rank == 0:
+            logger.info("torchrun DDP Training completed successfully!")
+        
+        cleanup_ddp()
+        
     else:
-        world_size = 1
-        print("CUDA not available, using CPU")
-    
-    if world_size == 1:
+        # standalone 모드 (torchrun 사용 안함)
+        # GPU 설정
+        if torch.cuda.is_available():
+            num_gpus = torch.cuda.device_count()
+            print(f"Available GPUs: {num_gpus}")
+            for i in range(num_gpus):
+                print(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+            
+            # 사용할 GPU 개수 결정
+            if args.gpu_ids:
+                # 특정 GPU ID 지정
+                os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(map(str, args.gpu_ids))
+                world_size = len(args.gpu_ids)
+                print(f"Using specific GPUs: {args.gpu_ids}")
+            else:
+                # GPU 개수 지정
+                world_size = min(args.gpus, num_gpus)
+                print(f"Using {world_size} GPUs")
+        else:
+            world_size = 1
+            print("CUDA not available, using CPU")
+        
+        # 단일 GPU/CPU 학습만 지원 (멀티 GPU는 torchrun 사용)
+        if world_size > 1:
+            print("For multi-GPU training, please use torchrun:")
+            print(f"python -m torch.distributed.run --nproc-per-node={world_size} --nnodes=1 --standalone training.py --config configs/config.yaml")
+            return
+        
         # 단일 GPU/CPU 학습
         print("Starting single GPU/CPU training")
         log_dir = config.get('results_dir', './results')
@@ -480,10 +486,6 @@ def main():
         trained_model = trainer.train()
         
         logger.info("Training completed successfully!")
-    else:
-        # 멀티 GPU 학습 (DDP)
-        print(f"Starting multi-GPU training with {world_size} GPUs")
-        mp.spawn(train_ddp, args=(world_size, config), nprocs=world_size, join=True)
 
 if __name__ == "__main__":
     import sys
