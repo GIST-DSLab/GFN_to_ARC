@@ -1,36 +1,40 @@
 #!/usr/bin/env python3
 """
-ARC Trajectory Transformer Full Experiment Runner
+ARC Trajectory Transformer Full Experiment Runner (YAML Config Version)
 Complete pipeline: Data preprocessing -> Training -> Inference -> Evaluation
 """
 
 import os
 import sys
 import argparse
-import json
+import yaml
 import subprocess
 import time
 from datetime import datetime
 import logging
-from tqdm import tqdm
+from pathlib import Path
 
 
 class ARCTrajectoryExperiment:
     """Orchestrates the complete trajectory transformer experiment"""
     
-    def __init__(self, config_name: str = "base", experiment_name: str = None):
-        self.config_name = config_name
-        self.experiment_name = experiment_name or f"arc_transformer_{config_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    def __init__(self, config_path: str = "configs/config.yaml", experiment_name: str = None):
+        # Load configuration
+        self.config_path = config_path
+        with open(config_path, 'r') as f:
+            self.config = yaml.safe_load(f)
+        
+        self.experiment_name = experiment_name or f"arc_transformer_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
         # Create experiment directory
-        self.experiment_dir = os.path.join("./experiments", self.experiment_name)
+        self.experiment_dir = os.path.join(self.config['results_dir'], "experiments", self.experiment_name)
         os.makedirs(self.experiment_dir, exist_ok=True)
         
         # Setup logging
         self.setup_logging()
         
         self.logger.info(f"Starting ARC Trajectory Transformer Experiment: {self.experiment_name}")
-        self.logger.info(f"Configuration: {config_name}")
+        self.logger.info(f"Configuration: {config_path}")
         self.logger.info(f"Experiment directory: {self.experiment_dir}")
     
     def setup_logging(self):
@@ -48,9 +52,11 @@ class ARCTrajectoryExperiment:
         self.logger = logging.getLogger(__name__)
     
     def run_command(self, command: str, description: str, capture_output: bool = True) -> bool:
-        """Run a shell command and log the result"""
+        """Run a command and log the results"""
+        self.logger.info(f"{'='*50}")
         self.logger.info(f"Starting: {description}")
         self.logger.info(f"Command: {command}")
+        self.logger.info(f"{'='*50}")
         
         start_time = time.time()
         
@@ -110,292 +116,181 @@ class ARCTrajectoryExperiment:
             "training.py", 
             "inference.py",
             "models/arc_transformer.py",
-            "utils/data_utils.py",
-            "configs/arc_config.py"
+            "utils/data_utils.py"
         ]
         
         required_dirs = [
-            "../LLM_experiment/data/trajectories_output",
-            "../LLM_experiment/data/re-arc"
+            self.config['trajectory_data_dir'],
+            self.config['rearc_data_dir']
         ]
         
         all_good = True
         
         # Check files
-        for file_path in required_files:
-            if not os.path.exists(file_path):
-                self.logger.error(f"Required file not found: {file_path}")
+        for file in required_files:
+            if not os.path.exists(file):
+                self.logger.error(f"Missing required file: {file}")
                 all_good = False
             else:
-                self.logger.info(f"✓ Found: {file_path}")
+                self.logger.info(f"✓ Found: {file}")
         
         # Check directories
         for dir_path in required_dirs:
             if not os.path.exists(dir_path):
-                self.logger.error(f"Required directory not found: {dir_path}")
+                self.logger.error(f"Missing required directory: {dir_path}")
                 all_good = False
             else:
                 self.logger.info(f"✓ Found: {dir_path}")
         
+        # Create output directories
+        for dir_key in ['processed_data_dir', 'model_save_dir', 'results_dir']:
+            dir_path = self.config[dir_key]
+            os.makedirs(dir_path, exist_ok=True)
+            self.logger.info(f"✓ Created/verified: {dir_path}")
+        
+        # Check for trajectory data
+        if os.path.exists(self.config['trajectory_data_dir']):
+            trajectory_dirs = [d for d in os.listdir(self.config['trajectory_data_dir']) 
+                             if d.startswith('problem_')]
+            self.logger.info(f"Found {len(trajectory_dirs)} trajectory directories")
+        
         return all_good
     
-    def run_preprocessing(self, force: bool = False) -> bool:
-        """Run data preprocessing"""
-        self.logger.info("=== STEP 1: Data Preprocessing ===")
+    def run_data_preprocessing(self, skip_if_exists: bool = True) -> bool:
+        """Run data preprocessing step"""
+        processed_file = os.path.join(self.config['processed_data_dir'], "train_trajectories.pt")
         
-        # Check if preprocessed data already exists
-        processed_file = "./processed_data/arc_trajectory_data.json"
-        if os.path.exists(processed_file) and not force:
-            self.logger.info("✓ Preprocessed data already exists, skipping preprocessing")
-            self.logger.info(f"Found: {processed_file}")
-            self.logger.info("Use --force_preprocessing to rerun preprocessing")
+        if skip_if_exists and os.path.exists(processed_file):
+            self.logger.info("Preprocessed data already exists, skipping...")
             return True
         
-        if force:
-            self.logger.info("Force preprocessing requested, running preprocessing...")
-        else:
-            self.logger.info("Preprocessed data not found, running preprocessing...")
-        command = f"python data_preprocessing.py --config_name {self.config_name} --analyze"
-        return self.run_command(command, "Data preprocessing", capture_output=True)
+        command = f"python data_preprocessing.py --config {self.config_path}"
+        return self.run_command(command, "Data Preprocessing")
     
-    def run_training(self, use_wandb: bool = False, force: bool = False) -> bool:
+    def run_training(self, skip_if_exists: bool = True, gpu_id: int = None) -> bool:
         """Run model training"""
-        self.logger.info("=== STEP 2: Model Training ===")
+        model_file = os.path.join(self.config['model_save_dir'], "arc_transformer_best.pt")
         
-        # Check if trained model already exists
-        model_file = "./models/checkpoint_best.pt"
-        if os.path.exists(model_file) and not force:
-            self.logger.info("✓ Trained model already exists, skipping training")
-            self.logger.info(f"Found: {model_file}")
-            self.logger.info("Use --force_training to retrain model")
-            
-            # Still copy to experiment directory
-            experiment_model_dir = os.path.join(self.experiment_dir, "models")
-            os.makedirs(experiment_model_dir, exist_ok=True)
-            if os.path.exists("./models"):
-                copy_cmd = f"cp -r ./models/* {experiment_model_dir}/"
-                subprocess.run(copy_cmd, shell=True)
-                self.logger.info(f"Existing models copied to {experiment_model_dir}")
+        if skip_if_exists and os.path.exists(model_file):
+            self.logger.info("Trained model already exists, skipping...")
             return True
         
-        if force:
-            self.logger.info("Force training requested, starting training...")
-        else:
-            self.logger.info("Trained model not found, starting training...")
+        command = f"python training.py --config {self.config_path}"
+        if gpu_id is not None:
+            command = f"CUDA_VISIBLE_DEVICES={gpu_id} {command}"
         
-        # Update config to use experiment directory
-        experiment_model_dir = os.path.join(self.experiment_dir, "models")
-        experiment_results_dir = os.path.join(self.experiment_dir, "results")
-        
-        command = f"python training.py --config {self.config_name}"
-        if use_wandb:
-            command += " --wandb"
-        
-        # Set environment variables for custom paths
-        env_vars = f"PYTHONPATH={os.getcwd()}:$PYTHONPATH "
-        command = env_vars + command
-        
-        success = self.run_command(command, "Model training", capture_output=False)
-        
-        if success:
-            # Copy trained models to experiment directory
-            os.makedirs(experiment_model_dir, exist_ok=True)
-            if os.path.exists("./models"):
-                copy_cmd = f"cp -r ./models/* {experiment_model_dir}/"
-                subprocess.run(copy_cmd, shell=True)
-                self.logger.info(f"Models copied to {experiment_model_dir}")
-        
-        return success
+        return self.run_command(command, "Model Training", capture_output=False)
     
-    def run_inference(self) -> bool:
-        """Run model inference and evaluation"""
-        self.logger.info("=== STEP 3: Model Inference & Evaluation ===")
+    def run_inference_and_evaluation(self, gpu_id: int = None) -> bool:
+        """Run inference and evaluation"""
+        command = f"python inference.py --config {self.config_path} --output_dir {self.experiment_dir}"
+        if gpu_id is not None:
+            command = f"CUDA_VISIBLE_DEVICES={gpu_id} {command}"
         
-        # Find best model
-        model_dir = os.path.join(self.experiment_dir, "models")
-        if not os.path.exists(model_dir):
-            model_dir = "./models"
-        
-        best_model_path = os.path.join(model_dir, "checkpoint_best.pt")
-        if not os.path.exists(best_model_path):
-            self.logger.warning("Best model not found, using latest checkpoint")
-            best_model_path = os.path.join(model_dir, "checkpoint_latest.pt")
-        
-        if not os.path.exists(best_model_path):
-            self.logger.error("No trained model found!")
-            return False
-        
-        # Run inference
-        output_dir = os.path.join(self.experiment_dir, "evaluation")
-        command = f"python inference.py --config {self.config_name} --model_path {best_model_path} --output_dir {output_dir}"
-        
-        return self.run_command(command, "Model inference and evaluation", capture_output=True)
+        return self.run_command(command, "Inference and Evaluation")
     
-    def generate_experiment_report(self) -> bool:
-        """Generate experiment summary report"""
-        self.logger.info("=== STEP 4: Generating Experiment Report ===")
+    def generate_experiment_report(self):
+        """Generate final experiment report"""
+        report_file = os.path.join(self.experiment_dir, "experiment_report.txt")
         
-        try:
-            report = {
-                "experiment_name": self.experiment_name,
-                "config": self.config_name,
-                "timestamp": datetime.now().isoformat(),
-                "experiment_dir": self.experiment_dir
-            }
+        with open(report_file, 'w') as f:
+            f.write(f"ARC Trajectory Transformer Experiment Report\n")
+            f.write(f"{'='*50}\n")
+            f.write(f"Experiment Name: {self.experiment_name}\n")
+            f.write(f"Configuration: {self.config_path}\n")
+            f.write(f"Timestamp: {datetime.now()}\n")
+            f.write(f"\n")
             
-            # Load training stats if available
-            training_stats_path = os.path.join(self.experiment_dir, "results", "training_stats.json")
-            if os.path.exists(training_stats_path):
-                with open(training_stats_path, 'r') as f:
-                    training_stats = json.load(f)
-                report["training_stats"] = training_stats
-            
-            # Load evaluation results if available
-            eval_results_path = os.path.join(self.experiment_dir, "evaluation", "evaluation_results.json")
-            if os.path.exists(eval_results_path):
-                with open(eval_results_path, 'r') as f:
-                    eval_results = json.load(f)
-                report["evaluation_results"] = eval_results
+            # Check for results
+            results_file = os.path.join(self.experiment_dir, "evaluation_results.json")
+            if os.path.exists(results_file):
+                import json
+                with open(results_file, 'r') as rf:
+                    results = json.load(rf)
                 
-                # Extract key metrics
-                report["summary"] = {
-                    "overall_accuracy": eval_results.get("overall_accuracy", 0.0),
-                    "total_correct": eval_results.get("total_correct", 0),
-                    "total_tests": eval_results.get("total_tests", 0),
-                    "problems_evaluated": len(eval_results.get("problem_results", []))
-                }
-            
-            # Save report
-            report_path = os.path.join(self.experiment_dir, "experiment_report.json")
-            with open(report_path, 'w') as f:
-                json.dump(report, f, indent=2)
-            
-            # Print summary
-            self.logger.info("\n" + "="*60)
-            self.logger.info(f"EXPERIMENT COMPLETED: {self.experiment_name}")
-            self.logger.info("="*60)
-            
-            if "summary" in report:
-                summary = report["summary"]
-                self.logger.info(f"Overall Accuracy: {summary['overall_accuracy']:.3f}")
-                self.logger.info(f"Correct Predictions: {summary['total_correct']}/{summary['total_tests']}")
-                self.logger.info(f"Problems Evaluated: {summary['problems_evaluated']}")
-            
-            if "training_stats" in report:
-                training_stats = report["training_stats"]
-                if training_stats.get("best_val_loss"):
-                    self.logger.info(f"Best Validation Loss: {training_stats['best_val_loss']:.4f}")
-            
-            self.logger.info(f"Experiment Report: {report_path}")
-            self.logger.info("="*60)
-            
-            return True
-            
-        except Exception as e:
-            self.logger.error(f"Failed to generate experiment report: {e}")
-            return False
+                f.write(f"Overall Accuracy: {results.get('overall_accuracy', 'N/A'):.2%}\n")
+                f.write(f"Total Tests: {results.get('total_tests', 'N/A')}\n")
+                f.write(f"Total Correct: {results.get('total_correct', 'N/A')}\n")
+                f.write(f"\n")
+                
+                if 'problem_results' in results:
+                    f.write(f"Problem-wise Results:\n")
+                    for problem_id, problem_data in results['problem_results'].items():
+                        f.write(f"  Problem {problem_id}: {problem_data['accuracy']:.2%} "
+                               f"({problem_data['correct_count']}/{problem_data['total_count']})\n")
+            else:
+                f.write(f"No evaluation results found.\n")
+        
+        self.logger.info(f"Experiment report saved to: {report_file}")
     
-    def run_full_experiment(self, skip_preprocessing: bool = False, 
-                           skip_training: bool = False, 
-                           skip_inference: bool = False,
-                           use_wandb: bool = False,
-                           force_preprocessing: bool = False,
-                           force_training: bool = False) -> bool:
+    def run_full_experiment(self, skip_existing: bool = True, gpu_id: int = None) -> bool:
         """Run the complete experiment pipeline"""
+        self.logger.info("Starting full experiment pipeline...")
         
-        start_time = time.time()
-        
-        # Check prerequisites
+        # Step 1: Check prerequisites
         if not self.check_prerequisites():
-            self.logger.error("Prerequisites check failed. Aborting experiment.")
+            self.logger.error("Prerequisites check failed!")
             return False
         
-        success = True
+        # Step 2: Data preprocessing
+        self.logger.info("\n📊 Step 1/3: Data Preprocessing")
+        if not self.run_data_preprocessing(skip_if_exists=skip_existing):
+            self.logger.error("Data preprocessing failed!")
+            return False
         
-        # Step 1: Data preprocessing
-        if not skip_preprocessing:
-            if not self.run_preprocessing(force=force_preprocessing):
-                self.logger.error("Data preprocessing failed. Aborting experiment.")
-                return False
-        else:
-            self.logger.info("Skipping data preprocessing")
+        # Step 3: Training
+        self.logger.info("\n🎯 Step 2/3: Model Training")
+        if not self.run_training(skip_if_exists=skip_existing, gpu_id=gpu_id):
+            self.logger.error("Model training failed!")
+            return False
         
-        # Step 2: Training
-        if not skip_training:
-            if not self.run_training(use_wandb=use_wandb, force=force_training):
-                self.logger.error("Training failed. Aborting experiment.")
-                return False
-        else:
-            self.logger.info("Skipping training")
+        # Step 4: Inference and Evaluation
+        self.logger.info("\n🔮 Step 3/3: Inference and Evaluation")
+        if not self.run_inference_and_evaluation(gpu_id=gpu_id):
+            self.logger.error("Inference and evaluation failed!")
+            return False
         
-        # Step 3: Inference
-        if not skip_inference:
-            if not self.run_inference():
-                self.logger.error("Inference failed.")
-                success = False
-        else:
-            self.logger.info("Skipping inference")
-        
-        # Step 4: Report generation
+        # Step 5: Generate report
         self.generate_experiment_report()
         
-        # Final summary
-        total_time = time.time() - start_time
-        self.logger.info(f"Total experiment time: {total_time/60:.1f} minutes")
-        
-        return success
+        self.logger.info("\n✅ Experiment completed successfully!")
+        return True
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run ARC Trajectory Transformer Experiment")
-    parser.add_argument("--config", type=str, default="base",
-                       choices=["base", "small"], help="Configuration name")
-    parser.add_argument("--name", type=str, default=None,
-                       help="Experiment name (default: auto-generated)")
-    parser.add_argument("--skip_preprocessing", action="store_true",
-                       help="Skip data preprocessing step")
-    parser.add_argument("--skip_training", action="store_true", 
-                       help="Skip training step")
-    parser.add_argument("--skip_inference", action="store_true",
-                       help="Skip inference step")
-    parser.add_argument("--wandb", action="store_true",
-                       help="Use Weights & Biases for training")
-    parser.add_argument("--preprocessing_only", action="store_true",
-                       help="Only run data preprocessing")
-    parser.add_argument("--training_only", action="store_true",
-                       help="Only run training")
-    parser.add_argument("--inference_only", action="store_true",
-                       help="Only run inference")
-    parser.add_argument("--force_preprocessing", action="store_true",
-                       help="Force rerun data preprocessing even if data exists")
-    parser.add_argument("--force_training", action="store_true",
-                       help="Force retrain model even if trained model exists")
+    parser = argparse.ArgumentParser(description='Run ARC Trajectory Transformer Experiment')
+    parser.add_argument('--config', type=str, default='configs/config.yaml',
+                       help='Configuration file path')
+    parser.add_argument('--experiment_name', type=str, default=None,
+                       help='Experiment name (default: auto-generated)')
+    parser.add_argument('--gpu', type=int, default=None,
+                       help='GPU ID to use (default: use CUDA_VISIBLE_DEVICES)')
+    parser.add_argument('--force', action='store_true',
+                       help='Force re-run all steps even if outputs exist')
+    parser.add_argument('--preprocessing_only', action='store_true',
+                       help='Run only data preprocessing')
+    parser.add_argument('--training_only', action='store_true',
+                       help='Run only model training')
+    parser.add_argument('--inference_only', action='store_true',
+                       help='Run only inference and evaluation')
     
     args = parser.parse_args()
     
-    # Create experiment runner
+    # Create experiment instance
     experiment = ARCTrajectoryExperiment(
-        config_name=args.config,
-        experiment_name=args.name
+        config_path=args.config,
+        experiment_name=args.experiment_name
     )
     
     try:
         if args.preprocessing_only:
-            success = experiment.run_preprocessing(force=args.force_preprocessing)
+            success = experiment.run_data_preprocessing(skip_if_exists=not args.force)
         elif args.training_only:
-            success = experiment.run_training(use_wandb=args.wandb, force=args.force_training)
+            success = experiment.run_training(skip_if_exists=not args.force, gpu_id=args.gpu)
         elif args.inference_only:
-            success = experiment.run_inference()
+            success = experiment.run_inference_and_evaluation(gpu_id=args.gpu)
         else:
-            # Run full experiment
-            success = experiment.run_full_experiment(
-                skip_preprocessing=args.skip_preprocessing,
-                skip_training=args.skip_training,
-                skip_inference=args.skip_inference,
-                use_wandb=args.wandb,
-                force_preprocessing=args.force_preprocessing,
-                force_training=args.force_training
-            )
+            success = experiment.run_full_experiment(skip_existing=not args.force, gpu_id=args.gpu)
         
         if success:
             print(f"\n✅ Experiment completed successfully!")
