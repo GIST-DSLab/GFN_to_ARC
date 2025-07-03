@@ -5,6 +5,10 @@ LLM 학습: trajectory 데이터를 사용하여 action sequence 예측 모델 �
 
 import os
 import json
+
+# Flash attention 비활성화
+os.environ["FLASH_ATTENTION_SKIP_CUDA_BUILD"] = "TRUE"
+
 import torch
 import torch.nn as nn
 import torch.multiprocessing as mp
@@ -179,7 +183,7 @@ class ARCActionTrainer:
             gradient_accumulation_steps=self.config.get('gradient_accumulation_steps', 2),
             dataloader_num_workers=0,
             remove_unused_columns=False,
-            report_to="wandb",
+            report_to="wandb" if self.rank == 0 else None,
             dataloader_pin_memory=False,  # 메모리 사용량 줄이기
             skip_memory_metrics=True,  # 메모리 메트릭 건너뛰기
             torch_empty_cache_steps=10,  # 주기적으로 캐시 비우기
@@ -205,14 +209,15 @@ class ARCActionTrainer:
         """모델 학습"""
         self.logger.info("Starting model training...")
         
-        # wandb 로그인 및 초기화
-        wandb.login(key="2f4e627868f1f9dad10bcb1a14fbf96817e6baa9")
-        wandb.init(
-            project="arc-action-sequence",
-            config=self.config,
-            name=f"arc_llm_{self.config['model_name'].split('/')[-1]}",
-            tags=["llama3.1", "action_sequence", "arc"]
-        )
+        # wandb 로그인 및 초기화 (rank 0에서만)
+        if self.rank == 0:
+            wandb.login(key="2f4e627868f1f9dad10bcb1a14fbf96817e6baa9")
+            wandb.init(
+                project="arc-action-sequence",
+                config=self.config,
+                name=f"arc_llm_{self.config['model_name'].split('/')[-1]}",
+                tags=["llama3.1", "action_sequence", "arc"]
+            )
         
         # 데이터 로드
         train_data, val_data = self.load_training_data()
@@ -252,7 +257,8 @@ class ARCActionTrainer:
         # eval_results = trainer.evaluate()
         # self.logger.info(f"Final evaluation results: {eval_results}")
         
-        wandb.finish()
+        if self.rank == 0:
+            wandb.finish()
         
         return trainer
     
@@ -292,7 +298,15 @@ class ARCActionTrainer:
 def setup_ddp(rank: int, world_size: int):
     """DDP 초기화"""
     os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '12355'
+    os.environ['MASTER_PORT'] = '12357'
+    
+    # NCCL 설정 최적화
+    os.environ['NCCL_DEBUG'] = 'INFO'
+    os.environ['NCCL_TIMEOUT'] = '1800'  # 30분 타임아웃
+    os.environ['NCCL_IB_DISABLE'] = '1'
+    os.environ['NCCL_P2P_DISABLE'] = '1'
+    
+    # CUDA 백엔드 사용 (GPU용)
     init_process_group(backend="nccl", rank=rank, world_size=world_size)
 
 def cleanup_ddp():
@@ -371,11 +385,7 @@ def main():
         world_size = 1
         print("CUDA not available, using CPU")
     
-    if world_size > 1:
-        # 멀티 GPU 학습
-        print(f"Starting multi-GPU training with {world_size} GPUs")
-        mp.spawn(train_ddp, args=(world_size, config), nprocs=world_size, join=True)
-    else:
+    if world_size == 1:
         # 단일 GPU/CPU 학습
         print("Starting single GPU/CPU training")
         log_dir = config.get('results_dir', './results')
@@ -387,6 +397,10 @@ def main():
         trained_model = trainer.train()
         
         logger.info("Training completed successfully!")
+    else:
+        # 멀티 GPU 학습 (DDP)
+        print(f"Starting multi-GPU training with {world_size} GPUs")
+        mp.spawn(train_ddp, args=(world_size, config), nprocs=world_size, join=True)
 
 if __name__ == "__main__":
     import sys
