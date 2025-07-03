@@ -1,0 +1,48 @@
+# LLM Experiment Configuration - Fast Training with Unsloth
+
+# Data paths
+trajectory_data_dir: "./data/trajectories_output"
+rearc_data_dir: "./data/re-arc"
+processed_data_dir: "./processed_data"
+model_save_dir: "./models_fast"
+results_dir: "./results_fast"
+
+# Training parameters - 속도 최적화
+model_name: "meta-llama/Llama-3.1-8B-Instruct"
+max_length: 512  # 절반으로 줄임
+batch_size: 8    # 크게 증가
+learning_rate: 0.0002  # LoRA에 적합한 높은 LR
+num_epochs: 1
+warmup_steps: 50
+gradient_accumulation_steps: 1  # Unsloth에서는 불필요
+
+# Unsloth 전용 설정
+use_unsloth: true
+lora_rank: 16
+lora_alpha: 16
+lora_dropout: 0.05
+load_in_4bit: true
+use_gradient_checkpointing: true
+
+# Data preprocessing
+max_grid_size: 30
+action_mapping:
+  0: "left_rotate"
+  1: "right_rotate" 
+  2: "horizontal_flip"
+  3: "vertical_flip"
+  4: "submit"
+
+# Available problem IDs
+problem_mapping:
+  86: "25ff71a9"
+  139: "6150a2bd"
+  178: "74dd1130"
+  149: "6773b310"
+  154: "6855a6e4"
+  240: "9d9215db"
+  379: "ecdecbb3"
+
+# Evaluation
+num_test_samples: 50
+max_action_sequence_length: 20

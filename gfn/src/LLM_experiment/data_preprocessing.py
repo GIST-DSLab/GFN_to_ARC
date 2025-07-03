@@ -9,6 +9,7 @@ import numpy as np
 from typing import List, Dict, Tuple, Any
 from utils import *
 import logging
+from tqdm import tqdm
 
 class TrajectoryProcessor:
     def __init__(self, config: Dict):
@@ -118,7 +119,7 @@ class TrajectoryProcessor:
         """LLM 학습용 데이터 생성"""
         training_data = []
         
-        for traj in processed_trajectories:
+        for traj in tqdm(processed_trajectories, desc="Creating LLM training data", unit="traj"):
             if traj is None:
                 continue
                 
@@ -152,7 +153,8 @@ class TrajectoryProcessor:
         """모든 문제에 대해 전처리 수행"""
         all_training_data = []
         
-        for problem_id in self.problem_mapping.keys():
+        problem_ids = list(self.problem_mapping.keys())
+        for problem_id in tqdm(problem_ids, desc="Processing problems", unit="problem"):
             problem_dir = os.path.join(
                 self.config['trajectory_data_dir'],
                 f"problem_{problem_id}"
@@ -181,7 +183,7 @@ class TrajectoryProcessor:
             all_processed_trajectories = []
             total_trajectories_loaded = 0
             
-            for trajectory_file in trajectory_files:
+            for trajectory_file in tqdm(trajectory_files, desc=f"Processing trajectory files for problem {problem_id}", unit="file", leave=False):
                 self.logger.info(f"Processing file: {os.path.basename(trajectory_file)}")
                 
                 # trajectory 데이터 로드
@@ -189,7 +191,7 @@ class TrajectoryProcessor:
                 total_trajectories_loaded += len(trajectories)
                 
                 # 각 trajectory 전처리
-                for traj in trajectories:
+                for traj in tqdm(trajectories, desc="Processing individual trajectories", unit="traj", leave=False):
                     processed = self.preprocess_single_trajectory(traj)
                     if processed:
                         all_processed_trajectories.append(processed)

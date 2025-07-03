@@ -1,0 +1,47 @@
+# LLM Experiment Configuration - Fast DDP Training
+
+# Data paths
+trajectory_data_dir: "./data/trajectories_output"
+rearc_data_dir: "./data/re-arc"
+processed_data_dir: "./processed_data"
+model_save_dir: "./models_ddp_fast"
+results_dir: "./results_ddp_fast"
+
+# Training parameters - DDP 최적화
+model_name: "meta-llama/Llama-3.1-8B-Instruct"
+max_length: 256   # 더 짧게
+batch_size: 16    # GPU당 16, 총 48 (3 GPU)
+learning_rate: 0.0001
+num_epochs: 1
+warmup_steps: 20
+gradient_accumulation_steps: 1  # 큰 배치 크기로 불필요
+
+# DDP 최적화 설정
+ddp_find_unused_parameters: false
+ddp_bucket_cap_mb: 200
+dataloader_num_workers: 4
+pin_memory: true
+prefetch_factor: 2
+
+# Data preprocessing
+max_grid_size: 30
+action_mapping:
+  0: "left_rotate"
+  1: "right_rotate"
+  2: "horizontal_flip" 
+  3: "vertical_flip"
+  4: "submit"
+
+# Available problem IDs
+problem_mapping:
+  86: "25ff71a9"
+  139: "6150a2bd" 
+  178: "74dd1130"
+  149: "6773b310"
+  154: "6855a6e4"
+  240: "9d9215db"
+  379: "ecdecbb3"
+
+# Evaluation
+num_test_samples: 50
+max_action_sequence_length: 20
