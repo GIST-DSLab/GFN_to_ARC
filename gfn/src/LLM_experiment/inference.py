@@ -21,6 +21,7 @@ sys.path.append('/home/ubuntu/GFN_to_ARC/gfn/src/ARCenv')
 
 from utils import *
 import logging
+from tqdm import tqdm
 
 # ARCenv 임포트
 from ARCenv.EntireARCEnv import DiagonalARCEnv
@@ -243,7 +244,7 @@ class ARCInferenceEvaluator:
             self.logger.info(f"Evaluating {arc_id} (ARC format): {len(train_examples)} train, {len(test_examples)} test")
         
         # 각 테스트 예제에 대해 평가
-        for test_idx, test_example in enumerate(test_examples):
+        for test_idx, test_example in enumerate(tqdm(test_examples, desc=f"Testing {arc_id}")):
             test_input = test_example['input']
             test_output = test_example['output']
             
@@ -301,7 +302,7 @@ class ARCInferenceEvaluator:
         total_tests = 0
         
         # 각 문제별 평가
-        for arc_id, problem_data in rearc_data.items():
+        for arc_id, problem_data in tqdm(rearc_data.items(), desc="Evaluating problems"):
             self.logger.info(f"\\nEvaluating problem {arc_id}")
             
             problem_results = self.evaluate_single_problem(arc_id, problem_data)

@@ -28,6 +28,7 @@ import logging
 import wandb
 from sklearn.model_selection import train_test_split
 import argparse
+from tqdm import tqdm
 
 class ARCActionDataset(Dataset):
     """ARC Action Sequence 데이터셋"""
@@ -112,10 +113,40 @@ class ARCActionTrainer:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             
-        self.model = AutoModelForCausalLM.from_pretrained(
-            config['model_name'],
-            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-        )
+        # Llama 8B인 경우 8비트 양자화 사용
+        if "Llama" in config['model_name']:
+            try:
+                from transformers import BitsAndBytesConfig
+                quantization_config = BitsAndBytesConfig(
+                    load_in_8bit=True,
+                    llm_int8_threshold=6.0,
+                    llm_int8_has_fp16_weight=False,
+                )
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    config['model_name'],
+                    quantization_config=quantization_config,
+                    device_map="auto",
+                    low_cpu_mem_usage=True,
+                    trust_remote_code=True,
+                    torch_dtype=torch.float16
+                )
+            except ImportError:
+                self.logger.warning("BitsAndBytesConfig not available, using regular loading")
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    config['model_name'],
+                    torch_dtype=torch.float16,
+                    device_map=None,
+                    low_cpu_mem_usage=True,
+                    trust_remote_code=True
+                )
+        else:
+            self.model = AutoModelForCausalLM.from_pretrained(
+                config['model_name'],
+                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+                device_map=None,
+                low_cpu_mem_usage=True,
+                trust_remote_code=True
+            )
         
         # 모델을 디바이스로 이동
         self.model.to(self.device)
@@ -134,14 +165,18 @@ class ARCActionTrainer:
             all_data_file = os.path.join(self.config['processed_data_dir'], "all_training_data.json")
             if not os.path.exists(all_data_file):
                 raise FileNotFoundError(f"Training data not found. Run preprocessing first.")
-                
+            
+            print("Loading training data...")
             all_data = load_json(all_data_file)
+            print(f"Splitting {len(all_data)} samples into train/validation...")
             train_data, val_data = train_test_split(all_data, test_size=0.1, random_state=42)
             
             # 저장
+            print("Saving train/val splits...")
             save_json(train_data, train_file)
             save_json(val_data, val_file)
         else:
+            print("Loading existing train/val data...")
             train_data = load_json(train_file)
             val_data = load_json(val_file)
             
@@ -150,7 +185,9 @@ class ARCActionTrainer:
     
     def create_datasets(self, train_data: List[Dict], val_data: List[Dict]):
         """데이터셋 생성"""
+        print("Creating training dataset...")
         train_dataset = ARCActionDataset(train_data, self.tokenizer, self.config['max_length'])
+        print("Creating validation dataset...")
         val_dataset = ARCActionDataset(val_data, self.tokenizer, self.config['max_length'])
         
         return train_dataset, val_dataset
@@ -186,7 +223,11 @@ class ARCActionTrainer:
             report_to="wandb" if self.rank == 0 else None,
             dataloader_pin_memory=False,  # 메모리 사용량 줄이기
             skip_memory_metrics=True,  # 메모리 메트릭 건너뛰기
-            torch_empty_cache_steps=10,  # 주기적으로 캐시 비우기
+            torch_empty_cache_steps=5,  # 더 자주 캐시 비우기
+            ddp_timeout=7200,  # DDP 타임아웃 2시간
+            ddp_bucket_cap_mb=25,  # DDP 버킷 크기 줄이기
+            ddp_broadcast_buffers=False,  # 브로드캐스트 비활성화
+            gradient_checkpointing=False,  # DDP에서는 비활성화
         )
         
         return training_args
@@ -301,10 +342,13 @@ def setup_ddp(rank: int, world_size: int):
     os.environ['MASTER_PORT'] = '12357'
     
     # NCCL 설정 최적화
-    os.environ['NCCL_DEBUG'] = 'INFO'
-    os.environ['NCCL_TIMEOUT'] = '1800'  # 30분 타임아웃
+    os.environ['NCCL_DEBUG'] = 'WARN'  # 로그 레벨 낮춤
+    os.environ['NCCL_TIMEOUT'] = '3600'  # 1시간 타임아웃
     os.environ['NCCL_IB_DISABLE'] = '1'
     os.environ['NCCL_P2P_DISABLE'] = '1'
+    os.environ['NCCL_SOCKET_TIMEOUT'] = '3600'
+    os.environ['TORCH_NCCL_BLOCKING_WAIT'] = '1'
+    os.environ['CUDA_LAUNCH_BLOCKING'] = '1'  # CUDA 동기화
     
     # CUDA 백엔드 사용 (GPU용)
     init_process_group(backend="nccl", rank=rank, world_size=world_size)

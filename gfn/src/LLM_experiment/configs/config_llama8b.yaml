@@ -1,4 +1,4 @@
-# LLM Experiment Configuration
+# LLM Experiment Configuration - Llama 3.1 8B
 
 # Data paths
 trajectory_data_dir: "/opt/dlami/nvme/seungpil"
@@ -7,23 +7,23 @@ processed_data_dir: "./processed_data"
 model_save_dir: "./models"
 results_dir: "./results"
 
-# Training parameters
-model_name: "microsoft/DialoGPT-small"  # 더 작은 모델로 테스트
-max_length: 256  # 시퀀스 길이도 줄임
-batch_size: 2  # 배치 크기 증가
-learning_rate: 0.00005
-num_epochs: 1  # 빠른 테스트를 위해
+# Training parameters for Llama 3.1 8B
+model_name: "meta-llama/Llama-3.1-8B-Instruct"
+max_length: 256  # 더 짧은 시퀀스 길이
+batch_size: 1
+learning_rate: 0.00001
+num_epochs: 1
 warmup_steps: 20
-gradient_accumulation_steps: 4
+gradient_accumulation_steps: 32  # 효과적인 배치 크기 32
 
 # Data preprocessing
 max_grid_size: 30
 action_mapping:
-  0: "left_rotate" # 왼쪽 회전
-  1: "right_rotate" # 오른쪽 회전
+  0: "left_rotate"     # 왼쪽 회전
+  1: "right_rotate"    # 오른쪽 회전
   2: "horizontal_flip" # 수평 뒤집기
-  3: "vertical_flip" # 수직 뒤집기
-  4: "submit" # 제출
+  3: "vertical_flip"   # 수직 뒤집기
+  4: "submit"          # 제출
 
 # Available problem IDs and their ARC task IDs (only available trajectory files)
 problem_mapping:
