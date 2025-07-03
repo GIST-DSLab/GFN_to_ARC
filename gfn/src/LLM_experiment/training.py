@@ -113,8 +113,8 @@ class ARCActionTrainer:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             
-        # Llama 8B인 경우 8비트 양자화 사용
-        if "Llama" in config['model_name']:
+        # DDP 사용 시에는 quantization 비활성화 (호환성 문제로 인해)
+        if "Llama" in config['model_name'] and world_size == 1:
             try:
                 from transformers import BitsAndBytesConfig
                 quantization_config = BitsAndBytesConfig(
@@ -130,6 +130,7 @@ class ARCActionTrainer:
                     trust_remote_code=True,
                     torch_dtype=torch.float16
                 )
+                self.logger.info("Using 8-bit quantization for single GPU training")
             except ImportError:
                 self.logger.warning("BitsAndBytesConfig not available, using regular loading")
                 self.model = AutoModelForCausalLM.from_pretrained(
@@ -140,6 +141,9 @@ class ARCActionTrainer:
                     trust_remote_code=True
                 )
         else:
+            # DDP 또는 non-Llama 모델의 경우 regular loading
+            if world_size > 1:
+                self.logger.info("Using regular loading for DDP training (quantization disabled)")
             self.model = AutoModelForCausalLM.from_pretrained(
                 config['model_name'],
                 torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
@@ -148,8 +152,11 @@ class ARCActionTrainer:
                 trust_remote_code=True
             )
         
-        # 모델을 디바이스로 이동
-        self.model.to(self.device)
+        # 모델을 디바이스로 이동 (8-bit 모델은 이미 device가 설정됨)
+        if not hasattr(self.model, 'hf_quantizer') or self.model.hf_quantizer is None:
+            self.model.to(self.device)
+        else:
+            self.logger.info("Skipping .to(device) for quantized model")
         
         # DDP 래핑 (멀티 GPU인 경우)
         if world_size > 1:
@@ -371,7 +378,7 @@ class ARCActionTrainer:
 def setup_ddp(rank: int, world_size: int):
     """DDP 초기화"""
     os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '12357'
+    os.environ['MASTER_PORT'] = '12360'
     
     # NCCL 설정 최적화
     os.environ['NCCL_DEBUG'] = 'WARN'  # 로그 레벨 낮춤

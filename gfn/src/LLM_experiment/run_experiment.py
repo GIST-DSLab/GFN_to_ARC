@@ -168,10 +168,36 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False)
         logger.info("Use --force-training to retrain.")
         return True
     
-    command = "python training.py"
+    # GPU 개수에 따라 DDP 또는 일반 python 사용
     if gpu_ids:
-        command += f" --gpu_ids {gpu_ids}"
-    return run_command(command, "Model Training", logger, capture_output=False)
+        gpu_list = gpu_ids.split()
+        num_gpus = len(gpu_list)
+        
+        if num_gpus > 1:
+            # 멀티 GPU: mp.spawn 사용
+            logger.info(f"Using DDP with mp.spawn on {num_gpus} GPUs: {gpu_ids}")
+            os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(gpu_list)
+            
+            # mp.spawn을 통한 DDP 학습 직접 실행
+            try:
+                import torch.multiprocessing as mp
+                from training import train_ddp
+                
+                mp.spawn(train_ddp, args=(num_gpus, config), nprocs=num_gpus, join=True)
+                logger.info("✅ DDP training completed successfully!")
+                return True
+            except Exception as e:
+                logger.error(f"❌ DDP training failed: {e}")
+                return False
+        else:
+            # 단일 GPU: 일반 python 사용
+            logger.info(f"Using single GPU: {gpu_ids}")
+            command = f"python training.py --gpu_ids {gpu_ids} --config configs/config.yaml"
+            return run_command(command, "Model Training", logger, capture_output=False)
+    else:
+        # GPU 지정 없음: 일반 python 사용
+        command = "python training.py --config configs/config.yaml"
+        return run_command(command, "Model Training", logger, capture_output=False)
 
 def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False):
     """추론 및 평가 실행"""

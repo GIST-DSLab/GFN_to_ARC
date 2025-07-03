@@ -4061,3 +4061,200 @@ Access to model meta-llama/Llama-3.1-8B-Instruct is restricted. You must have ac
 2025-07-03 16:21:18,491 - INFO - Command: python training.py
 2025-07-03 16:21:18,491 - INFO - ==================================================
 2025-07-03 16:25:27,048 - INFO - Experiment interrupted by user
+2025-07-04 04:00:42,390 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:00:42,390 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:00:42,390 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:00:42,391 - INFO - Checking prerequisites...
+2025-07-04 04:00:42,391 - ERROR - Trajectory data directory not found: /opt/dlami/nvme/seungpil
+2025-07-04 04:00:42,391 - ERROR - Prerequisites check failed. Exiting.
+2025-07-04 04:01:00,786 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:01:00,786 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:01:00,786 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:01:00,786 - INFO - Checking prerequisites...
+2025-07-04 04:01:00,786 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:01:00,786 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:01:02,446 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:01:02,446 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:01:02,446 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:01:04,257 - INFO - ✅ All prerequisites checked
+2025-07-04 04:01:04,257 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:01:04,257 - INFO - Created/verified directory: ./models
+2025-07-04 04:01:04,258 - INFO - Created/verified directory: ./results
+2025-07-04 04:01:04,258 - INFO - Created/verified directory: ./logs
+2025-07-04 04:01:04,258 - INFO - Using torchrun with 2 GPUs: 4 5
+2025-07-04 04:01:04,258 - INFO - ==================================================
+2025-07-04 04:01:04,258 - INFO - Starting: Model Training
+2025-07-04 04:01:04,258 - INFO - Command: torchrun --nproc_per_node=2 --nnodes=1 --rdzv_backend=c10d --rdzv_endpoint=localhost:29502 training.py --config configs/config.yaml
+2025-07-04 04:01:04,258 - INFO - ==================================================
+2025-07-04 04:01:04,258 - INFO - 🚀 Running command with live output...
+2025-07-04 04:01:04,261 - ERROR - ❌ Failed: Model Training (0.00s)
+2025-07-04 04:01:04,261 - ERROR - Exit code: 127
+2025-07-04 04:01:04,261 - ERROR - Training failed
+2025-07-04 04:01:04,261 - INFO - Training completed. Exiting as requested.
+2025-07-04 04:01:30,267 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:01:30,267 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:01:30,267 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:01:30,267 - INFO - Checking prerequisites...
+2025-07-04 04:01:30,268 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:01:30,268 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:01:31,439 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:01:31,439 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:01:31,439 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:01:32,706 - INFO - ✅ All prerequisites checked
+2025-07-04 04:01:32,706 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:01:32,706 - INFO - Created/verified directory: ./models
+2025-07-04 04:01:32,706 - INFO - Created/verified directory: ./results
+2025-07-04 04:01:32,706 - INFO - Created/verified directory: ./logs
+2025-07-04 04:01:32,706 - INFO - Using torchrun with 2 GPUs: 4 5
+2025-07-04 04:01:32,706 - INFO - ==================================================
+2025-07-04 04:01:32,706 - INFO - Starting: Model Training
+2025-07-04 04:01:32,706 - INFO - Command: /data/miniforge3/bin/torchrun --nproc_per_node=2 --nnodes=1 --rdzv_backend=c10d --rdzv_endpoint=localhost:29502 training.py --config configs/config.yaml
+2025-07-04 04:01:32,707 - INFO - ==================================================
+2025-07-04 04:01:32,707 - INFO - 🚀 Running command with live output...
+2025-07-04 04:01:32,708 - ERROR - ❌ Failed: Model Training (0.00s)
+2025-07-04 04:01:32,708 - ERROR - Exit code: 127
+2025-07-04 04:01:32,709 - ERROR - Training failed
+2025-07-04 04:01:32,709 - INFO - Training completed. Exiting as requested.
+2025-07-04 04:03:14,756 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:03:14,756 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:03:14,756 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:03:14,756 - INFO - Checking prerequisites...
+2025-07-04 04:03:14,756 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:03:14,756 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:03:19,954 - INFO - ✅ All prerequisites checked
+2025-07-04 04:03:19,954 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:03:19,955 - INFO - Created/verified directory: ./models
+2025-07-04 04:03:19,955 - INFO - Created/verified directory: ./results
+2025-07-04 04:03:19,955 - INFO - Created/verified directory: ./logs
+2025-07-04 04:03:19,955 - INFO - Using torchrun with 2 GPUs: 4 5
+2025-07-04 04:03:19,955 - INFO - ==================================================
+2025-07-04 04:03:19,955 - INFO - Starting: Model Training
+2025-07-04 04:03:19,955 - INFO - Command: /data/miniforge3/envs/gflow-llm/bin/torchrun --nproc_per_node=2 --nnodes=1 --rdzv_backend=c10d --rdzv_endpoint=localhost:29502 training.py --config configs/config.yaml
+2025-07-04 04:03:19,955 - INFO - ==================================================
+2025-07-04 04:03:19,955 - INFO - 🚀 Running command with live output...
+2025-07-04 04:04:54,808 - INFO - Experiment interrupted by user
+2025-07-04 04:11:15,669 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:11:15,669 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:11:15,669 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:11:15,669 - INFO - Checking prerequisites...
+2025-07-04 04:11:15,669 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:11:15,669 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:11:20,913 - INFO - ✅ All prerequisites checked
+2025-07-04 04:11:20,914 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:11:20,914 - INFO - Created/verified directory: ./models
+2025-07-04 04:11:20,914 - INFO - Created/verified directory: ./results
+2025-07-04 04:11:20,914 - INFO - Created/verified directory: ./logs
+2025-07-04 04:11:20,914 - INFO - Using torchrun with 2 GPUs: 4 5
+2025-07-04 04:11:20,914 - INFO - ==================================================
+2025-07-04 04:11:20,914 - INFO - Starting: Model Training
+2025-07-04 04:11:20,914 - INFO - Command: /data/miniforge3/envs/gflow-llm/bin/torchrun --nproc_per_node=2 --nnodes=1 --rdzv_backend=c10d --rdzv_endpoint=localhost:29502 training.py --config configs/config.yaml
+2025-07-04 04:11:20,914 - INFO - ==================================================
+2025-07-04 04:11:20,914 - INFO - 🚀 Running command with live output...
+2025-07-04 04:11:21,430 - ERROR - ❌ Failed: Model Training (0.52s)
+2025-07-04 04:11:21,430 - ERROR - Exit code: 2
+2025-07-04 04:11:21,430 - ERROR - Training failed
+2025-07-04 04:11:21,430 - INFO - Training completed. Exiting as requested.
+2025-07-04 04:13:05,388 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:13:05,388 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:13:05,388 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:13:05,388 - INFO - Checking prerequisites...
+2025-07-04 04:13:05,388 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:13:05,388 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:13:06,961 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:13:06,961 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:13:06,961 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:13:08,737 - INFO - ✅ All prerequisites checked
+2025-07-04 04:13:08,737 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:13:08,737 - INFO - Created/verified directory: ./models
+2025-07-04 04:13:08,738 - INFO - Created/verified directory: ./results
+2025-07-04 04:13:08,738 - INFO - Created/verified directory: ./logs
+2025-07-04 04:13:08,738 - INFO - Using torchrun with 2 GPUs: 4 5
+2025-07-04 04:13:08,738 - INFO - ==================================================
+2025-07-04 04:13:08,738 - INFO - Starting: Model Training
+2025-07-04 04:13:08,738 - INFO - Command: python -m torch.distributed.run --nproc-per-node=2 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-04 04:13:08,738 - INFO - ==================================================
+2025-07-04 04:13:08,738 - INFO - 🚀 Running command with live output...
+2025-07-04 04:13:51,470 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:13:51,470 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:13:51,470 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:13:51,470 - INFO - Checking prerequisites...
+2025-07-04 04:13:51,471 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:13:51,471 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:13:57,159 - INFO - ✅ All prerequisites checked
+2025-07-04 04:13:57,160 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:13:57,160 - INFO - Created/verified directory: ./models
+2025-07-04 04:13:57,160 - INFO - Created/verified directory: ./results
+2025-07-04 04:13:57,160 - INFO - Created/verified directory: ./logs
+2025-07-04 04:13:57,160 - INFO - Using torchrun with 2 GPUs: 4 5
+2025-07-04 04:13:57,160 - INFO - ==================================================
+2025-07-04 04:13:57,160 - INFO - Starting: Model Training
+2025-07-04 04:13:57,160 - INFO - Command: python -m torch.distributed.run --nproc-per-node=2 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-04 04:13:57,161 - INFO - ==================================================
+2025-07-04 04:13:57,161 - INFO - 🚀 Running command with live output...
+2025-07-04 04:14:19,398 - INFO - Experiment interrupted by user
+2025-07-04 04:16:33,362 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:16:33,362 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:16:33,362 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:16:33,362 - INFO - Checking prerequisites...
+2025-07-04 04:16:33,362 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:16:33,362 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:16:34,926 - INFO - Note: detected 92 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2025-07-04 04:16:34,926 - INFO - Note: NumExpr detected 92 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-07-04 04:16:34,926 - INFO - NumExpr defaulting to 16 threads.
+2025-07-04 04:16:36,695 - INFO - ✅ All prerequisites checked
+2025-07-04 04:16:36,695 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:16:36,695 - INFO - Created/verified directory: ./models
+2025-07-04 04:16:36,695 - INFO - Created/verified directory: ./results
+2025-07-04 04:16:36,695 - INFO - Created/verified directory: ./logs
+2025-07-04 04:16:36,696 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:16:40,189 - INFO - PyTorch version 2.6.0 available.
+2025-07-04 04:19:31,030 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:19:31,030 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:19:31,030 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:19:31,030 - INFO - Checking prerequisites...
+2025-07-04 04:19:31,030 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:19:31,030 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:19:36,609 - INFO - ✅ All prerequisites checked
+2025-07-04 04:19:36,609 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:19:36,609 - INFO - Created/verified directory: ./models
+2025-07-04 04:19:36,609 - INFO - Created/verified directory: ./results
+2025-07-04 04:19:36,610 - INFO - Created/verified directory: ./logs
+2025-07-04 04:19:36,610 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:19:40,010 - INFO - PyTorch version 2.7.1 available.
+2025-07-04 04:19:50,919 - ERROR - ❌ DDP training failed: 
+
+-- Process 0 terminated with the following error:
+Traceback (most recent call last):
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 90, in _wrap
+    fn(i, *args)
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 401, in train_ddp
+    setup_ddp(rank, world_size)
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 393, in setup_ddp
+    init_process_group(backend="nccl", rank=rank, world_size=world_size)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/distributed/c10d_logger.py", line 81, in wrapper
+    return func(*args, **kwargs)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/distributed/c10d_logger.py", line 95, in wrapper
+    func_return = func(*args, **kwargs)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py", line 1710, in init_process_group
+    store, rank, world_size = next(rendezvous_iterator)
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/distributed/rendezvous.py", line 278, in _env_rendezvous_handler
+    store = _create_c10d_store(
+  File "/data/miniforge3/envs/gflow-llm/lib/python3.10/site-packages/torch/distributed/rendezvous.py", line 198, in _create_c10d_store
+    return TCPStore(
+torch.distributed.DistNetworkError: The server socket has failed to listen on any local network address. port: 12360, useIpv6: false, code: -98, name: EADDRINUSE, message: address already in use
+
+2025-07-04 04:19:50,919 - ERROR - Training failed
+2025-07-04 04:19:50,919 - INFO - Training completed. Exiting as requested.
+2025-07-04 04:23:30,239 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-04 04:23:30,239 - INFO - Configuration: configs/config.yaml
+2025-07-04 04:23:30,239 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-04 04:23:30,239 - INFO - Checking prerequisites...
+2025-07-04 04:23:30,240 - WARNING - Missing trajectory files: ['./data/trajectories_output/problem_149/trajectories_0_1000.json', './data/trajectories_output/problem_154/trajectories_0_1000.json', './data/trajectories_output/problem_240/trajectories_0_1000.json', './data/trajectories_output/problem_379/trajectories_0_1000.json']
+2025-07-04 04:23:30,240 - WARNING - Some problems will be skipped during processing
+2025-07-04 04:23:35,648 - INFO - ✅ All prerequisites checked
+2025-07-04 04:23:35,648 - INFO - Created/verified directory: ./processed_data
+2025-07-04 04:23:35,648 - INFO - Created/verified directory: ./models
+2025-07-04 04:23:35,648 - INFO - Created/verified directory: ./results
+2025-07-04 04:23:35,648 - INFO - Created/verified directory: ./logs
+2025-07-04 04:23:35,649 - INFO - Using DDP with mp.spawn on 2 GPUs: 4 5
+2025-07-04 04:23:38,884 - INFO - PyTorch version 2.7.1 available.

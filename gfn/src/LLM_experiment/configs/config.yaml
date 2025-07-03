@@ -1,11 +1,11 @@
 # LLM Experiment Configuration
 
 # Data paths
-trajectory_data_dir: "/opt/dlami/nvme/seungpil"
+trajectory_data_dir: "./data/trajectories_output"
 rearc_data_dir: "./data/re-arc"
 processed_data_dir: "./processed_data"
-model_save_dir: "/opt/dlami/nvme/seungpil/models"
-results_dir: "/opt/dlami/nvme/seungpil/results"
+model_save_dir: "./models"
+results_dir: "./results"
 
 # Training parameters
 model_name: "meta-llama/Llama-3.1-8B-Instruct" # Start with smaller model for testing
