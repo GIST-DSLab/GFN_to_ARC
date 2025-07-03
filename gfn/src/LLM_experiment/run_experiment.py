@@ -162,7 +162,7 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False)
     """모델 학습 실행"""
     
     # 이미 학습된 모델이 있는지 확인
-    model_dir = os.path.join("./models", f"arc_action_model_{config['model_name'].split('/')[-1]}", "final_model")
+    model_dir = os.path.join(config['model_save_dir'], f"arc_action_model_{config['model_name'].split('/')[-1]}", "final_model")
     if os.path.exists(model_dir) and not force:
         logger.info("Trained model already exists. Skipping training.")
         logger.info("Use --force-training to retrain.")
@@ -198,7 +198,7 @@ def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False
     """추론 및 평가 실행"""
     
     # 이미 평가 결과가 있는지 확인
-    results_file = "./results/evaluation_results.json"
+    results_file = os.path.join(config['results_dir'], "evaluation_results.json")
     if os.path.exists(results_file) and not force:
         logger.info("Evaluation results already exist. Skipping inference.")
         logger.info("Use --force-inference to re-evaluate.")
@@ -212,7 +212,7 @@ def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False
 def generate_summary_report(config: Dict, logger):
     """실험 결과 요약 보고서 생성"""
     try:
-        results_file = "./results/evaluation_results.json"
+        results_file = os.path.join(config['results_dir'], "evaluation_results.json")
         if not os.path.exists(results_file):
             logger.warning("No evaluation results found for summary report")
             return
@@ -240,7 +240,7 @@ def generate_summary_report(config: Dict, logger):
             }
         
         # 요약 보고서 저장
-        summary_file = "./results/experiment_summary.json"
+        summary_file = os.path.join(config['results_dir'], "experiment_summary.json")
         save_json(summary, summary_file)
         
         # 콘솔에 요약 출력
