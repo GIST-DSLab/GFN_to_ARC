@@ -65,7 +65,7 @@ def preprocess_data(config: Dict) -> Tuple[ARCTrajectoryDataset, ARCTrajectoryDa
     print("Loading GFlowNet trajectories...")
     trajectories = load_gflownet_trajectories(
         config['trajectory_data_dir'],
-        problem_ids=[86, 139, 178, 149, 154, 240, 379]
+        problem_ids=[86, 139, 178]  # 실제 존재하는 문제들만 사용
     )
     
     if len(trajectories) == 0:

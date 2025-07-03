@@ -89,7 +89,9 @@ class ARCTrajectoryExperiment:
                     command,
                     shell=True,
                     check=True,
-                    cwd=os.path.dirname(os.path.abspath(__file__))
+                    cwd=os.path.dirname(os.path.abspath(__file__)),
+                    stdout=None,  # 실시간 출력을 위해 None으로 설정
+                    stderr=None   # 실시간 출력을 위해 None으로 설정
                 )
                 
                 duration = time.time() - start_time
@@ -165,7 +167,7 @@ class ARCTrajectoryExperiment:
             return True
         
         command = f"python data_preprocessing.py --config {self.config_path}"
-        return self.run_command(command, "Data Preprocessing")
+        return self.run_command(command, "Data Preprocessing", capture_output=False)  # tqdm 표시를 위해 False로 변경
     
     def run_training(self, skip_if_exists: bool = True, gpu_id: int = None) -> bool:
         """Run model training"""

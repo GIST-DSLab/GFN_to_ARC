@@ -1,0 +1,9 @@
+2025-07-04 07:12:36,913 - INFO - Starting ARC Trajectory Transformer Experiment: arc_transformer_20250704_071236
+2025-07-04 07:12:36,913 - INFO - Configuration: configs/config_gpu456.yaml
+2025-07-04 07:12:36,913 - INFO - Experiment directory: ./results_gpu456/experiments/arc_transformer_20250704_071236
+2025-07-04 07:12:36,913 - INFO - ==================================================
+2025-07-04 07:12:36,913 - INFO - Starting: Data Preprocessing
+2025-07-04 07:12:36,913 - INFO - Command: python data_preprocessing.py --config configs/config_gpu456.yaml
+2025-07-04 07:12:36,913 - INFO - ==================================================
+2025-07-04 07:12:36,913 - INFO - 🚀 Running command with live output...
+2025-07-04 07:12:56,453 - INFO - SUCCESS: Data Preprocessing (took 19.5s)
