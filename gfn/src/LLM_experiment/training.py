@@ -162,24 +162,27 @@ class ARCActionTrainer:
             overwrite_output_dir=True,
             num_train_epochs=self.config['num_epochs'],
             per_device_train_batch_size=self.config['batch_size'],
-            per_device_eval_batch_size=self.config['batch_size'],
+            per_device_eval_batch_size=1,  # 평가 배치 크기를 1로 고정
             warmup_steps=self.config['warmup_steps'],
             learning_rate=self.config['learning_rate'],
             logging_dir=os.path.join(output_dir, 'logs'),
             logging_steps=50,
-            eval_steps=200,
-            save_steps=200,
-            eval_strategy="steps",
+            eval_steps=500,  # 평가 주기를 늘림
+            save_steps=500,  # 저장 주기를 늘림
+            eval_strategy="no",  # 평가 비활성화
             save_strategy="steps",
-            load_best_model_at_end=True,
-            metric_for_best_model="eval_loss",
-            greater_is_better=False,
+            load_best_model_at_end=False,  # 평가가 없으므로 비활성화
+            # metric_for_best_model="eval_loss",  # 평가가 없으므로 주석 처리
+            # greater_is_better=False,  # 평가가 없으므로 주석 처리
             dataloader_drop_last=False,
             fp16=False,
             gradient_accumulation_steps=self.config.get('gradient_accumulation_steps', 2),
             dataloader_num_workers=0,
             remove_unused_columns=False,
             report_to="wandb",
+            dataloader_pin_memory=False,  # 메모리 사용량 줄이기
+            skip_memory_metrics=True,  # 메모리 메트릭 건너뛰기
+            torch_empty_cache_steps=10,  # 주기적으로 캐시 비우기
         )
         
         return training_args
@@ -229,10 +232,10 @@ class ARCActionTrainer:
             model=self.model,
             args=training_args,
             train_dataset=train_dataset,
-            eval_dataset=val_dataset,
+            eval_dataset=None,  # 평가 비활성화
             data_collator=data_collator,
-            compute_metrics=self.compute_metrics,
-            callbacks=[EarlyStoppingCallback(early_stopping_patience=5)]
+            compute_metrics=None,  # 평가 메트릭 비활성화
+            # callbacks=[EarlyStoppingCallback(early_stopping_patience=5)]  # Early stopping 비활성화
         )
         
         # 학습 실행
@@ -245,9 +248,9 @@ class ARCActionTrainer:
         
         self.logger.info(f"Training completed. Model saved to {final_model_path}")
         
-        # 평가 결과 로깅
-        eval_results = trainer.evaluate()
-        self.logger.info(f"Final evaluation results: {eval_results}")
+        # 평가 결과 로깅 (평가 비활성화로 인해 주석 처리)
+        # eval_results = trainer.evaluate()
+        # self.logger.info(f"Final evaluation results: {eval_results}")
         
         wandb.finish()
         

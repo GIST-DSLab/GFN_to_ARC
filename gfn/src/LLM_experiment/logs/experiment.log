@@ -191,3 +191,400 @@ TypeError: '<=' not supported between instances of 'float' and 'str'
 2025-07-03 01:07:11,450 - INFO - ============================================================
 2025-07-03 01:07:11,450 - INFO - Summary saved to: ./results/experiment_summary.json
 2025-07-03 01:07:11,450 - INFO - 🎉 Experiment completed successfully! Total time: 3.47s (0.1m)
+2025-07-03 07:52:09,389 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 07:52:09,389 - INFO - Configuration: configs/config.yaml
+2025-07-03 07:52:09,389 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-03 07:52:09,389 - INFO - Checking prerequisites...
+2025-07-03 07:52:09,389 - ERROR - ReARC data directory not found: ./data/re-arc
+2025-07-03 07:52:09,389 - ERROR - Prerequisites check failed. Exiting.
+2025-07-03 09:06:49,797 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 09:06:49,797 - INFO - Configuration: configs/config.yaml
+2025-07-03 09:06:49,797 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-03 09:06:49,797 - INFO - Checking prerequisites...
+2025-07-03 09:06:49,797 - ERROR - Required package not found: transformers
+2025-07-03 09:06:49,797 - ERROR - Prerequisites check failed. Exiting.
+2025-07-03 09:07:09,293 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 09:07:09,293 - INFO - Configuration: configs/config.yaml
+2025-07-03 09:07:09,293 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-03 09:07:09,293 - INFO - Checking prerequisites...
+2025-07-03 09:07:09,294 - ERROR - Required package not found: transformers
+2025-07-03 09:07:09,294 - ERROR - Prerequisites check failed. Exiting.
+2025-07-03 10:07:05,255 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 10:07:05,255 - INFO - Configuration: configs/config.yaml
+2025-07-03 10:07:05,255 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-03 10:07:05,255 - INFO - Checking prerequisites...
+2025-07-03 10:07:06,932 - INFO - ✅ All prerequisites checked
+2025-07-03 10:07:06,932 - INFO - Created/verified directory: ./processed_data
+2025-07-03 10:07:06,933 - INFO - Created/verified directory: ./models
+2025-07-03 10:07:06,933 - INFO - Created/verified directory: ./results
+2025-07-03 10:07:06,933 - INFO - Created/verified directory: ./logs
+2025-07-03 10:07:06,933 - INFO - Preprocessed data already exists. Skipping preprocessing.
+2025-07-03 10:07:06,933 - INFO - Use --force-preprocessing to regenerate.
+2025-07-03 10:07:06,933 - INFO - ==================================================
+2025-07-03 10:07:06,933 - INFO - Starting: Model Training
+2025-07-03 10:07:06,933 - INFO - Command: python training.py --gpu_ids 4 5 6 7
+2025-07-03 10:07:06,933 - INFO - ==================================================
+2025-07-03 10:17:40,701 - ERROR - ❌ Failed: Model Training (633.77s)
+2025-07-03 10:17:40,701 - ERROR - Exit code: 1
+2025-07-03 10:17:40,701 - ERROR - STDOUT:\nAvailable GPUs: 8
+GPU 0: NVIDIA H200
+GPU 1: NVIDIA H200
+GPU 2: NVIDIA H200
+GPU 3: NVIDIA H200
+GPU 4: NVIDIA H200
+GPU 5: NVIDIA H200
+GPU 6: NVIDIA H200
+GPU 7: NVIDIA H200
+Using specific GPUs: [4, 5, 6, 7]
+Starting multi-GPU training with 4 GPUs
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-medium[0m at: [34mhttps://wandb.ai/gistdslab/arc-action-sequence/runs/7oe4iz69[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_100729-7oe4iz69/logs[0m
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-medium[0m at: [34mhttps://wandb.ai/gistdslab/arc-action-sequence/runs/9hljmk3u[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_100729-9hljmk3u/logs[0m
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-medium[0m at: [34mhttps://wandb.ai/gistdslab/arc-action-sequence/runs/324cv6j3[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_100729-324cv6j3/logs[0m
+
+2025-07-03 10:17:40,701 - ERROR - STDERR:\n2025-07-03 10:07:20,247 - INFO - Starting DDP training with 4 GPUs
+2025-07-03 10:07:20,654 - INFO - Rank 0: Using device: cuda:0
+2025-07-03 10:07:20,654 - INFO - Available GPUs: 4, World size: 4
+2025-07-03 10:07:28,947 - INFO - Starting model training...
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_100729-7oe4iz69
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/7oe4iz69
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_100729-9hljmk3u
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/9hljmk3u
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_100729-324cv6j3
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/324cv6j3
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_100729-bike2yno
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/bike2yno
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+2025-07-03 10:07:31,262 - INFO - Loaded 63422 training samples, 7047 validation samples
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]`loss_type=None` was set in the config but it is unrecognised.Using the default loss: `ForCausalLMLoss`.
+[rank3]:[W703 10:17:32.155144213 socket.cpp:460] [c10d] waitForInput: poll for socket SocketImpl(fd=5, addr=[localhost]:33938, remote=[localhost]:12355) returned 0, likely a timeout
+[rank3]:[W703 10:17:32.155469278 socket.cpp:485] [c10d] waitForInput: socket SocketImpl(fd=5, addr=[localhost]:33938, remote=[localhost]:12355) timed out after 600000ms
+
+  0%|          | 0/5946 [10:00<?, ?it/s]
+[rank1]:[W703 10:17:32.262904307 socket.cpp:460] [c10d] waitForInput: poll for socket SocketImpl(fd=6, addr=[localhost]:33962, remote=[localhost]:12355) returned 0, likely a timeout
+[rank1]:[W703 10:17:32.263191531 socket.cpp:485] [c10d] waitForInput: socket SocketImpl(fd=6, addr=[localhost]:33962, remote=[localhost]:12355) timed out after 600000ms
+
+  0%|          | 0/5946 [10:00<?, ?it/s]
+[rank2]:[W703 10:17:32.299231450 socket.cpp:460] [c10d] waitForInput: poll for socket SocketImpl(fd=6, addr=[localhost]:33946, remote=[localhost]:12355) returned 0, likely a timeout
+[rank2]:[W703 10:17:32.299444543 socket.cpp:485] [c10d] waitForInput: socket SocketImpl(fd=6, addr=[localhost]:33946, remote=[localhost]:12355) timed out after 600000ms
+
+  0%|          | 0/5946 [10:00<?, ?it/s]
+[rank0]:[E703 10:17:32.376697120 ProcessGroupNCCL.cpp:632] [Rank 0] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=9, OpType=ALLREDUCE, NumelIn=354823168, NumelOut=354823168, Timeout(ms)=600000) ran for 600005 milliseconds before timing out.
+[rank0]:[E703 10:17:32.377222862 ProcessGroupNCCL.cpp:2271] [PG ID 0 PG GUID 0(default_pg) Rank 0]  failure detected by watchdog at work sequence id: 9 PG status: last enqueued work: 9, last completed work: 8
+[rank0]:[E703 10:17:32.377237169 ProcessGroupNCCL.cpp:670] Stack trace of the failed collective not found, potentially because FlightRecorder is disabled. You can enable it by setting TORCH_NCCL_TRACE_BUFFER_SIZE to a non-zero value.
+[rank0]:[E703 10:17:32.377271519 ProcessGroupNCCL.cpp:2106] [PG ID 0 PG GUID 0(default_pg) Rank 0] First PG on this rank to signal dumping.
+[rank3]:[E703 10:17:33.156340280 ProcessGroupNCCL.cpp:1685] [PG ID 0 PG GUID 0(default_pg) Rank 3] Observed flight recorder dump signal from another rank via TCPStore.
+[rank3]:[E703 10:17:33.156459282 ProcessGroupNCCL.cpp:1746] [PG ID 0 PG GUID 0(default_pg) Rank 3] Received a dump signal due to a collective timeout from  rank 0 and we will try our best to dump the debug info. Last enqueued NCCL work: 6, last completed NCCL work: 6.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank3]:[E703 10:17:33.156606101 ProcessGroupNCCL.cpp:1536] [PG ID 0 PG GUID 0(default_pg) Rank 3] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1
+[rank1]:[E703 10:17:33.263964199 ProcessGroupNCCL.cpp:1685] [PG ID 0 PG GUID 0(default_pg) Rank 1] Observed flight recorder dump signal from another rank via TCPStore.
+[rank1]:[E703 10:17:33.264086051 ProcessGroupNCCL.cpp:1746] [PG ID 0 PG GUID 0(default_pg) Rank 1] Received a dump signal due to a collective timeout from  rank 0 and we will try our best to dump the debug info. Last enqueued NCCL work: 6, last completed NCCL work: 6.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank1]:[E703 10:17:33.264208950 ProcessGroupNCCL.cpp:1536] [PG ID 0 PG GUID 0(default_pg) Rank 1] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1
+[rank0]:[E703 10:17:33.293442036 ProcessGroupNCCL.cpp:1746] [PG ID 0 PG GUID 0(default_pg) Rank 0] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 9, last completed NCCL work: 8.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank0]:[E703 10:17:33.293637453 ProcessGroupNCCL.cpp:1536] [PG ID 0 PG GUID 0(default_pg) Rank 0] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1
+[rank0]:[E703 10:17:33.293924682 ProcessGroupNCCL.cpp:684] [Rank 0] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank0]:[E703 10:17:33.293935697 ProcessGroupNCCL.cpp:698] [Rank 0] To avoid data inconsistency, we are taking the entire process down.
+[rank0]:[E703 10:17:33.295274779 ProcessGroupNCCL.cpp:1899] [PG ID 0 PG GUID 0(default_pg) Rank 0] Process group watchdog thread terminated with exception: [Rank 0] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=9, OpType=ALLREDUCE, NumelIn=354823168, NumelOut=354823168, Timeout(ms)=600000) ran for 600005 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:635 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7ba4c95785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x23d (0x7ba473be2a6d in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::watchdogHandler() + 0xc80 (0x7ba473be47f0 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::ncclCommWatchdog() + 0x14d (0x7ba473be5efd in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xdbbf4 (0x7ba4636dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #5: <unknown function> + 0x94ac3 (0x7ba4ca494ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x126850 (0x7ba4ca526850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank2]:[W703 10:17:33.556789964 TCPStore.cpp:125] [c10d] recvValue failed on SocketImpl(fd=6, addr=[localhost]:33946, remote=[localhost]:12355): Connection reset by peer
+Exception raised from recvBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:675 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x73b3b35785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5ba8bfe (0x73b39c5a8bfe in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x5baafcf (0x73b39c5aafcf in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: <unknown function> + 0x5bab84a (0x73b39c5ab84a in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::check(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) + 0x2a9 (0x73b39c5a52a9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: c10d::ProcessGroupNCCL::heartbeatMonitor() + 0x379 (0x73b35dbe09f9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0xdbbf4 (0x73b34d6dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #7: <unknown function> + 0x94ac3 (0x73b3b4494ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #8: <unknown function> + 0x126850 (0x73b3b4526850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank2]:[W703 10:17:33.560761531 ProcessGroupNCCL.cpp:1662] [PG ID 0 PG GUID 0(default_pg) Rank 2] Failed to check the "should dump" flag on TCPStore, (maybe TCPStore server has shut down too early), with error: Connection reset by peer
+[rank2]:[W703 10:17:34.560882874 TCPStore.cpp:106] [c10d] sendBytes failed on SocketImpl(fd=6, addr=[localhost]:33946, remote=[localhost]:12355): Broken pipe
+Exception raised from sendBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:653 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x73b3b35785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5ba8bfe (0x73b39c5a8bfe in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x5baa458 (0x73b39c5aa458 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: <unknown function> + 0x5babc3e (0x73b39c5abc3e in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::check(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) + 0x298 (0x73b39c5a5298 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: c10d::ProcessGroupNCCL::heartbeatMonitor() + 0x379 (0x73b35dbe09f9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0xdbbf4 (0x73b34d6dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #7: <unknown function> + 0x94ac3 (0x73b3b4494ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #8: <unknown function> + 0x126850 (0x73b3b4526850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank2]:[W703 10:17:34.564723515 ProcessGroupNCCL.cpp:1662] [PG ID 0 PG GUID 0(default_pg) Rank 2] Failed to check the "should dump" flag on TCPStore, (maybe TCPStore server has shut down too early), with error: Broken pipe
+W0703 10:17:35.097000 3002389 site-packages/torch/multiprocessing/spawn.py:169] Terminating process 3002979 via signal SIGTERM
+W0703 10:17:35.100000 3002389 site-packages/torch/multiprocessing/spawn.py:169] Terminating process 3002980 via signal SIGTERM
+W0703 10:17:35.108000 3002389 site-packages/torch/multiprocessing/spawn.py:169] Terminating process 3002981 via signal SIGTERM
+Traceback (most recent call last):
+  File "/data/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 390, in <module>
+    main()
+  File "/data/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 374, in main
+    mp.spawn(train_ddp, args=(world_size, config), nprocs=world_size, join=True)
+  File "/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
+  File "/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
+    while not context.join():
+  File "/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 196, in join
+    raise ProcessExitedException(
+torch.multiprocessing.spawn.ProcessExitedException: process 0 terminated with signal SIGABRT
+/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+
+2025-07-03 10:17:40,702 - ERROR - Training failed
+2025-07-03 10:17:40,702 - ERROR - ❌ Experiment failed. Total time: 635.45s
+2025-07-03 10:43:44,397 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 10:43:44,397 - INFO - Configuration: configs/config.yaml
+2025-07-03 10:43:44,397 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-03 10:43:44,397 - INFO - Checking prerequisites...
+2025-07-03 10:43:45,977 - INFO - ✅ All prerequisites checked
+2025-07-03 10:43:45,978 - INFO - Created/verified directory: ./processed_data
+2025-07-03 10:43:45,978 - INFO - Created/verified directory: ./models
+2025-07-03 10:43:45,978 - INFO - Created/verified directory: ./results
+2025-07-03 10:43:45,978 - INFO - Created/verified directory: ./logs
+2025-07-03 10:43:45,978 - INFO - Preprocessed data already exists. Skipping preprocessing.
+2025-07-03 10:43:45,978 - INFO - Use --force-preprocessing to regenerate.
+2025-07-03 10:43:45,978 - INFO - ==================================================
+2025-07-03 10:43:45,978 - INFO - Starting: Model Training
+2025-07-03 10:43:45,978 - INFO - Command: python training.py --gpu_ids 4 5 6 7
+2025-07-03 10:43:45,978 - INFO - ==================================================
+2025-07-03 10:54:15,204 - ERROR - ❌ Failed: Model Training (629.23s)
+2025-07-03 10:54:15,205 - ERROR - Exit code: 1
+2025-07-03 10:54:15,205 - ERROR - STDOUT:\nAvailable GPUs: 8
+GPU 0: NVIDIA H200
+GPU 1: NVIDIA H200
+GPU 2: NVIDIA H200
+GPU 3: NVIDIA H200
+GPU 4: NVIDIA H200
+GPU 5: NVIDIA H200
+GPU 6: NVIDIA H200
+GPU 7: NVIDIA H200
+Using specific GPUs: [4, 5, 6, 7]
+Starting multi-GPU training with 4 GPUs
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-medium[0m at: [34mhttps://wandb.ai/gistdslab/arc-action-sequence/runs/ybfw740j[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_104404-ybfw740j/logs[0m
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-medium[0m at: [34mhttps://wandb.ai/gistdslab/arc-action-sequence/runs/ecv128pu[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_104404-ecv128pu/logs[0m
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33marc_llm_DialoGPT-medium[0m at: [34mhttps://wandb.ai/gistdslab/arc-action-sequence/runs/484arfsg[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250703_104404-484arfsg/logs[0m
+
+2025-07-03 10:54:15,205 - ERROR - STDERR:\n2025-07-03 10:43:58,033 - INFO - Starting DDP training with 4 GPUs
+2025-07-03 10:43:59,008 - INFO - Rank 0: Using device: cuda:0
+2025-07-03 10:43:59,009 - INFO - Available GPUs: 4, World size: 4
+2025-07-03 10:44:03,654 - INFO - Starting model training...
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/ubuntu/.netrc
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_104404-ybfw740j
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/ybfw740j
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_104404-ecv128pu
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/ecv128pu
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_104404-484arfsg
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/484arfsg
+wandb: creating run
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250703_104404-u3r5zmpj
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run arc_llm_DialoGPT-medium
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/arc-action-sequence
+wandb: 🚀 View run at https://wandb.ai/gistdslab/arc-action-sequence/runs/u3r5zmpj
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+2025-07-03 10:44:06,232 - INFO - Loaded 63422 training samples, 7047 validation samples
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+torch.distributed process group is initialized, but parallel_mode != ParallelMode.DISTRIBUTED. In order to use Torch DDP, launch your script with `python -m torch.distributed.launch
+wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+
+  0%|          | 0/5946 [00:00<?, ?it/s]`loss_type=None` was set in the config but it is unrecognised.Using the default loss: `ForCausalLMLoss`.
+[rank3]:[W703 10:54:07.048798111 socket.cpp:460] [c10d] waitForInput: poll for socket SocketImpl(fd=5, addr=[localhost]:60998, remote=[localhost]:12355) returned 0, likely a timeout
+[rank3]:[W703 10:54:07.049178586 socket.cpp:485] [c10d] waitForInput: socket SocketImpl(fd=5, addr=[localhost]:60998, remote=[localhost]:12355) timed out after 600000ms
+
+  0%|          | 0/5946 [10:00<?, ?it/s]
+[rank1]:[W703 10:54:07.090047447 socket.cpp:460] [c10d] waitForInput: poll for socket SocketImpl(fd=5, addr=[localhost]:60964, remote=[localhost]:12355) returned 0, likely a timeout
+[rank1]:[W703 10:54:07.090336813 socket.cpp:485] [c10d] waitForInput: socket SocketImpl(fd=5, addr=[localhost]:60964, remote=[localhost]:12355) timed out after 600000ms
+
+  0%|          | 0/5946 [10:00<?, ?it/s]
+[rank2]:[W703 10:54:07.141112146 socket.cpp:460] [c10d] waitForInput: poll for socket SocketImpl(fd=5, addr=[localhost]:60996, remote=[localhost]:12355) returned 0, likely a timeout
+[rank2]:[W703 10:54:07.141318578 socket.cpp:485] [c10d] waitForInput: socket SocketImpl(fd=5, addr=[localhost]:60996, remote=[localhost]:12355) timed out after 600000ms
+
+  0%|          | 0/5946 [10:00<?, ?it/s]
+[rank0]:[E703 10:54:07.534949321 ProcessGroupNCCL.cpp:632] [Rank 0] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=9, OpType=ALLREDUCE, NumelIn=354823168, NumelOut=354823168, Timeout(ms)=600000) ran for 600014 milliseconds before timing out.
+[rank0]:[E703 10:54:07.535499063 ProcessGroupNCCL.cpp:2271] [PG ID 0 PG GUID 0(default_pg) Rank 0]  failure detected by watchdog at work sequence id: 9 PG status: last enqueued work: 9, last completed work: 8
+[rank0]:[E703 10:54:07.535520667 ProcessGroupNCCL.cpp:670] Stack trace of the failed collective not found, potentially because FlightRecorder is disabled. You can enable it by setting TORCH_NCCL_TRACE_BUFFER_SIZE to a non-zero value.
+[rank0]:[E703 10:54:07.535564302 ProcessGroupNCCL.cpp:2106] [PG ID 0 PG GUID 0(default_pg) Rank 0] First PG on this rank to signal dumping.
+[rank3]:[E703 10:54:08.050172605 ProcessGroupNCCL.cpp:1685] [PG ID 0 PG GUID 0(default_pg) Rank 3] Observed flight recorder dump signal from another rank via TCPStore.
+[rank3]:[E703 10:54:08.050303362 ProcessGroupNCCL.cpp:1746] [PG ID 0 PG GUID 0(default_pg) Rank 3] Received a dump signal due to a collective timeout from  rank 0 and we will try our best to dump the debug info. Last enqueued NCCL work: 6, last completed NCCL work: 6.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank3]:[E703 10:54:08.050429747 ProcessGroupNCCL.cpp:1536] [PG ID 0 PG GUID 0(default_pg) Rank 3] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1
+[rank0]:[E703 10:54:08.066752658 ProcessGroupNCCL.cpp:1746] [PG ID 0 PG GUID 0(default_pg) Rank 0] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 9, last completed NCCL work: 8.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank0]:[E703 10:54:08.066926256 ProcessGroupNCCL.cpp:1536] [PG ID 0 PG GUID 0(default_pg) Rank 0] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1
+[rank0]:[E703 10:54:08.067296601 ProcessGroupNCCL.cpp:684] [Rank 0] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank0]:[E703 10:54:08.067307607 ProcessGroupNCCL.cpp:698] [Rank 0] To avoid data inconsistency, we are taking the entire process down.
+[rank0]:[E703 10:54:08.068635872 ProcessGroupNCCL.cpp:1899] [PG ID 0 PG GUID 0(default_pg) Rank 0] Process group watchdog thread terminated with exception: [Rank 0] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=9, OpType=ALLREDUCE, NumelIn=354823168, NumelOut=354823168, Timeout(ms)=600000) ran for 600014 milliseconds before timing out.
+Exception raised from checkTimeout at /pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:635 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x714e06f785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x23d (0x714db19e2a6d in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::watchdogHandler() + 0xc80 (0x714db19e47f0 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::ncclCommWatchdog() + 0x14d (0x714db19e5efd in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xdbbf4 (0x714da14dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #5: <unknown function> + 0x94ac3 (0x714e08294ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x126850 (0x714e08326850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank1]:[W703 10:54:08.272152870 TCPStore.cpp:125] [c10d] recvValue failed on SocketImpl(fd=5, addr=[localhost]:60964, remote=[localhost]:12355): Connection reset by peer
+Exception raised from recvBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:675 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7e8fca3785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5ba8bfe (0x7e8fb33a8bfe in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x5baafcf (0x7e8fb33aafcf in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: <unknown function> + 0x5bab84a (0x7e8fb33ab84a in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::check(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) + 0x2a9 (0x7e8fb33a52a9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: c10d::ProcessGroupNCCL::heartbeatMonitor() + 0x379 (0x7e8f749e09f9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0xdbbf4 (0x7e8f644dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #7: <unknown function> + 0x94ac3 (0x7e8fcb294ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #8: <unknown function> + 0x126850 (0x7e8fcb326850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank2]:[W703 10:54:08.272143010 TCPStore.cpp:125] [c10d] recvValue failed on SocketImpl(fd=5, addr=[localhost]:60996, remote=[localhost]:12355): Connection reset by peer
+Exception raised from recvBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:675 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7447b8b785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5ba8bfe (0x7447a1fa8bfe in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x5baafcf (0x7447a1faafcf in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: <unknown function> + 0x5bab84a (0x7447a1fab84a in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::check(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) + 0x2a9 (0x7447a1fa52a9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: c10d::ProcessGroupNCCL::heartbeatMonitor() + 0x379 (0x7447635e09f9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0xdbbf4 (0x7447530dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #7: <unknown function> + 0x94ac3 (0x7447b9e94ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #8: <unknown function> + 0x126850 (0x7447b9f26850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank1]:[W703 10:54:08.275992955 ProcessGroupNCCL.cpp:1662] [PG ID 0 PG GUID 0(default_pg) Rank 1] Failed to check the "should dump" flag on TCPStore, (maybe TCPStore server has shut down too early), with error: Connection reset by peer
+[rank2]:[W703 10:54:08.276022750 ProcessGroupNCCL.cpp:1662] [PG ID 0 PG GUID 0(default_pg) Rank 2] Failed to check the "should dump" flag on TCPStore, (maybe TCPStore server has shut down too early), with error: Connection reset by peer
+[rank1]:[W703 10:54:09.276162476 TCPStore.cpp:106] [c10d] sendBytes failed on SocketImpl(fd=5, addr=[localhost]:60964, remote=[localhost]:12355): Broken pipe
+Exception raised from sendBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:653 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7e8fca3785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5ba8bfe (0x7e8fb33a8bfe in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x5baa458 (0x7e8fb33aa458 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: <unknown function> + 0x5babc3e (0x7e8fb33abc3e in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::check(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) + 0x298 (0x7e8fb33a5298 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: c10d::ProcessGroupNCCL::heartbeatMonitor() + 0x379 (0x7e8f749e09f9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0xdbbf4 (0x7e8f644dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #7: <unknown function> + 0x94ac3 (0x7e8fcb294ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #8: <unknown function> + 0x126850 (0x7e8fcb326850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank2]:[W703 10:54:09.276176385 TCPStore.cpp:106] [c10d] sendBytes failed on SocketImpl(fd=5, addr=[localhost]:60996, remote=[localhost]:12355): Broken pipe
+Exception raised from sendBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:653 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7447b8b785e8 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5ba8bfe (0x7447a1fa8bfe in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x5baa458 (0x7447a1faa458 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: <unknown function> + 0x5babc3e (0x7447a1fabc3e in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::check(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) + 0x298 (0x7447a1fa5298 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cpu.so)
+frame #5: c10d::ProcessGroupNCCL::heartbeatMonitor() + 0x379 (0x7447635e09f9 in /home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0xdbbf4 (0x7447530dbbf4 in /home/ubuntu/miniconda3/envs/gflownet/bin/../lib/libstdc++.so.6)
+frame #7: <unknown function> + 0x94ac3 (0x7447b9e94ac3 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #8: <unknown function> + 0x126850 (0x7447b9f26850 in /lib/x86_64-linux-gnu/libc.so.6)
+
+[rank1]:[W703 10:54:09.280030354 ProcessGroupNCCL.cpp:1662] [PG ID 0 PG GUID 0(default_pg) Rank 1] Failed to check the "should dump" flag on TCPStore, (maybe TCPStore server has shut down too early), with error: Broken pipe
+[rank2]:[W703 10:54:09.280056990 ProcessGroupNCCL.cpp:1662] [PG ID 0 PG GUID 0(default_pg) Rank 2] Failed to check the "should dump" flag on TCPStore, (maybe TCPStore server has shut down too early), with error: Broken pipe
+W0703 10:54:09.375000 3046354 site-packages/torch/multiprocessing/spawn.py:169] Terminating process 3046610 via signal SIGTERM
+W0703 10:54:09.377000 3046354 site-packages/torch/multiprocessing/spawn.py:169] Terminating process 3046611 via signal SIGTERM
+W0703 10:54:09.390000 3046354 site-packages/torch/multiprocessing/spawn.py:169] Terminating process 3046612 via signal SIGTERM
+Traceback (most recent call last):
+  File "/data/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 390, in <module>
+    main()
+  File "/data/GFN_to_ARC/gfn/src/LLM_experiment/training.py", line 374, in main
+    mp.spawn(train_ddp, args=(world_size, config), nprocs=world_size, join=True)
+  File "/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
+  File "/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
+    while not context.join():
+  File "/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 196, in join
+    raise ProcessExitedException(
+torch.multiprocessing.spawn.ProcessExitedException: process 0 terminated with signal SIGABRT
+/home/ubuntu/miniconda3/envs/gflownet/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+
+2025-07-03 10:54:15,205 - ERROR - Training failed
+2025-07-03 10:54:15,205 - ERROR - ❌ Experiment failed. Total time: 630.81s
+2025-07-03 11:26:41,140 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 11:26:41,140 - INFO - Configuration: configs/config.yaml
+2025-07-03 11:26:41,140 - INFO - Model: microsoft/DialoGPT-medium
+2025-07-03 11:26:41,140 - INFO - Checking prerequisites...
+2025-07-03 11:26:42,737 - INFO - ✅ All prerequisites checked
+2025-07-03 11:26:42,737 - INFO - Created/verified directory: ./processed_data
+2025-07-03 11:26:42,737 - INFO - Created/verified directory: ./models
+2025-07-03 11:26:42,737 - INFO - Created/verified directory: ./results
+2025-07-03 11:26:42,737 - INFO - Created/verified directory: ./logs
+2025-07-03 11:26:42,737 - INFO - Preprocessed data already exists. Skipping preprocessing.
+2025-07-03 11:26:42,737 - INFO - Use --force-preprocessing to regenerate.
+2025-07-03 11:26:42,737 - INFO - ==================================================
+2025-07-03 11:26:42,737 - INFO - Starting: Model Training
+2025-07-03 11:26:42,737 - INFO - Command: python training.py --gpu_ids 4 5 6 7
+2025-07-03 11:26:42,737 - INFO - ==================================================

@@ -1,0 +1,40 @@
+# LLM Experiment Configuration
+
+# Data paths
+trajectory_data_dir: "/opt/dlami/nvme/seungpil"
+rearc_data_dir: "./data/re-arc"
+processed_data_dir: "./processed_data"
+model_save_dir: "./models"
+results_dir: "./results"
+
+# Training parameters
+model_name: "microsoft/DialoGPT-medium" # Start with smaller model for testing
+max_length: 1024
+batch_size: 1
+learning_rate: 0.00005
+num_epochs: 3
+warmup_steps: 100
+gradient_accumulation_steps: 8
+
+# Data preprocessing
+max_grid_size: 30
+action_mapping:
+  0: "left_rotate" # 왼쪽 회전
+  1: "right_rotate" # 오른쪽 회전
+  2: "horizontal_flip" # 수평 뒤집기
+  3: "vertical_flip" # 수직 뒤집기
+  4: "submit" # 제출
+
+# Available problem IDs and their ARC task IDs (only available trajectory files)
+problem_mapping:
+  86: "25ff71a9"
+  139: "6150a2bd"
+  178: "74dd1130"
+  149: "6773b310"
+  154: "6855a6e4"
+  240: "9d9215db"
+  379: "ecdecbb3"
+
+# Evaluation
+num_test_samples: 50
+max_action_sequence_length: 20
