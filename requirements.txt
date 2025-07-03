@@ -11,3 +11,16 @@ pandas>=1.3.0
 Pillow>=8.0.0
 simple-parsing
 pygame>=2.5.1
+
+# LLM and Unsloth dependencies
+transformers>=4.44.0
+datasets>=2.0.0
+accelerate>=0.21.0
+peft>=0.4.0
+bitsandbytes>=0.43.0
+scikit-learn>=1.0.0
+pyyaml>=6.0
+unsloth[cu121-ampere-torch230] @ git+https://github.com/unslothai/unsloth.git
+
+# TRL for supervised fine-tuning
+trl>=0.7.0
