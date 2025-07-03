@@ -160,7 +160,7 @@ class ARCTrajectoryExperiment:
     
     def run_data_preprocessing(self, skip_if_exists: bool = True) -> bool:
         """Run data preprocessing step"""
-        processed_file = os.path.join(self.config['processed_data_dir'], "train_trajectories.pt")
+        processed_file = os.path.join(self.config['processed_data_dir'], "arc_trajectory_data.json")
         
         if skip_if_exists and os.path.exists(processed_file):
             self.logger.info("Preprocessed data already exists, skipping...")
@@ -171,7 +171,7 @@ class ARCTrajectoryExperiment:
     
     def run_training(self, skip_if_exists: bool = True, gpu_id: int = None) -> bool:
         """Run model training"""
-        model_file = os.path.join(self.config['model_save_dir'], "arc_transformer_best.pt")
+        model_file = os.path.join(self.config['model_save_dir'], "checkpoint_best.pt")
         
         if skip_if_exists and os.path.exists(model_file):
             self.logger.info("Trained model already exists, skipping...")
