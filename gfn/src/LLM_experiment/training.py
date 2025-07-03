@@ -163,11 +163,43 @@ class ARCActionTrainer:
         if not os.path.exists(train_file) or not os.path.exists(val_file):
             # 전체 데이터에서 분할
             all_data_file = os.path.join(self.config['processed_data_dir'], "all_training_data.json")
-            if not os.path.exists(all_data_file):
-                raise FileNotFoundError(f"Training data not found. Run preprocessing first.")
+            if os.path.exists(all_data_file):
+                print("Loading training data from all_training_data.json...")
+                all_data = load_json(all_data_file)
+            else:
+                # all_training_data.json이 없으면 개별 problem 파일들을 찾아서 로드
+                print("all_training_data.json not found. Loading from individual problem files...")
+                all_data = []
+                
+                # processed_data_dir에서 problem_*_processed.json 파일들 찾기
+                import glob
+                problem_files = glob.glob(os.path.join(self.config['processed_data_dir'], "problem_*_processed.json"))
+                
+                if not problem_files:
+                    raise FileNotFoundError(f"No training data found in {self.config['processed_data_dir']}. Run preprocessing first.")
+                
+                problem_files.sort()  # 파일 순서 정렬
+                print(f"Found {len(problem_files)} problem files to load:")
+                
+                for problem_file in problem_files:
+                    problem_name = os.path.basename(problem_file)
+                    print(f"  Loading {problem_name}...")
+                    try:
+                        problem_data = load_json(problem_file)
+                        if problem_data:  # 빈 배열이 아닌 경우만 추가
+                            all_data.extend(problem_data)
+                            print(f"    Added {len(problem_data)} samples from {problem_name}")
+                        else:
+                            print(f"    Skipped {problem_name} (empty)")
+                    except Exception as e:
+                        print(f"    Error loading {problem_name}: {e}")
+                        continue
+                
+                if not all_data:
+                    raise FileNotFoundError(f"No valid training data found. All problem files are empty or invalid.")
+                
+                print(f"Total samples loaded: {len(all_data)}")
             
-            print("Loading training data...")
-            all_data = load_json(all_data_file)
             print(f"Splitting {len(all_data)} samples into train/validation...")
             train_data, val_data = train_test_split(all_data, test_size=0.1, random_state=42)
             

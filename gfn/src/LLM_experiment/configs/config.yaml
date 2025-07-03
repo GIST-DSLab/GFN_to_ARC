@@ -4,15 +4,15 @@
 trajectory_data_dir: "/opt/dlami/nvme/seungpil"
 rearc_data_dir: "./data/re-arc"
 processed_data_dir: "./processed_data"
-model_save_dir: "./models"
-results_dir: "./results"
+model_save_dir: "/opt/dlami/nvme/seungpil/models"
+results_dir: "/opt/dlami/nvme/seungpil/results"
 
 # Training parameters
-model_name: "microsoft/DialoGPT-small"  # 더 작은 모델로 테스트
-max_length: 256  # 시퀀스 길이도 줄임
-batch_size: 2  # 배치 크기 증가
+model_name: "meta-llama/Llama-3.1-8B-Instruct" # Start with smaller model for testing
+max_length: 1024
+batch_size: 1
 learning_rate: 0.00005
-num_epochs: 1  # 빠른 테스트를 위해
+num_epochs: 1 # 빠른 테스트를 위해
 warmup_steps: 20
 gradient_accumulation_steps: 4
 

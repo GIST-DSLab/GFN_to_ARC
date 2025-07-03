@@ -99,8 +99,8 @@ def setup_directories(config: Dict, logger):
     """필요한 디렉토리 생성"""
     directories = [
         config['processed_data_dir'],
-        "./models",
-        "./results",
+        config['model_save_dir'],
+        config["results_dir"],
         "./logs"
     ]
     
@@ -117,6 +117,27 @@ def run_preprocessing(config: Dict, logger, force: bool = False):
         logger.info("Preprocessed data already exists. Skipping preprocessing.")
         logger.info("Use --force-preprocessing to regenerate.")
         return True
+    
+    # all_training_data.json이 없어도 개별 problem 파일들이 있으면 건너뛰기
+    import glob
+    problem_files = glob.glob(os.path.join(config['processed_data_dir'], "problem_*_processed.json"))
+    if problem_files and not force:
+        # 빈 파일이 아닌 유효한 데이터가 있는지 확인
+        valid_files = []
+        for problem_file in problem_files:
+            try:
+                with open(problem_file, 'r') as f:
+                    data = f.read().strip()
+                    if data and data != "[]" and len(data) > 10:  # 빈 배열이 아니고 충분한 데이터가 있는 경우
+                        valid_files.append(problem_file)
+            except Exception:
+                continue
+        
+        if valid_files:
+            logger.info(f"Found {len(valid_files)} existing processed data files. Skipping preprocessing.")
+            logger.info(f"Files: {[os.path.basename(f) for f in valid_files]}")
+            logger.info("Use --force-preprocessing to regenerate.")
+            return True
     
     command = "python data_preprocessing.py"
     return run_command(command, "Data Preprocessing", logger)
