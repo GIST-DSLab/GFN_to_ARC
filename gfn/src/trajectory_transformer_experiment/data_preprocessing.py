@@ -97,7 +97,8 @@ def preprocess_data(config: Dict) -> Tuple[ARCTrajectoryDataset, ARCTrajectoryDa
     
     # 4. 너무 긴 시퀀스 필터링
     max_length = config['max_sequence_length']
-    sequences = [seq for seq in sequences if len(seq['sequence']) <= max_length]
+    print(f"Filtering sequences by max length ({max_length})...")
+    sequences = [seq for seq in tqdm(sequences, desc="Filtering by sequence length", unit="seq") if len(seq['sequence']) <= max_length]
     print(f"After filtering by max length ({max_length}): {len(sequences)} sequences")
     
     # 5. Train/validation split

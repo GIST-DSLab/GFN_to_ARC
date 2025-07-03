@@ -30,20 +30,21 @@ def load_gflownet_trajectories(data_dir: str, problem_ids: List[int] = None) -> 
             continue
             
         # trajectory 파일들 찾기
-        for filename in os.listdir(problem_dir):
-            if filename.endswith('.json') and 'trajectories' in filename:
-                filepath = os.path.join(problem_dir, filename)
-                print(f"Loading {filepath}")
+        trajectory_files = [f for f in os.listdir(problem_dir) if f.endswith('.json') and 'trajectories' in f]
+        
+        for filename in tqdm(trajectory_files, desc=f"Loading trajectory files for problem {problem_id}", unit="file", leave=False):
+            filepath = os.path.join(problem_dir, filename)
+            print(f"Loading {filepath}")
+            
+            with open(filepath, 'r') as f:
+                data = json.load(f)
                 
-                with open(filepath, 'r') as f:
-                    data = json.load(f)
-                    
-                # 성공한 trajectory만 필터링
-                for traj in data:
-                    if 'rewards' in traj and len(traj['rewards']) > 0:
-                        final_reward = traj['rewards'][-1]
-                        if final_reward > 0:  # 성공한 trajectory만
-                            trajectories.append(traj)
+            # 성공한 trajectory만 필터링
+            for traj in tqdm(data, desc="Filtering successful trajectories", unit="traj", leave=False):
+                if 'rewards' in traj and len(traj['rewards']) > 0:
+                    final_reward = traj['rewards'][-1]
+                    if final_reward > 0:  # 성공한 trajectory만
+                        trajectories.append(traj)
     
     print(f"Loaded {len(trajectories)} successful trajectories")
     return trajectories
