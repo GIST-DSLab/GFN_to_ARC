@@ -18,7 +18,7 @@ import logging
 
 from models.arc_transformer import create_model
 from data_preprocessing import ARCTrajectoryDataset, preprocess_data
-from configs.arc_config import base, arc_small
+import yaml
 
 class ARCTrainer:
     def __init__(self, config):
@@ -299,28 +299,27 @@ class ARCTrainer:
 
 def main():
     parser = argparse.ArgumentParser(description="Train ARC Trajectory Transformer")
-    parser.add_argument("--config", type=str, default="base", 
-                       choices=["base", "small"], help="Configuration name")
+    parser.add_argument("--config", type=str, default="configs/config.yaml", 
+                       help="Configuration file path")
     parser.add_argument("--wandb", action="store_true", help="Use Weights & Biases")
-    parser.add_argument("--device", type=str, default="cuda", help="Device to use")
-    parser.add_argument("--seed", type=int, default=42, help="Random seed")
+    parser.add_argument("--device", type=str, default=None, help="Device to use (overrides config)")
+    parser.add_argument("--seed", type=int, default=None, help="Random seed (overrides config)")
     
     args = parser.parse_args()
     
-    # Set random seed
-    torch.manual_seed(args.seed)
-    np.random.seed(args.seed)
-    
     # Load configuration
-    if args.config == "base":
-        config = base['train'].copy()
-    elif args.config == "small":
-        config = arc_small['train'].copy()
-    else:
-        raise ValueError(f"Unknown config: {args.config}")
+    with open(args.config, 'r') as f:
+        config = yaml.safe_load(f)
     
-    config['device'] = args.device
-    config['seed'] = args.seed
+    # Override config with command line arguments
+    if args.device:
+        config['device'] = args.device
+    if args.seed:
+        config['seed'] = args.seed
+    
+    # Set random seed
+    torch.manual_seed(config.get('seed', 42))
+    np.random.seed(config.get('seed', 42))
     
     # Initialize trainer
     trainer = ARCTrainer(config)
