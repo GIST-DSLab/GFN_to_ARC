@@ -25,3 +25,9 @@ __pycache__/
 *.json
 !download_data.py
 !run_experiment.py
+
+# Debug and test files
+debug_*.py
+test_*.py
+quick_*.py
+show_*.py
