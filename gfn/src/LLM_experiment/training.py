@@ -118,10 +118,11 @@ class ARCActionTrainer:
         if "Llama" in config['model_name'] and world_size == 1:
             try:
                 from transformers import BitsAndBytesConfig
+                quant_config = config.get('quantization', {})
                 quantization_config = BitsAndBytesConfig(
-                    load_in_8bit=True,
-                    llm_int8_threshold=6.0,
-                    llm_int8_has_fp16_weight=False,
+                    load_in_8bit=quant_config.get('load_in_8bit', True),
+                    llm_int8_threshold=quant_config.get('llm_int8_threshold', 6.0),
+                    llm_int8_has_fp16_weight=quant_config.get('llm_int8_has_fp16_weight', False),
                 )
                 self.model = AutoModelForCausalLM.from_pretrained(
                     config['model_name'],
@@ -238,6 +239,9 @@ class ARCActionTrainer:
         output_dir = os.path.join(self.config.get('model_save_dir', './models'), f"arc_action_model_{model_name_safe}")
         os.makedirs(output_dir, exist_ok=True)
         
+        # 학습 설정 가져오기
+        training_config = self.config.get('training', {})
+        
         training_args = TrainingArguments(
             output_dir=output_dir,
             overwrite_output_dir=True,
@@ -247,27 +251,25 @@ class ARCActionTrainer:
             warmup_steps=self.config['warmup_steps'],
             learning_rate=self.config['learning_rate'],
             logging_dir=os.path.join(output_dir, 'logs'),
-            logging_steps=50,
-            eval_steps=500,  # 평가 주기를 늘림
-            save_steps=500,  # 저장 주기를 늘림
-            eval_strategy="no",  # 평가 비활성화
+            logging_steps=training_config.get('logging_steps', 50),
+            eval_steps=training_config.get('eval_steps', 500),
+            save_steps=training_config.get('save_steps', 500),
+            eval_strategy=training_config.get('eval_strategy', "no"),
             save_strategy="steps",
             load_best_model_at_end=False,  # 평가가 없으므로 비활성화
-            # metric_for_best_model="eval_loss",  # 평가가 없으므로 주석 처리
-            # greater_is_better=False,  # 평가가 없으므로 주석 처리
             dataloader_drop_last=False,
             fp16=False,
             gradient_accumulation_steps=self.config.get('gradient_accumulation_steps', 2),
-            dataloader_num_workers=0,
+            dataloader_num_workers=training_config.get('dataloader_num_workers', 0),
             remove_unused_columns=False,
             report_to="wandb" if self.rank == 0 else None,
-            dataloader_pin_memory=False,  # 메모리 사용량 줄이기
-            skip_memory_metrics=True,  # 메모리 메트릭 건너뛰기
-            torch_empty_cache_steps=5,  # 더 자주 캐시 비우기
-            ddp_timeout=7200,  # DDP 타임아웃 2시간
-            ddp_bucket_cap_mb=25,  # DDP 버킷 크기 줄이기
-            ddp_broadcast_buffers=False,  # 브로드캐스트 비활성화
-            gradient_checkpointing=False,  # DDP에서는 비활성화
+            dataloader_pin_memory=training_config.get('dataloader_pin_memory', False),
+            skip_memory_metrics=training_config.get('skip_memory_metrics', True),
+            torch_empty_cache_steps=training_config.get('torch_empty_cache_steps', 5),
+            ddp_timeout=training_config.get('ddp_timeout', 7200),
+            ddp_bucket_cap_mb=training_config.get('ddp_bucket_cap_mb', 25),
+            ddp_broadcast_buffers=training_config.get('ddp_broadcast_buffers', False),
+            gradient_checkpointing=training_config.get('gradient_checkpointing', False),
         )
         
         return training_args
@@ -292,12 +294,21 @@ class ARCActionTrainer:
         
         # wandb 로그인 및 초기화 (rank 0에서만)
         if self.rank == 0:
-            wandb.login(key="2f4e627868f1f9dad10bcb1a14fbf96817e6baa9")
+            # WandB API key는 환경변수에서 가져오거나 config에서 가져오기
+            import os
+            wandb_key = os.environ.get('WANDB_API_KEY')
+            if wandb_key:
+                wandb.login(key=wandb_key)
+            else:
+                wandb.login()  # 기본 로그인 방식 사용
+            
+            # WandB config 가져오기
+            wandb_config = self.config.get('wandb', {})
             wandb.init(
-                project="arc-action-sequence",
+                project=wandb_config.get('project', "arc-action-sequence"),
                 config=self.config,
                 name=f"arc_llm_{self.config['model_name'].split('/')[-1]}",
-                tags=["llama3.1", "action_sequence", "arc"]
+                tags=wandb_config.get('tags', ["llama3.1", "action_sequence", "arc"])
             )
         
         # 데이터 로드
@@ -355,13 +366,16 @@ class ARCActionTrainer:
         inputs = self.tokenizer(prompt, return_tensors='pt')
         
         # 생성
+        # 생성 설정 가져오기
+        gen_config = self.config.get('generation', {})
+        
         with torch.no_grad():
             outputs = self.model.generate(
                 inputs['input_ids'],
                 max_new_tokens=max_new_tokens,
                 num_return_sequences=1,
-                temperature=0.7,
-                do_sample=True,
+                temperature=gen_config.get('temperature', 0.7),
+                do_sample=gen_config.get('do_sample', True),
                 pad_token_id=self.tokenizer.eos_token_id
             )
         
@@ -376,11 +390,15 @@ class ARCActionTrainer:
         
         return actions
 
-def setup_ddp(rank: int, world_size: int):
+def setup_ddp(rank: int, world_size: int, config: Dict = None):
     """torchrun을 통한 DDP 초기화"""
-    print(f"Rank {rank}: Initializing DDP with gloo backend...")
+    ddp_config = config.get('ddp', {}) if config else {}
+    backend = ddp_config.get('backend', 'gloo')
+    timeout_minutes = ddp_config.get('timeout_minutes', 30)
+    
+    print(f"Rank {rank}: Initializing DDP with {backend} backend...")
     # torchrun이 이미 환경변수를 설정해줌 (MASTER_ADDR, MASTER_PORT 등)
-    init_process_group(backend="gloo", timeout=datetime.timedelta(minutes=30))
+    init_process_group(backend=backend, timeout=datetime.timedelta(minutes=timeout_minutes))
     print(f"Rank {rank}: DDP initialized successfully")
 
 def cleanup_ddp():
@@ -426,8 +444,8 @@ def main():
         
         print(f"torchrun mode: rank={rank}, world_size={world_size}, local_rank={local_rank}")
         
-        # DDP 초기화 - gloo 백엔드 사용
-        setup_ddp(rank, world_size)
+        # DDP 초기화 - config에서 백엔드 설정 가져오기
+        setup_ddp(rank, world_size, config)
         
         # 로깅 설정 (rank 0에서만)
         if rank == 0:

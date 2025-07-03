@@ -46,3 +46,76 @@ problem_mapping:
 # Evaluation
 num_test_samples: 50
 max_action_sequence_length: 20
+
+# Environment Configuration
+environment:
+  python_paths:
+    gflownet: "/data/miniforge3/envs/gflownet/bin/python"
+    gflow_llm: "/data/miniforge3/envs/gflow-llm/bin/python"
+  sys_paths:
+    - "/home/ubuntu/GFN_to_ARC/gfn/src"
+    - "/home/ubuntu/GFN_to_ARC/gfn/src/ARCenv"
+  log_dir: "./logs"
+
+# Training Configuration
+training:
+  logging_steps: 10  # Unsloth에서는 더 자주 로깅
+  eval_steps: 100
+  save_steps: 100
+  eval_strategy: "steps"
+  dataloader_num_workers: 0
+  dataloader_pin_memory: false
+  skip_memory_metrics: true
+  torch_empty_cache_steps: 5
+  ddp_timeout: 7200
+  ddp_bucket_cap_mb: 25
+  ddp_broadcast_buffers: false
+  gradient_checkpointing: false
+  random_seed: 3407
+
+# WandB Configuration
+wandb:
+  project: "arc-action-sequence"
+  tags: ["llama3.1", "action_sequence", "arc", "unsloth"]
+
+# Quantization Configuration
+quantization:
+  load_in_8bit: false  # Unsloth에서는 4bit 사용
+  llm_int8_threshold: 6.0
+  llm_int8_has_fp16_weight: false
+
+# Generation Configuration
+generation:
+  temperature: 0.7
+  do_sample: true
+  early_stopping: true
+  inference_temperature: 0.1
+
+# LoRA Configuration
+lora:
+  load_in_4bit: true
+  r: 16
+  lora_alpha: 16
+  lora_dropout: 0.05
+  bias: "none"
+  use_rslora: false
+  target_modules: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+# Evaluation Configuration
+evaluation:
+  few_shot_examples: 5
+  test_examples_range: [5, 25]
+  validation_split_ratio: 0.1
+
+# Optimizer Configuration
+optimizer:
+  name: "adamw_8bit"
+  weight_decay: 0.01
+  lr_scheduler_type: "linear"
+  dataset_num_proc: 2
+  packing: false
+
+# DDP Configuration
+ddp:
+  backend: "gloo"
+  timeout_minutes: 30

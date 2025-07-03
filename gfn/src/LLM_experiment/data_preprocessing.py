@@ -217,8 +217,14 @@ class TrajectoryProcessor:
         self.logger.info(f"Total training samples: {len(all_training_data)}")
         return all_training_data
     
-    def create_validation_split(self, training_data: List[Dict], split_ratio: float = 0.1):
+    def create_validation_split(self, training_data: List[Dict], split_ratio: float = None):
         """검증 데이터 분할"""
+        if split_ratio is None:
+            split_ratio = self.config.get('evaluation', {}).get('validation_split_ratio', 0.1)
+        
+        # 시드 설정
+        random_seed = self.config.get('training', {}).get('random_seed', 42)
+        np.random.seed(random_seed)
         np.random.shuffle(training_data)
         split_idx = int(len(training_data) * (1 - split_ratio))
         

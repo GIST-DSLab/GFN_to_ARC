@@ -93,25 +93,26 @@ def format_data_for_unsloth(data: List[Dict]) -> List[Dict]:
 
 def create_unsloth_model_and_tokenizer(config: Dict):
     """Unsloth 모델과 토크나이저 생성"""
+    lora_config = config.get('lora', {})
+    
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=config['model_name'],
         max_seq_length=config['max_length'],
         dtype=None,  # Unsloth가 자동으로 선택
-        load_in_4bit=True,  # 4bit 양자화로 메모리 절약
+        load_in_4bit=lora_config.get('load_in_4bit', True),  # 4bit 양자화로 메모리 절약
     )
     
     # LoRA 어댑터 추가
     model = FastLanguageModel.get_peft_model(
         model,
-        r=16,  # LoRA rank
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
-                       "gate_proj", "up_proj", "down_proj"],
-        lora_alpha=16,
-        lora_dropout=0.05,
-        bias="none",
+        r=lora_config.get('r', 16),  # LoRA rank
+        target_modules=lora_config.get('target_modules', ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]),
+        lora_alpha=lora_config.get('lora_alpha', 16),
+        lora_dropout=lora_config.get('lora_dropout', 0.05),
+        bias=lora_config.get('bias', "none"),
         use_gradient_checkpointing="unsloth",  # Unsloth의 최적화된 체크포인팅
-        random_state=3407,
-        use_rslora=False,
+        random_state=lora_config.get('random_state', 3407),
+        use_rslora=lora_config.get('use_rslora', False),
         loftq_config=None,
     )
     
@@ -139,23 +140,27 @@ def train_with_unsloth(config: Dict, logger: logging.Logger) -> None:
     logger.info("Creating Unsloth model and tokenizer...")
     model, tokenizer = create_unsloth_model_and_tokenizer(config)
     
+    # 학습 설정 가져오기
+    training_config = config.get('training', {})
+    optimizer_config = config.get('optimizer', {})
+    
     # 학습 인자 설정
     training_args = TrainingArguments(
-        per_device_train_batch_size=config.get('batch_size', 8),  # 큰 배치 크기
+        per_device_train_batch_size=config.get('batch_size', 8),
         gradient_accumulation_steps=config.get('gradient_accumulation_steps', 2),
         warmup_steps=config.get('warmup_steps', 50),
-        num_train_epochs=config.get('num_epochs', 1),  # config에서 epoch 수 가져오기
-        learning_rate=config.get('learning_rate', 2e-4),  # LoRA에 적합한 높은 LR
+        num_train_epochs=config.get('num_epochs', 1),
+        learning_rate=config.get('learning_rate', 2e-4),
         fp16=not is_bfloat16_supported(),
         bf16=is_bfloat16_supported(),
-        logging_steps=10,
-        optim="adamw_8bit",  # 8bit optimizer로 메모리 절약
-        weight_decay=0.01,
-        lr_scheduler_type="linear",
-        seed=3407,
+        logging_steps=training_config.get('logging_steps', 10),
+        optim=optimizer_config.get('name', "adamw_8bit"),
+        weight_decay=optimizer_config.get('weight_decay', 0.01),
+        lr_scheduler_type=optimizer_config.get('lr_scheduler_type', "linear"),
+        seed=training_config.get('random_seed', 3407),
         output_dir=config['model_save_dir'],
-        save_steps=100,
-        eval_steps=100,
+        save_steps=training_config.get('save_steps', 100),
+        eval_steps=training_config.get('eval_steps', 100),
         eval_strategy="steps",
         save_strategy="steps",
         load_best_model_at_end=True,
@@ -172,8 +177,8 @@ def train_with_unsloth(config: Dict, logger: logging.Logger) -> None:
         eval_dataset=val_dataset,
         dataset_text_field="text",
         max_seq_length=config['max_length'],
-        dataset_num_proc=2,
-        packing=False,  # 짧은 시퀀스의 경우 False가 더 안정적
+        dataset_num_proc=optimizer_config.get('dataset_num_proc', 2),
+        packing=optimizer_config.get('packing', False),
         args=training_args,
     )
     

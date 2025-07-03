@@ -187,17 +187,20 @@ class ARCInferenceEvaluator:
         )
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         
+        # 생성 설정 가져오기
+        gen_config = self.config.get('generation', {})
+        
         # 생성
         with torch.no_grad():
             outputs = self.model.generate(
                 inputs['input_ids'],
                 max_new_tokens=max_new_tokens,
                 num_return_sequences=1,
-                temperature=0.1,  # 낮은 temperature로 더 확정적인 출력
-                do_sample=True,
+                temperature=gen_config.get('inference_temperature', 0.1),
+                do_sample=gen_config.get('do_sample', True),
                 pad_token_id=self.tokenizer.eos_token_id,
                 eos_token_id=self.tokenizer.eos_token_id,
-                early_stopping=True
+                early_stopping=gen_config.get('early_stopping', True)
             )
         
         # 디코딩
@@ -228,11 +231,16 @@ class ARCInferenceEvaluator:
             all_examples = problem_data
             random.shuffle(all_examples)
             
-            # few-shot용 train examples (5개)
-            train_examples = all_examples[:5]
+            # 평가 설정 가져오기
+            eval_config = self.config.get('evaluation', {})
+            few_shot_examples = eval_config.get('few_shot_examples', 5)
+            test_range = eval_config.get('test_examples_range', [5, 25])
             
-            # 평가용 test examples (최대 20개)
-            test_examples = all_examples[5:25] if len(all_examples) > 25 else all_examples[5:]
+            # few-shot용 train examples
+            train_examples = all_examples[:few_shot_examples]
+            
+            # 평가용 test examples
+            test_examples = all_examples[test_range[0]:test_range[1]] if len(all_examples) > test_range[1] else all_examples[test_range[0]:]
             
             self.logger.info(f"Evaluating {arc_id} (re-arc format): {len(train_examples)} train, {len(test_examples)} test from {len(all_examples)} total examples")
             
