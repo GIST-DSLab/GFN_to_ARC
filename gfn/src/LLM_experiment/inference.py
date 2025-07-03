@@ -142,32 +142,40 @@ class ARCInferenceEvaluator:
         
         # 학습에 사용된 문제들의 ARC ID
         for problem_id, arc_id in self.config['problem_mapping'].items():
-            arc_file = os.path.join(
-                self.config['rearc_data_dir'], 
-                "arc_original", 
-                "training", 
-                f"{arc_id}.json"
-            )
+            # 우선순위로 여러 경로 시도
+            possible_paths = [
+                # re_arc_extracted에서 먼저 시도
+                os.path.join(self.config['rearc_data_dir'], "re_arc_extracted", "re_arc", "tasks", f"{arc_id}.json"),
+                # 기존 arc_original 경로
+                os.path.join(self.config['rearc_data_dir'], "arc_original", "training", f"{arc_id}.json"),
+                # 다른 가능한 경로들
+                os.path.join(self.config['rearc_data_dir'], "arc_original", "evaluation", f"{arc_id}.json")
+            ]
             
-            if os.path.exists(arc_file):
+            arc_file = None
+            for path in possible_paths:
+                if os.path.exists(path):
+                    arc_file = path
+                    break
+            
+            if arc_file:
                 with open(arc_file, 'r') as f:
                     data = json.load(f)
                 rearc_data[arc_id] = data
-                self.logger.info(f"Loaded ReARC data for {arc_id}")
+                self.logger.info(f"Loaded ReARC data for {arc_id} from {arc_file}")
             else:
-                self.logger.warning(f"ReARC file not found: {arc_file}")
+                self.logger.warning(f"ReARC file not found for {arc_id}. Tried paths: {possible_paths}")
         
         return rearc_data
     
     def generate_action_sequence(self, 
                                 input_grid: List[List[int]], 
-                                output_grid: List[List[int]], 
                                 train_examples: List[Dict] = None,
                                 max_new_tokens: int = 100) -> List[int]:
-        """입력-출력 쌍에 대해 액션 시퀀스 생성"""
+        """입력 그리드에 대해 액션 시퀀스 생성 (output은 숨김)"""
         
-        # 프롬프트 생성 (BARC 형식 사용, few-shot examples 포함)
-        prompt = create_inference_prompt(input_grid, output_grid, train_examples, use_barc_format=True)
+        # 프롬프트 생성 (BARC 형식 사용, few-shot examples 포함, test output 없음)
+        prompt = create_inference_prompt(input_grid, train_examples, use_barc_format=True)
         
         # 토큰화
         inputs = self.tokenizer(
@@ -210,20 +218,38 @@ class ARCInferenceEvaluator:
             'test_results': []
         }
         
-        # 학습 예제들로 few-shot learning
-        train_examples = problem_data.get('train', [])
-        test_examples = problem_data.get('test', [])
-        
-        self.logger.info(f"Evaluating {arc_id}: {len(train_examples)} train, {len(test_examples)} test")
+        # re-arc tasks 형식 vs ARC 원본 형식 구분
+        if isinstance(problem_data, list):
+            # re-arc tasks 형식: 1000개 예제 리스트
+            import random
+            
+            # 전체 데이터에서 샘플링
+            all_examples = problem_data
+            random.shuffle(all_examples)
+            
+            # few-shot용 train examples (5개)
+            train_examples = all_examples[:5]
+            
+            # 평가용 test examples (최대 20개)
+            test_examples = all_examples[5:25] if len(all_examples) > 25 else all_examples[5:]
+            
+            self.logger.info(f"Evaluating {arc_id} (re-arc format): {len(train_examples)} train, {len(test_examples)} test from {len(all_examples)} total examples")
+            
+        else:
+            # ARC 원본 형식: train/test 구조
+            train_examples = problem_data.get('train', [])
+            test_examples = problem_data.get('test', [])
+            
+            self.logger.info(f"Evaluating {arc_id} (ARC format): {len(train_examples)} train, {len(test_examples)} test")
         
         # 각 테스트 예제에 대해 평가
         for test_idx, test_example in enumerate(test_examples):
             test_input = test_example['input']
             test_output = test_example['output']
             
-            # 액션 시퀀스 생성 (train examples 포함)
+            # 액션 시퀀스 생성 (test input만 제공, output은 숨김)
             predicted_actions, raw_response = self.generate_action_sequence(
-                test_input, test_output, train_examples
+                test_input, train_examples
             )
             
             # 액션 시퀀스 실행

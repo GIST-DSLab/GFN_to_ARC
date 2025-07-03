@@ -75,8 +75,13 @@ class TrajectoryProcessor:
         return converted_actions
     
     def preprocess_single_trajectory(self, trajectory: Dict) -> Dict:
-        """단일 trajectory 전처리"""
+        """단일 trajectory 전처리 (성공한 trajectory만)"""
         try:
+            # 성공 여부 확인 (마지막 reward > 0)
+            rewards = trajectory.get('rewards', [])
+            if not rewards or rewards[-1] <= 0:
+                return None  # 실패한 trajectory는 제외
+                
             # 초기/최종 상태 추출
             initial_grid, final_grid = self.extract_initial_and_final_states(trajectory)
             if initial_grid is None or final_grid is None:

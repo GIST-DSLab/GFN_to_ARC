@@ -3,6 +3,14 @@ models/
 wandb/
 logs/
 
+# Data files
+data/
+processed_data/
+results/
+
+# Config files (contain local paths)
+configs/config.yaml
+
 # Temporary files
 *.tmp
 *.log
@@ -12,3 +20,8 @@ __pycache__/
 # Keys and secrets
 *.pem
 *.key
+
+# Large JSON files
+*.json
+!download_data.py
+!run_experiment.py

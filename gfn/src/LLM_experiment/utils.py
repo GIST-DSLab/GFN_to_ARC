@@ -160,12 +160,11 @@ def create_training_prompt(input_grid: List[List[int]],
                           output_grid: List[List[int]], 
                           action_sequence: List[int],
                           use_barc_format: bool = True) -> str:
-    """학습용 프롬프트 생성"""
+    """학습용 프롬프트 생성 (action은 completion으로 분리)"""
     if use_barc_format:
         # BARC/Llama-3.1 스타일 프롬프트
         input_str = format_grid_for_llm(input_grid, use_colors=True)
         output_str = format_grid_for_llm(output_grid, use_colors=True)
-        action_str = format_action_sequence_for_llm(action_sequence)
         
         system_prompt = "You are a world-class puzzle solver who is extremely good at spotting patterns and solving puzzles by applying transformations like rotations and flips."
         user_prompt = f"""Given an input grid, predict the sequence of actions (rotations and flips) needed to transform it into the output grid.
@@ -176,7 +175,7 @@ Input:
 Target Output:
 {output_str}
 
-Actions: {action_str}"""
+Actions:"""
         
         # Llama-3.1 format
         prompt = f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{user_prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
@@ -185,33 +184,24 @@ Actions: {action_str}"""
         # 기존 형식
         input_str = format_grid_for_llm(input_grid)
         output_str = format_grid_for_llm(output_grid) 
-        action_str = format_action_sequence_for_llm(action_sequence)
         
-        prompt = f"Input: {input_str}\nOutput: {output_str}\nActions: {action_str}"
+        prompt = f"Input: {input_str}\nOutput: {output_str}\nActions:"
         return prompt
 
 def create_inference_prompt(input_grid: List[List[int]], 
-                           output_grid: List[List[int]],
                            train_examples: List[Dict] = None,
                            use_barc_format: bool = True) -> str:
-    """추론용 프롬프트 생성 (few-shot learning 지원)"""
+    """추론용 프롬프트 생성 (few-shot learning 지원, test output 숨김)"""
     if use_barc_format:
         # BARC/Llama-3.1 스타일 프롬프트
         system_prompt = "You are a world-class puzzle solver who is extremely good at spotting patterns and solving puzzles by applying transformations like rotations and flips."
         
-        # Few-shot examples 구성
+        # Few-shot examples 구성 (input-output pair만, 액션 제외)
         examples_text = ""
         if train_examples:
             for i, example in enumerate(train_examples[:3]):  # 최대 3개 예제 사용
                 train_input_str = format_grid_for_llm(example['input'], use_colors=True)
                 train_output_str = format_grid_for_llm(example['output'], use_colors=True)
-                
-                # 실제 액션 시퀀스가 있다면 사용, 없으면 예시
-                if 'actions' in example:
-                    actions_str = format_action_sequence_for_llm(example['actions'])
-                else:
-                    # 예시 액션 (실제로는 학습 데이터에서 가져와야 함)
-                    actions_str = "[left_rotate,submit]"
                 
                 examples_text += f"""Example {i+1}:
 Input:
@@ -220,24 +210,18 @@ Input:
 Target Output:
 {train_output_str}
 
-Actions: {actions_str}
-
 """
         
-        # 실제 문제
+        # 실제 문제 (input만 제공, output은 숨김)
         input_str = format_grid_for_llm(input_grid, use_colors=True)
-        output_str = format_grid_for_llm(output_grid, use_colors=True)
         
-        user_prompt = f"""Given input grids and their target outputs, predict the sequence of actions (rotations and flips) needed to transform the input into the output.
+        user_prompt = f"""Look at the input-output examples and learn the transformation pattern. Then predict the sequence of actions (rotations and flips) needed to transform the given input.
 
 {examples_text}Now solve this:
 Input:
 {input_str}
 
-Target Output:
-{output_str}
-
-Predict the sequence of actions needed. Use action names: left_rotate, right_rotate, horizontal_flip, vertical_flip, submit.
+Based on the pattern from the examples, predict the sequence of actions needed. Use action names: left_rotate, right_rotate, horizontal_flip, vertical_flip, submit.
 Actions:"""
         
         # Llama-3.1 format
@@ -250,12 +234,11 @@ Actions:"""
             for example in train_examples[:3]:
                 train_input_str = format_grid_for_llm(example['input'])
                 train_output_str = format_grid_for_llm(example['output'])
-                examples_text += f"Input: {train_input_str}\nOutput: {train_output_str}\nActions: [left_rotate,submit]\n\n"
+                examples_text += f"Input: {train_input_str}\nOutput: {train_output_str}\n\n"
         
         input_str = format_grid_for_llm(input_grid)
-        output_str = format_grid_for_llm(output_grid)
         
-        prompt = f"{examples_text}Input: {input_str}\nOutput: {output_str}\nActions:"
+        prompt = f"{examples_text}Input: {input_str}\nActions:"
         return prompt
 
 def validate_action_sequence(actions: List[int]) -> bool:
