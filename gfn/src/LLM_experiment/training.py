@@ -294,13 +294,7 @@ class ARCActionTrainer:
         
         # wandb 로그인 및 초기화 (rank 0에서만)
         if self.rank == 0:
-            # WandB API key는 환경변수에서 가져오거나 config에서 가져오기
-            import os
-            wandb_key = os.environ.get('WANDB_API_KEY')
-            if wandb_key:
-                wandb.login(key=wandb_key)
-            else:
-                wandb.login()  # 기본 로그인 방식 사용
+            wandb.login(key="2f4e627868f1f9dad10bcb1a14fbf96817e6baa9")
             
             # WandB config 가져오기
             wandb_config = self.config.get('wandb', {})
