@@ -217,7 +217,8 @@ class ARCTrajectoryExperiment:
                 
                 if 'problem_results' in results:
                     f.write(f"Problem-wise Results:\n")
-                    for problem_id, problem_data in results['problem_results'].items():
+                    for problem_data in results['problem_results']:
+                        problem_id = problem_data['problem_id']
                         f.write(f"  Problem {problem_id}: {problem_data['accuracy']:.2%} "
                                f"({problem_data['correct_count']}/{problem_data['total_count']})\n")
             else:

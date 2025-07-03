@@ -372,7 +372,7 @@ def main():
         config['model_load_path'] = args.model_path
     else:
         # Use default model path from config
-        config['model_load_path'] = os.path.join(config['model_save_dir'], "arc_transformer_best.pt")
+        config['model_load_path'] = os.path.join(config['model_save_dir'], "checkpoint_best.pt")
     
     # Initialize inference engine
     inference_engine = ARCTrajectoryInference(config, config['model_load_path'])
@@ -384,7 +384,7 @@ def main():
         print(f"\n=== Evaluation Summary ===")
         print(f"Overall Accuracy: {results['overall_accuracy']:.3f}")
         print(f"Correct: {results['total_correct']}/{results['total_tests']}")
-        print(f"Results saved to: {os.path.join(args.output_dir, 'evaluation_results.json')}")
+        print(f"Results saved to: {os.path.join(config['results_dir'], 'evaluation_results.json')}")
         
     except KeyboardInterrupt:
         print("Evaluation interrupted by user")
