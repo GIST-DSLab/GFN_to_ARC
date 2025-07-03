@@ -234,8 +234,14 @@ class TrajectoryProcessor:
         return train_data, val_data
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Preprocess trajectory data")
+    parser.add_argument("--config", type=str, default="configs/config.yaml",
+                       help="Path to config file")
+    args = parser.parse_args()
+    
     # 설정 로드
-    config = load_config("configs/config.yaml")
+    config = load_config(args.config)
     
     # 로깅 설정
     log_file = os.path.join(config['processed_data_dir'], "preprocessing.log")

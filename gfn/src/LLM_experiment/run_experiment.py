@@ -124,7 +124,7 @@ def setup_directories(config: Dict, logger):
         os.makedirs(directory, exist_ok=True)
         logger.info(f"Created/verified directory: {directory}")
 
-def run_preprocessing(config: Dict, logger, force: bool = False):
+def run_preprocessing(config: Dict, logger, force: bool = False, config_path: str = "configs/config.yaml"):
     """데이터 전처리 실행"""
     
     # 이미 처리된 데이터가 있는지 확인
@@ -155,10 +155,11 @@ def run_preprocessing(config: Dict, logger, force: bool = False):
             logger.info("Use --force-preprocessing to regenerate.")
             return True
     
-    command = "python data_preprocessing.py"
+    python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+    command = f"{python_path} data_preprocessing.py --config {config_path}"
     return run_command(command, "Data Preprocessing", logger, capture_output=True)
 
-def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False):
+def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False, config_path: str = "configs/config.yaml"):
     """모델 학습 실행"""
     
     # 이미 학습된 모델이 있는지 확인
@@ -180,21 +181,21 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False)
             
             # torchrun을 통한 DDP 학습 (gflow-llm 환경 사용)
             python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
-            command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config configs/config.yaml"
+            command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config {config_path}"
             return run_command(command, "Model Training", logger, capture_output=False)
         else:
             # 단일 GPU: 일반 python 사용 (gflow-llm 환경)
             logger.info(f"Using single GPU: {gpu_ids}")
             python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
-            command = f"{python_path} training.py --gpu_ids {gpu_ids} --config configs/config.yaml"
+            command = f"{python_path} training.py --gpu_ids {gpu_ids} --config {config_path}"
             return run_command(command, "Model Training", logger, capture_output=False)
     else:
         # GPU 지정 없음: 일반 python 사용 (gflow-llm 환경)
         python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
-        command = f"{python_path} training.py --config configs/config.yaml"
+        command = f"{python_path} training.py --config {config_path}"
         return run_command(command, "Model Training", logger, capture_output=False)
 
-def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False):
+def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False, config_path: str = "configs/config.yaml"):
     """추론 및 평가 실행"""
     
     # 이미 평가 결과가 있는지 확인
@@ -204,7 +205,8 @@ def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False
         logger.info("Use --force-inference to re-evaluate.")
         return True
     
-    command = "python inference.py"
+    python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+    command = f"{python_path} inference.py --config {config_path}"
     if gpu_ids:
         command += f" --gpu_ids {gpu_ids}"
     return run_command(command, "Inference and Evaluation", logger)
@@ -307,7 +309,7 @@ def main():
         
         # 전처리 단계
         if not args.skip_preprocessing and (not args.training_only and not args.inference_only):
-            if not run_preprocessing(config, logger, args.force_preprocessing):
+            if not run_preprocessing(config, logger, args.force_preprocessing, args.config):
                 success = False
                 logger.error("Preprocessing failed")
                 
@@ -320,7 +322,7 @@ def main():
         
         # 학습 단계
         if success and not args.skip_training and (not args.preprocessing_only and not args.inference_only):
-            if not run_training(config, logger, gpu_ids_str, args.force_training):
+            if not run_training(config, logger, gpu_ids_str, args.force_training, args.config):
                 success = False
                 logger.error("Training failed")
                 
@@ -330,7 +332,7 @@ def main():
         
         # 추론 및 평가 단계
         if success and not args.skip_inference and not args.preprocessing_only:
-            if not run_inference(config, logger, gpu_ids_str, args.force_inference):
+            if not run_inference(config, logger, gpu_ids_str, args.force_inference, args.config):
                 success = False
                 logger.error("Inference failed")
         
