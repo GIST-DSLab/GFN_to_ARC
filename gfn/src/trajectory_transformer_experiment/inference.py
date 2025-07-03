@@ -38,8 +38,32 @@ class ARCTrajectoryInference:
         self.model = self.load_model(model_path)
         
         # Initialize ARC environment for action execution
+        self.executor = self.create_executor()
         
         self.logger.info(f"Inference engine initialized on {self.device}")
+    
+    def create_executor(self):
+        """Create action executor for ARC environment"""
+        class ActionExecutor:
+            def execute_action_sequence(self, initial_grid, actions):
+                """Execute sequence of actions on grid"""
+                current_grid = [row[:] for row in initial_grid]  # Deep copy
+                
+                for action in actions:
+                    if action == 0:  # left_rotate
+                        current_grid = [[current_grid[j][2-i] for j in range(3)] for i in range(3)]
+                    elif action == 1:  # right_rotate
+                        current_grid = [[current_grid[2-j][i] for j in range(3)] for i in range(3)]
+                    elif action == 2:  # horizontal_flip
+                        current_grid = [row[::-1] for row in current_grid]
+                    elif action == 3:  # vertical_flip
+                        current_grid = current_grid[::-1]
+                    elif action == 4:  # submit
+                        break  # Stop execution on submit
+                
+                return current_grid
+        
+        return ActionExecutor()
     
     def setup_logging(self):
         """Setup logging"""
@@ -153,7 +177,10 @@ class ARCTrajectoryInference:
     def evaluate_single_problem(self, problem_data: Dict) -> Dict:
         """Evaluate model on a single ARC problem"""
         problem_id = problem_data['id']
-        test_cases = problem_data['test']
+        # For ReARC, use train data as test cases since there's no separate test data
+        test_cases = problem_data.get('test', [])
+        if not test_cases:
+            test_cases = problem_data.get('train', [])[:3]  # Use first 3 train examples as test
         
         results = []
         
