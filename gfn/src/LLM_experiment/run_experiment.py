@@ -157,17 +157,28 @@ def run_preprocessing(config: Dict, logger, force: bool = False, config_path: st
     
     python_path = "/data/miniforge3/envs/gflownet/bin/python"
     command = f"{python_path} data_preprocessing.py --config {config_path}"
-    return run_command(command, "Data Preprocessing", logger, capture_output=True)
+    return run_command(command, "Data Preprocessing", logger, capture_output=False)  # tqdm 표시를 위해 False로 변경
 
-def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False, config_path: str = "configs/config.yaml"):
+def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False, config_path: str = "configs/config.yaml", use_unsloth: bool = False):
     """모델 학습 실행"""
     
-    # 이미 학습된 모델이 있는지 확인
-    model_dir = os.path.join(config['model_save_dir'], f"arc_action_model_{config['model_name'].split('/')[-1]}", "final_model")
+    # Unsloth 사용 시 다른 모델 디렉토리 확인
+    if use_unsloth:
+        model_dir = os.path.join(config['model_save_dir'], "unsloth_lora_model")
+    else:
+        model_dir = os.path.join(config['model_save_dir'], f"arc_action_model_{config['model_name'].split('/')[-1]}", "final_model")
+    
     if os.path.exists(model_dir) and not force:
         logger.info("Trained model already exists. Skipping training.")
         logger.info("Use --force-training to retrain.")
         return True
+    
+    # Unsloth 사용 시 단일 GPU 전용
+    if use_unsloth:
+        logger.info("Using Unsloth for accelerated training (single GPU only)")
+        python_path = "/data/miniforge3/envs/gflow-llm/bin/python"  # gflow-llm 환경 사용
+        command = f"{python_path} training_unsloth.py --config {config_path}"
+        return run_command(command, "Unsloth Training", logger, capture_output=False)
     
     # GPU 개수에 따라 DDP 또는 일반 python 사용
     if gpu_ids:
@@ -179,20 +190,20 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False,
             logger.info(f"Using DDP with torchrun on {num_gpus} GPUs: {gpu_ids}")
             os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(gpu_list)
             
-            # torchrun을 통한 DDP 학습 (gflownet 환경 사용)
-            python_path = "/home/ubuntu/miniconda3/envs/gflownet/bin/python"
-            command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config configs/config.yaml"
+            # torchrun을 통한 DDP 학습 (gflow-llm 환경 사용)
+            python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+            command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config {config_path}"
             return run_command(command, "Model Training", logger, capture_output=False)
         else:
-            # 단일 GPU: 일반 python 사용 (gflownet 환경)
+            # 단일 GPU: 일반 python 사용 (gflow-llm 환경)
             logger.info(f"Using single GPU: {gpu_ids}")
-            python_path = "/home/ubuntu/miniconda3/envs/gflownet/bin/python"
-            command = f"{python_path} training.py --gpu_ids {gpu_ids} --config configs/config.yaml"
+            python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+            command = f"{python_path} training.py --gpu_ids {gpu_ids} --config {config_path}"
             return run_command(command, "Model Training", logger, capture_output=False)
     else:
-        # GPU 지정 없음: 일반 python 사용 (gflownet 환경)
-        python_path = "/home/ubuntu/miniconda3/envs/gflownet/bin/python"
-        command = f"{python_path} training.py --config configs/config.yaml"
+        # GPU 지정 없음: 일반 python 사용 (gflow-llm 환경)
+        python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+        command = f"{python_path} training.py --config {config_path}"
         return run_command(command, "Model Training", logger, capture_output=False)
 
 def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False, config_path: str = "configs/config.yaml"):
@@ -278,6 +289,7 @@ def main():
     parser.add_argument("--preprocessing-only", action="store_true", help="Run only preprocessing step")
     parser.add_argument("--training-only", action="store_true", help="Run only training step")
     parser.add_argument("--inference-only", action="store_true", help="Run only inference step")
+    parser.add_argument("--use-unsloth", action="store_true", help="Use Unsloth for accelerated training (single GPU only)")
     
     args = parser.parse_args()
     
@@ -322,7 +334,7 @@ def main():
         
         # 학습 단계
         if success and not args.skip_training and (not args.preprocessing_only and not args.inference_only):
-            if not run_training(config, logger, gpu_ids_str, args.force_training, args.config):
+            if not run_training(config, logger, gpu_ids_str, args.force_training, args.config, args.use_unsloth):
                 success = False
                 logger.error("Training failed")
                 
