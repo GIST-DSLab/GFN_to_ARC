@@ -56,3 +56,53 @@
 2025-07-04 00:15:23,297 - INFO - Epoch 10/10 - Train Loss: 1.6615, Val Loss: 1.6211 (Best!)
 2025-07-04 00:15:23,297 - INFO - Training completed!
 2025-07-04 00:15:23,297 - INFO - Best validation loss: 1.6211
+2025-07-04 02:14:00,418 - INFO - Model initialized with 161088 parameters
+2025-07-04 02:14:00,418 - INFO - Using device: cuda
+2025-07-04 02:14:00,418 - INFO - Loading data...
+2025-07-04 02:14:00,418 - INFO - Loading preprocessed data...
+2025-07-04 02:14:00,431 - INFO - Train batches: 24
+2025-07-04 02:14:00,431 - INFO - Validation batches: 3
+2025-07-04 02:14:00,431 - INFO - Starting training...
+2025-07-04 02:14:00,431 - INFO - Configuration: {'n_layer': 3, 'n_head': 4, 'n_embd': 64, 'batch_size': 16, 'learning_rate': 0.0001, 'n_epochs': 10, 'warmup_steps': 1000, 'lr_decay': True, 'weight_decay': 0.01, 'embd_pdrop': 0.1, 'resid_pdrop': 0.1, 'attn_pdrop': 0.1, 'max_sequence_length': 128, 'step': 1, 'observation_dim': 9, 'action_dim': 1, 'reward_dim': 1, 'vocab_size': 22, 'action_weight': 5.0, 'reward_weight': 1.0, 'observation_weight': 1.0, 'trajectory_data_dir': '../LLM_experiment/data/trajectories_output', 'processed_data_dir': './processed_data', 'model_save_dir': './models', 'results_dir': './results', 'device': 'cuda', 'seed': 42, 'log_interval': 100, 'eval_interval': 1000, 'save_interval': 5000}
+2025-07-04 02:14:07,858 - INFO - Epoch 1, Batch 0/24, Loss: 3.0828, LR: 1.00e-04
+2025-07-04 02:14:10,336 - INFO - Validation Loss: 2.3955
+2025-07-04 02:14:10,382 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:10,403 - INFO - Epoch 1/10 - Train Loss: 2.6418, Val Loss: 2.3955 (Best!)
+2025-07-04 02:14:10,626 - INFO - Epoch 2, Batch 0/24, Loss: 2.4234, LR: 9.76e-05
+2025-07-04 02:14:11,321 - INFO - Validation Loss: 2.2094
+2025-07-04 02:14:11,366 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:11,366 - INFO - Epoch 2/10 - Train Loss: 2.3073, Val Loss: 2.2094 (Best!)
+2025-07-04 02:14:11,593 - INFO - Epoch 3, Batch 0/24, Loss: 2.2016, LR: 9.11e-05
+2025-07-04 02:14:12,286 - INFO - Validation Loss: 2.0615
+2025-07-04 02:14:12,331 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:12,331 - INFO - Epoch 3/10 - Train Loss: 2.1539, Val Loss: 2.0615 (Best!)
+2025-07-04 02:14:12,554 - INFO - Epoch 4, Batch 0/24, Loss: 2.0773, LR: 8.10e-05
+2025-07-04 02:14:13,239 - INFO - Validation Loss: 1.9200
+2025-07-04 02:14:13,284 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:13,284 - INFO - Epoch 4/10 - Train Loss: 2.0148, Val Loss: 1.9200 (Best!)
+2025-07-04 02:14:13,507 - INFO - Epoch 5, Batch 0/24, Loss: 1.9109, LR: 6.83e-05
+2025-07-04 02:14:14,189 - INFO - Validation Loss: 1.8184
+2025-07-04 02:14:14,234 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:14,235 - INFO - Epoch 5/10 - Train Loss: 1.8970, Val Loss: 1.8184 (Best!)
+2025-07-04 02:14:14,440 - INFO - Epoch 6, Batch 0/24, Loss: 1.8175, LR: 5.44e-05
+2025-07-04 02:14:15,108 - INFO - Validation Loss: 1.7443
+2025-07-04 02:14:15,154 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:15,154 - INFO - Epoch 6/10 - Train Loss: 1.8105, Val Loss: 1.7443 (Best!)
+2025-07-04 02:14:15,369 - INFO - Epoch 7, Batch 0/24, Loss: 1.7472, LR: 4.05e-05
+2025-07-04 02:14:15,963 - INFO - Validation Loss: 1.6921
+2025-07-04 02:14:16,008 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:16,008 - INFO - Epoch 7/10 - Train Loss: 1.7510, Val Loss: 1.6921 (Best!)
+2025-07-04 02:14:16,212 - INFO - Epoch 8, Batch 0/24, Loss: 1.7544, LR: 2.81e-05
+2025-07-04 02:14:16,883 - INFO - Validation Loss: 1.6584
+2025-07-04 02:14:16,928 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:16,928 - INFO - Epoch 8/10 - Train Loss: 1.7043, Val Loss: 1.6584 (Best!)
+2025-07-04 02:14:17,120 - INFO - Epoch 9, Batch 0/24, Loss: 1.7400, LR: 1.83e-05
+2025-07-04 02:14:17,821 - INFO - Validation Loss: 1.6366
+2025-07-04 02:14:17,866 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:17,866 - INFO - Epoch 9/10 - Train Loss: 1.6825, Val Loss: 1.6366 (Best!)
+2025-07-04 02:14:18,094 - INFO - Epoch 10, Batch 0/24, Loss: 1.5552, LR: 1.20e-05
+2025-07-04 02:14:18,753 - INFO - Validation Loss: 1.6211
+2025-07-04 02:14:18,799 - INFO - Best model saved to ./models/checkpoint_best.pt
+2025-07-04 02:14:18,799 - INFO - Epoch 10/10 - Train Loss: 1.6615, Val Loss: 1.6211 (Best!)
+2025-07-04 02:14:18,799 - INFO - Training completed!
+2025-07-04 02:14:18,799 - INFO - Best validation loss: 1.6211

@@ -12,7 +12,7 @@ import argparse
 from utils import *
 import logging
 
-def run_command(command: str, description: str, logger):
+def run_command(command: str, description: str, logger, capture_output: bool = False):
     """명령어 실행 및 로깅"""
     logger.info(f"{'='*50}")
     logger.info(f"Starting: {description}")
@@ -22,21 +22,34 @@ def run_command(command: str, description: str, logger):
     start_time = time.time()
     
     try:
-        result = subprocess.run(
-            command, 
-            shell=True, 
-            check=True, 
-            capture_output=True, 
-            text=True
-        )
-        
-        elapsed_time = time.time() - start_time
-        logger.info(f"✅ Completed: {description} ({elapsed_time:.2f}s)")
-        
-        if result.stdout:
-            logger.info(f"STDOUT:\\n{result.stdout}")
-        if result.stderr:
-            logger.warning(f"STDERR:\\n{result.stderr}")
+        if capture_output:
+            # 출력을 캡처하는 경우 (데이터 전처리, 추론 등)
+            result = subprocess.run(
+                command, 
+                shell=True, 
+                check=True, 
+                capture_output=True, 
+                text=True
+            )
+            
+            elapsed_time = time.time() - start_time
+            logger.info(f"✅ Completed: {description} ({elapsed_time:.2f}s)")
+            
+            if result.stdout:
+                logger.info(f"STDOUT:\\n{result.stdout}")
+            if result.stderr:
+                logger.warning(f"STDERR:\\n{result.stderr}")
+        else:
+            # 실시간 출력이 필요한 경우 (학습 등)
+            logger.info(f"🚀 Running command with live output...")
+            result = subprocess.run(
+                command, 
+                shell=True, 
+                check=True
+            )
+            
+            elapsed_time = time.time() - start_time
+            logger.info(f"✅ Completed: {description} ({elapsed_time:.2f}s)")
             
         return True
         
@@ -44,8 +57,11 @@ def run_command(command: str, description: str, logger):
         elapsed_time = time.time() - start_time
         logger.error(f"❌ Failed: {description} ({elapsed_time:.2f}s)")
         logger.error(f"Exit code: {e.returncode}")
-        logger.error(f"STDOUT:\\n{e.stdout}")
-        logger.error(f"STDERR:\\n{e.stderr}")
+        
+        if capture_output:
+            logger.error(f"STDOUT:\\n{e.stdout}")
+            logger.error(f"STDERR:\\n{e.stderr}")
+        
         return False
 
 def check_prerequisites(config: Dict, logger):
@@ -140,7 +156,7 @@ def run_preprocessing(config: Dict, logger, force: bool = False):
             return True
     
     command = "python data_preprocessing.py"
-    return run_command(command, "Data Preprocessing", logger)
+    return run_command(command, "Data Preprocessing", logger, capture_output=True)
 
 def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False):
     """모델 학습 실행"""
@@ -155,7 +171,7 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False)
     command = "python training.py"
     if gpu_ids:
         command += f" --gpu_ids {gpu_ids}"
-    return run_command(command, "Model Training", logger)
+    return run_command(command, "Model Training", logger, capture_output=False)
 
 def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False):
     """추론 및 평가 실행"""

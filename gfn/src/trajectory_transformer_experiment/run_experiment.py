@@ -47,7 +47,7 @@ class ARCTrajectoryExperiment:
         )
         self.logger = logging.getLogger(__name__)
     
-    def run_command(self, command: str, description: str) -> bool:
+    def run_command(self, command: str, description: str, capture_output: bool = True) -> bool:
         """Run a shell command and log the result"""
         self.logger.info(f"Starting: {description}")
         self.logger.info(f"Command: {command}")
@@ -55,26 +55,46 @@ class ARCTrajectoryExperiment:
         start_time = time.time()
         
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                cwd=os.path.dirname(os.path.abspath(__file__))
-            )
-            
-            duration = time.time() - start_time
-            
-            if result.returncode == 0:
-                self.logger.info(f"SUCCESS: {description} (took {duration:.1f}s)")
-                if result.stdout:
-                    self.logger.info(f"Output: {result.stdout}")
-                return True
-            else:
-                self.logger.error(f"FAILED: {description} (took {duration:.1f}s)")
-                self.logger.error(f"Error: {result.stderr}")
-                return False
+            if capture_output:
+                # 출력을 캡처하는 경우 (데이터 전처리, 추론 등)
+                result = subprocess.run(
+                    command,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=os.path.dirname(os.path.abspath(__file__))
+                )
                 
+                duration = time.time() - start_time
+                
+                if result.returncode == 0:
+                    self.logger.info(f"SUCCESS: {description} (took {duration:.1f}s)")
+                    if result.stdout:
+                        self.logger.info(f"Output: {result.stdout}")
+                    return True
+                else:
+                    self.logger.error(f"FAILED: {description} (took {duration:.1f}s)")
+                    self.logger.error(f"Error: {result.stderr}")
+                    return False
+            else:
+                # 실시간 출력이 필요한 경우 (학습 등)
+                self.logger.info(f"🚀 Running command with live output...")
+                result = subprocess.run(
+                    command,
+                    shell=True,
+                    check=True,
+                    cwd=os.path.dirname(os.path.abspath(__file__))
+                )
+                
+                duration = time.time() - start_time
+                self.logger.info(f"SUCCESS: {description} (took {duration:.1f}s)")
+                return True
+                
+        except subprocess.CalledProcessError as e:
+            duration = time.time() - start_time
+            self.logger.error(f"FAILED: {description} (took {duration:.1f}s)")
+            self.logger.error(f"Exit code: {e.returncode}")
+            return False
         except Exception as e:
             duration = time.time() - start_time
             self.logger.error(f"EXCEPTION: {description} (took {duration:.1f}s)")
@@ -136,7 +156,7 @@ class ARCTrajectoryExperiment:
         else:
             self.logger.info("Preprocessed data not found, running preprocessing...")
         command = f"python data_preprocessing.py --config_name {self.config_name} --analyze"
-        return self.run_command(command, "Data preprocessing")
+        return self.run_command(command, "Data preprocessing", capture_output=True)
     
     def run_training(self, use_wandb: bool = False, force: bool = False) -> bool:
         """Run model training"""
@@ -175,7 +195,7 @@ class ARCTrajectoryExperiment:
         env_vars = f"PYTHONPATH={os.getcwd()}:$PYTHONPATH "
         command = env_vars + command
         
-        success = self.run_command(command, "Model training")
+        success = self.run_command(command, "Model training", capture_output=False)
         
         if success:
             # Copy trained models to experiment directory
@@ -209,7 +229,7 @@ class ARCTrajectoryExperiment:
         output_dir = os.path.join(self.experiment_dir, "evaluation")
         command = f"python inference.py --config {self.config_name} --model_path {best_model_path} --output_dir {output_dir}"
         
-        return self.run_command(command, "Model inference and evaluation")
+        return self.run_command(command, "Model inference and evaluation", capture_output=True)
     
     def generate_experiment_report(self) -> bool:
         """Generate experiment summary report"""

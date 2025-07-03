@@ -1,0 +1,10 @@
+2025-07-04 02:13:44,976 - INFO - Starting ARC Trajectory Transformer Experiment: arc_transformer_small_20250704_021344
+2025-07-04 02:13:44,976 - INFO - Configuration: small
+2025-07-04 02:13:44,976 - INFO - Experiment directory: ./experiments/arc_transformer_small_20250704_021344
+2025-07-04 02:13:44,976 - INFO - === STEP 2: Model Training ===
+2025-07-04 02:13:44,976 - INFO - Force training requested, starting training...
+2025-07-04 02:13:44,976 - INFO - Starting: Model training
+2025-07-04 02:13:44,976 - INFO - Command: PYTHONPATH=/home/ubuntu/GFN_to_ARC/gfn/src/trajectory_transformer_experiment:$PYTHONPATH python training.py --config small
+2025-07-04 02:13:44,976 - INFO - 🚀 Running command with live output...
+2025-07-04 02:14:20,277 - INFO - SUCCESS: Model training (took 35.3s)
+2025-07-04 02:14:20,295 - INFO - Models copied to ./experiments/arc_transformer_small_20250704_021344/models
