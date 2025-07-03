@@ -155,7 +155,7 @@ def run_preprocessing(config: Dict, logger, force: bool = False, config_path: st
             logger.info("Use --force-preprocessing to regenerate.")
             return True
     
-    python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+    python_path = "/data/miniforge3/envs/gflownet/bin/python"
     command = f"{python_path} data_preprocessing.py --config {config_path}"
     return run_command(command, "Data Preprocessing", logger, capture_output=True)
 
@@ -179,20 +179,20 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False,
             logger.info(f"Using DDP with torchrun on {num_gpus} GPUs: {gpu_ids}")
             os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(gpu_list)
             
-            # torchrun을 통한 DDP 학습 (gflow-llm 환경 사용)
-            python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
-            command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config {config_path}"
+            # torchrun을 통한 DDP 학습 (gflownet 환경 사용)
+            python_path = "/home/ubuntu/miniconda3/envs/gflownet/bin/python"
+            command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config configs/config.yaml"
             return run_command(command, "Model Training", logger, capture_output=False)
         else:
             # 단일 GPU: 일반 python 사용 (gflownet 환경)
             logger.info(f"Using single GPU: {gpu_ids}")
-            python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
-            command = f"{python_path} training.py --gpu_ids {gpu_ids} --config {config_path}"
+            python_path = "/home/ubuntu/miniconda3/envs/gflownet/bin/python"
+            command = f"{python_path} training.py --gpu_ids {gpu_ids} --config configs/config.yaml"
             return run_command(command, "Model Training", logger, capture_output=False)
     else:
-        # GPU 지정 없음: 일반 python 사용 (gflow-llm 환경)
-        python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
-        command = f"{python_path} training.py --config {config_path}"
+        # GPU 지정 없음: 일반 python 사용 (gflownet 환경)
+        python_path = "/home/ubuntu/miniconda3/envs/gflownet/bin/python"
+        command = f"{python_path} training.py --config configs/config.yaml"
         return run_command(command, "Model Training", logger, capture_output=False)
 
 def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False, config_path: str = "configs/config.yaml"):
@@ -205,7 +205,7 @@ def run_inference(config: Dict, logger, gpu_ids: str = None, force: bool = False
         logger.info("Use --force-inference to re-evaluate.")
         return True
     
-    python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
+    python_path = "/data/miniforge3/envs/gflownet/bin/python"
     command = f"{python_path} inference.py --config {config_path}"
     if gpu_ids:
         command += f" --gpu_ids {gpu_ids}"

@@ -1,19 +1,19 @@
 # Trajectory Transformer Experiment Configuration - GPU 4,5,6
 
 # Data paths
-trajectory_data_dir: "../LLM_experiment/data/trajectories_output"
-rearc_data_dir: "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks"
-processed_data_dir: "./processed_data_gpu456"
-model_save_dir: "./models_gpu456"
-results_dir: "./results_gpu456"
+trajectory_data_dir: "/opt/dlami/nvme/seungpil/"
+rearc_data_dir: "./data/re-arc"
+processed_data_dir: "./processed_data"
+model_save_dir: "/opt/dlami/nvme/seungpil//models_gpu456"
+results_dir: "/opt/dlami/nvme/seungpil/results_gpu456"
 
 # Model architecture
-n_layer: 6           # Transformer layers
-n_head: 8            # Attention heads  
-n_embd: 128          # Embedding dimension
+n_layer: 6 # Transformer layers
+n_head: 8 # Attention heads
+n_embd: 128 # Embedding dimension
 
 # Training parameters
-batch_size: 48       # Increased for 3 GPUs
+batch_size: 48 # Increased for 3 GPUs
 learning_rate: 0.0001
 n_epochs: 50
 warmup_steps: 1000
@@ -26,17 +26,17 @@ resid_pdrop: 0.1
 attn_pdrop: 0.1
 
 # Sequence parameters
-max_sequence_length: 64  # Max trajectory length
-step: 1                  # Subsampling step
+max_sequence_length: 64 # Max trajectory length
+step: 1 # Subsampling step
 
 # Data parameters
-observation_dim: 9       # 3x3 grid flattened
-action_dim: 1           # Single action index
-reward_dim: 1           # Single reward value
-vocab_size: 22          # 0-9 colors + special tokens
+observation_dim: 9 # 3x3 grid flattened
+action_dim: 1 # Single action index
+reward_dim: 1 # Single reward value
+vocab_size: 22 # 0-9 colors + special tokens
 
 # Loss weights
-action_weight: 5.0      # Emphasize action prediction
+action_weight: 5.0 # Emphasize action prediction
 reward_weight: 1.0
 observation_weight: 1.0
 
@@ -51,16 +51,16 @@ save_interval: 5000
 temperature: 1.0
 top_k: null
 top_p: 0.9
-max_new_tokens: 32      # Max action sequence length
+max_new_tokens: 32 # Max action sequence length
 num_return_sequences: 1
 
-# Planning parameters  
-horizon: 20             # Planning horizon
-beam_width: 64          # Beam search width
-n_samples: 1            # Number of trajectory samples
+# Planning parameters
+horizon: 20 # Planning horizon
+beam_width: 64 # Beam search width
+n_samples: 1 # Number of trajectory samples
 
 # Evaluation parameters
-eval_problems: [86, 139, 178]  # Subset for multi-GPU training
+eval_problems: [86, 139, 149, 178, 240] # Subset for multi-GPU training
 max_test_samples: 50
 
 # Problem-specific max actions
