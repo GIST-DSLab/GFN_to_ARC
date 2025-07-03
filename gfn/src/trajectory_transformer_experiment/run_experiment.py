@@ -119,16 +119,49 @@ class ARCTrajectoryExperiment:
         
         return all_good
     
-    def run_preprocessing(self) -> bool:
+    def run_preprocessing(self, force: bool = False) -> bool:
         """Run data preprocessing"""
         self.logger.info("=== STEP 1: Data Preprocessing ===")
         
+        # Check if preprocessed data already exists
+        processed_file = "./processed_data/arc_trajectory_data.json"
+        if os.path.exists(processed_file) and not force:
+            self.logger.info("✓ Preprocessed data already exists, skipping preprocessing")
+            self.logger.info(f"Found: {processed_file}")
+            self.logger.info("Use --force_preprocessing to rerun preprocessing")
+            return True
+        
+        if force:
+            self.logger.info("Force preprocessing requested, running preprocessing...")
+        else:
+            self.logger.info("Preprocessed data not found, running preprocessing...")
         command = f"python data_preprocessing.py --config_name {self.config_name} --analyze"
         return self.run_command(command, "Data preprocessing")
     
-    def run_training(self, use_wandb: bool = False) -> bool:
+    def run_training(self, use_wandb: bool = False, force: bool = False) -> bool:
         """Run model training"""
         self.logger.info("=== STEP 2: Model Training ===")
+        
+        # Check if trained model already exists
+        model_file = "./models/checkpoint_best.pt"
+        if os.path.exists(model_file) and not force:
+            self.logger.info("✓ Trained model already exists, skipping training")
+            self.logger.info(f"Found: {model_file}")
+            self.logger.info("Use --force_training to retrain model")
+            
+            # Still copy to experiment directory
+            experiment_model_dir = os.path.join(self.experiment_dir, "models")
+            os.makedirs(experiment_model_dir, exist_ok=True)
+            if os.path.exists("./models"):
+                copy_cmd = f"cp -r ./models/* {experiment_model_dir}/"
+                subprocess.run(copy_cmd, shell=True)
+                self.logger.info(f"Existing models copied to {experiment_model_dir}")
+            return True
+        
+        if force:
+            self.logger.info("Force training requested, starting training...")
+        else:
+            self.logger.info("Trained model not found, starting training...")
         
         # Update config to use experiment directory
         experiment_model_dir = os.path.join(self.experiment_dir, "models")
@@ -245,7 +278,9 @@ class ARCTrajectoryExperiment:
     def run_full_experiment(self, skip_preprocessing: bool = False, 
                            skip_training: bool = False, 
                            skip_inference: bool = False,
-                           use_wandb: bool = False) -> bool:
+                           use_wandb: bool = False,
+                           force_preprocessing: bool = False,
+                           force_training: bool = False) -> bool:
         """Run the complete experiment pipeline"""
         
         start_time = time.time()
@@ -259,7 +294,7 @@ class ARCTrajectoryExperiment:
         
         # Step 1: Data preprocessing
         if not skip_preprocessing:
-            if not self.run_preprocessing():
+            if not self.run_preprocessing(force=force_preprocessing):
                 self.logger.error("Data preprocessing failed. Aborting experiment.")
                 return False
         else:
@@ -267,7 +302,7 @@ class ARCTrajectoryExperiment:
         
         # Step 2: Training
         if not skip_training:
-            if not self.run_training(use_wandb=use_wandb):
+            if not self.run_training(use_wandb=use_wandb, force=force_training):
                 self.logger.error("Training failed. Aborting experiment.")
                 return False
         else:
@@ -311,6 +346,10 @@ def main():
                        help="Only run training")
     parser.add_argument("--inference_only", action="store_true",
                        help="Only run inference")
+    parser.add_argument("--force_preprocessing", action="store_true",
+                       help="Force rerun data preprocessing even if data exists")
+    parser.add_argument("--force_training", action="store_true",
+                       help="Force retrain model even if trained model exists")
     
     args = parser.parse_args()
     
@@ -322,9 +361,9 @@ def main():
     
     try:
         if args.preprocessing_only:
-            success = experiment.run_preprocessing()
+            success = experiment.run_preprocessing(force=args.force_preprocessing)
         elif args.training_only:
-            success = experiment.run_training(use_wandb=args.wandb)
+            success = experiment.run_training(use_wandb=args.wandb, force=args.force_training)
         elif args.inference_only:
             success = experiment.run_inference()
         else:
@@ -333,7 +372,9 @@ def main():
                 skip_preprocessing=args.skip_preprocessing,
                 skip_training=args.skip_training,
                 skip_inference=args.skip_inference,
-                use_wandb=args.wandb
+                use_wandb=args.wandb,
+                force_preprocessing=args.force_preprocessing,
+                force_training=args.force_training
             )
         
         if success:

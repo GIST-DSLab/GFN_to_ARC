@@ -1,0 +1,62 @@
+2025-07-04 00:51:14,721 - INFO - Starting ARC Trajectory Transformer Experiment: arc_transformer_small_20250704_005114
+2025-07-04 00:51:14,721 - INFO - Configuration: small
+2025-07-04 00:51:14,721 - INFO - Experiment directory: ./experiments/arc_transformer_small_20250704_005114
+2025-07-04 00:51:14,721 - INFO - === STEP 1: Data Preprocessing ===
+2025-07-04 00:51:14,721 - INFO - Force preprocessing requested, running preprocessing...
+2025-07-04 00:51:14,721 - INFO - Starting: Data preprocessing
+2025-07-04 00:51:14,722 - INFO - Command: python data_preprocessing.py --config_name small --analyze
+2025-07-04 00:51:35,009 - INFO - SUCCESS: Data preprocessing (took 20.3s)
+2025-07-04 00:51:35,009 - INFO - Output: === ARC Trajectory Data Preprocessing ===
+Loading GFlowNet trajectories...
+Loading ../LLM_experiment/data/trajectories_output/problem_86/trajectories_0_1000.json
+Loading ../LLM_experiment/data/trajectories_output/problem_139/trajectories_0_1000.json
+Loading ../LLM_experiment/data/trajectories_output/problem_178/trajectories_0_1000.json
+Warning: Problem 149 directory not found
+Warning: Problem 154 directory not found
+Warning: Problem 240 directory not found
+Warning: Problem 379 directory not found
+Loaded 416 successful trajectories
+Converting trajectories to sequences...
+Successfully converted 416 trajectories
+Failed conversions: 0
+Sequence length stats:
+  Mean: 83.4
+  Std: 30.8
+  Min: 33
+  Max: 110
+  95th percentile: 110.0
+After filtering by max length (128): 416 sequences
+Train sequences: 374
+Validation sequences: 42
+Processed data saved to ./processed_data/arc_trajectory_data.json
+
+=== Sample Data Analysis ===
+
+Sample 0:
+  Problem ID: 84
+  Input shape: torch.Size([127])
+  Label shape: torch.Size([127])
+  Attention mask shape: torch.Size([127])
+  Non-padding tokens: 110
+  First 20 input tokens: [3, 3, 8, 3, 7, 0, 5, 0, 0, 11, 16, 8, 0, 0, 3, 7, 0, 3, 3, 5]
+
+Sample 1:
+  Problem ID: 13
+  Input shape: torch.Size([127])
+  Label shape: torch.Size([127])
+  Attention mask shape: torch.Size([127])
+  Non-padding tokens: 33
+  First 20 input tokens: [2, 2, 1, 1, 5, 1, 5, 2, 2, 13, 19, 1, 2, 2, 1, 5, 1, 2, 2, 5]
+
+Sample 2:
+  Problem ID: 968
+  Input shape: torch.Size([127])
+  Label shape: torch.Size([127])
+  Attention mask shape: torch.Size([127])
+  Non-padding tokens: 110
+  First 20 input tokens: [2, 2, 1, 1, 5, 1, 5, 2, 2, 13, 16, 1, 2, 2, 1, 5, 1, 2, 2, 5]
+
+=== Preprocessing Complete ===
+Train dataset size: 374
+Validation dataset size: 42
+

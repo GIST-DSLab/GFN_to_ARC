@@ -110,6 +110,18 @@ python run_experiment.py --config base --wandb
 python run_experiment.py --config base --skip_preprocessing
 ```
 
+### Force Rerun Steps (even if data/models exist)
+```bash
+# Force rerun preprocessing
+python run_experiment.py --config base --force_preprocessing
+
+# Force retrain model
+python run_experiment.py --config base --force_training
+
+# Force both
+python run_experiment.py --config base --force_preprocessing --force_training
+```
+
 ### Only Training
 ```bash
 python run_experiment.py --config base --training_only --wandb
