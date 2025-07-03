@@ -2,7 +2,7 @@
 
 # Data paths
 trajectory_data_dir: "/opt/dlami/nvme/seungpil/"
-rearc_data_dir: "../LLM_experiment/data/re-arc"
+rearc_data_dir: "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks"
 processed_data_dir: "./processed_data"
 model_save_dir: "/opt/dlami/nvme/seungpil/rl-models"
 results_dir: "/opt/dlami/nvme/seungpil/rl-results"
@@ -13,7 +13,7 @@ n_head: 8 # Attention heads
 n_embd: 128 # Embedding dimension
 
 # Training parameters
-batch_size: 48 # Increased for 3 GPUs
+batch_size: 8 # Increased for 3 GPUs
 learning_rate: 0.0001
 n_epochs: 50
 warmup_steps: 1000

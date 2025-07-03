@@ -1,13 +1,8 @@
 """
 2025.6.8
 2025.6.12
-<<<<<<< HEAD
-4.51.3
-0.19.0.dev0
-=======
 4.53.0
 0.19.0
->>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -161,10 +156,6 @@ class UnslothIterativeSFTConfig(IterativeSFTConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
-<<<<<<< HEAD
-        tp_size = 0,
-=======
->>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -189,10 +180,7 @@ class UnslothIterativeSFTConfig(IterativeSFTConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
-<<<<<<< HEAD
-=======
         hub_revision = None,
->>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -217,10 +205,7 @@ class UnslothIterativeSFTConfig(IterativeSFTConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
-<<<<<<< HEAD
-=======
         liger_kernel_config = None,
->>>>>>> 146303f (unsloth)
         eval_use_gather_object = False,
         average_tokens_across_devices = False,
         model_init_kwargs = None,
@@ -314,10 +299,6 @@ class UnslothIterativeSFTConfig(IterativeSFTConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
-<<<<<<< HEAD
-            tp_size = tp_size,
-=======
->>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -342,10 +323,7 @@ class UnslothIterativeSFTConfig(IterativeSFTConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
-<<<<<<< HEAD
-=======
             hub_revision = hub_revision,
->>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -370,10 +348,7 @@ class UnslothIterativeSFTConfig(IterativeSFTConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
-<<<<<<< HEAD
-=======
             liger_kernel_config = liger_kernel_config,
->>>>>>> 146303f (unsloth)
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             model_init_kwargs = model_init_kwargs,
@@ -617,13 +592,9 @@ class _UnslothIterativeSFTTrainer(Trainer):
         texts_labels: Optional[list[str]] = None,
     ):
         """
-<<<<<<< HEAD
-        Run an optimisation step given a list of input_ids, attention_mask, and labels or a list of text and text_labels.
-=======
         Run an optimisation step given a list of input_ids, attention_mask, and labels or a list of text and
         text_labels.
 
->>>>>>> 146303f (unsloth)
         Args:
             input_ids (list[`torch.LongTensor`]):
                 List of tensors containing the input_ids (if not provided, text will be used)
@@ -659,8 +630,6 @@ class _UnslothIterativeSFTTrainer(Trainer):
                 "No 'labels' or 'text_labels' are provided. When using an encoder-decoder architecture, 'labels' or 'text_labels' must be passed."
             )
 
-<<<<<<< HEAD
-=======
         # Convert Column to list if not already
         input_ids = input_ids[:] if input_ids is not None else None
         attention_mask = attention_mask[:] if attention_mask is not None else None
@@ -668,7 +637,6 @@ class _UnslothIterativeSFTTrainer(Trainer):
         texts = texts[:] if texts is not None else None
         texts_labels = texts_labels[:] if texts_labels is not None else None
 
->>>>>>> 146303f (unsloth)
         input_ids, attention_mask, labels, texts, texts_labels = self._step_safety_checker(
             input_ids, attention_mask, labels, texts, texts_labels
         )
@@ -799,11 +767,6 @@ class _UnslothIterativeSFTTrainer(Trainer):
         else:
             base_model = None
 
-<<<<<<< HEAD
-        tags = tags or set()
-        if isinstance(tags, str):
-            tags = {tags}
-=======
         # normalize `tags` to a mutable set
         if tags is None:
             tags = set()
@@ -811,7 +774,6 @@ class _UnslothIterativeSFTTrainer(Trainer):
             tags = {tags}
         else:
             tags = set(tags)
->>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")
@@ -839,19 +801,11 @@ class UnslothIterativeSFTTrainer(_UnslothIterativeSFTTrainer):
         model (`Union[str, PreTrainedModel]`):
             Model to be trained. Can be either:
 
-<<<<<<< HEAD
-            - A string, being the *model id* of a pretrained model hosted inside a model repo on huggingface.co, or
-              a path to a *directory* containing model weights saved using
-              [`~transformers.PreTrainedModel.save_pretrained`], e.g., `'./my_model_directory/'`. The model is
-              loaded using [`~transformers.AutoModelForCausalLM.from_pretrained`] with the keywork arguments
-              in `args.model_init_kwargs`.
-=======
             - A string, being the *model id* of a pretrained model hosted inside a model repo on huggingface.co, or a
               path to a *directory* containing model weights saved using
               [`~transformers.PreTrainedModel.save_pretrained`], e.g., `'./my_model_directory/'`. The model is loaded
               using [`~transformers.AutoModelForCausalLM.from_pretrained`] with the keyword arguments in
               `args.model_init_kwargs`.
->>>>>>> 146303f (unsloth)
             - A [`~transformers.PreTrainedModel`] object. Only causal language models are supported.
         args ([`IterativeSFTConfig`], *optional*, defaults to `None`):
             Configuration for this trainer. If `None`, a default configuration is used.
@@ -870,12 +824,8 @@ class UnslothIterativeSFTTrainer(_UnslothIterativeSFTTrainer):
         preprocess_logits_for_metrics (`Callable[[torch.Tensor, torch.Tensor], torch.Tensor]`):
             The function to use to preprocess the logits before computing the metrics.
         compute_metrics (`Callable[[EvalPrediction], dict]`, *optional*):
-<<<<<<< HEAD
-            The function to use to compute the metrics. Must take a `EvalPrediction` and return a dictionary string to metric values.
-=======
             The function to use to compute the metrics. Must take a `EvalPrediction` and return a dictionary string to
             metric values.
->>>>>>> 146303f (unsloth)
         max_length (`int`, *optional*, deprecated):
             Maximum length of the tokenized sequence. Use `args.max_length` instead.
         truncation_mode (`str`, *optional*, deprecated):

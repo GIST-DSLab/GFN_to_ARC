@@ -1,13 +1,8 @@
 """
 2025.6.8
 2025.6.12
-<<<<<<< HEAD
-4.51.3
-0.19.0.dev0
-=======
 4.53.0
 0.19.0
->>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -77,13 +72,8 @@ class UnslothOnlineDPOConfig(OnlineDPOConfig):
         temperature (`float`, *optional*, defaults to `0.9`):
             Temperature for sampling. The higher the temperature, the more random the completions.
         missing_eos_penalty (`float` or `None`, *optional*, defaults to `None`):
-<<<<<<< HEAD
-            Penalty applied to the score when the model fails to generate an EOS token. This is useful to encourage
-            to generate completions shorter than the maximum length (`max_new_tokens`). The penalty must be a positive
-=======
             Penalty applied to the score when the model fails to generate an EOS token. This is useful to encourage to
             generate completions shorter than the maximum length (`max_new_tokens`). The penalty must be a positive
->>>>>>> 146303f (unsloth)
             value.
         beta (`float` or `list[float]`, *optional*, defaults to `0.1`):
             Parameter controlling the deviation from the reference model. Higher β means less deviation from the
@@ -196,10 +186,6 @@ class UnslothOnlineDPOConfig(OnlineDPOConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
-<<<<<<< HEAD
-        tp_size = 0,
-=======
->>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -224,10 +210,7 @@ class UnslothOnlineDPOConfig(OnlineDPOConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
-<<<<<<< HEAD
-=======
         hub_revision = None,
->>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -252,10 +235,7 @@ class UnslothOnlineDPOConfig(OnlineDPOConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
-<<<<<<< HEAD
-=======
         liger_kernel_config = None,
->>>>>>> 146303f (unsloth)
         eval_use_gather_object = False,
         average_tokens_across_devices = False,
         reward_model_path = None,
@@ -365,10 +345,6 @@ class UnslothOnlineDPOConfig(OnlineDPOConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
-<<<<<<< HEAD
-            tp_size = tp_size,
-=======
->>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -393,10 +369,7 @@ class UnslothOnlineDPOConfig(OnlineDPOConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
-<<<<<<< HEAD
-=======
             hub_revision = hub_revision,
->>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -421,10 +394,7 @@ class UnslothOnlineDPOConfig(OnlineDPOConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
-<<<<<<< HEAD
-=======
             liger_kernel_config = liger_kernel_config,
->>>>>>> 146303f (unsloth)
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             reward_model_path = reward_model_path,
@@ -983,11 +953,7 @@ class _UnslothOnlineDPOTrainer(Trainer):
 
         kwargs = {}
 
-<<<<<<< HEAD
-        # For LOMO optimizers you need to explicitly use the learnign rate
-=======
         # For LOMO optimizers you need to explicitly use the learning rate
->>>>>>> 146303f (unsloth)
         if self.args.optim in [OptimizerNames.LOMO, OptimizerNames.ADALOMO]:
             kwargs["learning_rate"] = self._get_learning_rate()
 
@@ -1079,11 +1045,6 @@ class _UnslothOnlineDPOTrainer(Trainer):
         else:
             base_model = None
 
-<<<<<<< HEAD
-        tags = tags or set()
-        if isinstance(tags, str):
-            tags = {tags}
-=======
         # normalize `tags` to a mutable set
         if tags is None:
             tags = set()
@@ -1091,7 +1052,6 @@ class _UnslothOnlineDPOTrainer(Trainer):
             tags = {tags}
         else:
             tags = set(tags)
->>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")
@@ -1129,13 +1089,8 @@ class UnslothOnlineDPOTrainer(_UnslothOnlineDPOTrainer):
         model (`transformers.PreTrainedModel` or `torch.nn.Module`):
             The model to train, preferably an `AutoModelForCausalLM`.
         ref_model (`transformers.PreTrainedModel` or `torch.nn.Module` or `None`):
-<<<<<<< HEAD
-            The reference model to use for training. If None is specified, the reference model will be created from
-            the model.
-=======
             The reference model to use for training. If None is specified, the reference model will be created from the
             model.
->>>>>>> 146303f (unsloth)
         reward_model (`transformers.PreTrainedModel` or `torch.nn.Module` or `None`):
             The reward model to score completions with, preferably an `AutoModelForSequenceClassification`.
         judge (`BasePairwiseJudge`):
@@ -1143,14 +1098,9 @@ class UnslothOnlineDPOTrainer(_UnslothOnlineDPOTrainer):
         args (`OnlineDPOConfig`):
             The online DPO config arguments to use for training.
         data_collator (`transformers.DataCollator`):
-<<<<<<< HEAD
-            The data collator to use for training. If None is specified, the default data collator (`DPODataCollatorWithPadding`) will be used
-            which will pad the sequences to the maximum length of the sequences in the batch, given a dataset of paired sequences.
-=======
             The data collator to use for training. If None is specified, the default data collator
             (`DPODataCollatorWithPadding`) will be used which will pad the sequences to the maximum length of the
             sequences in the batch, given a dataset of paired sequences.
->>>>>>> 146303f (unsloth)
         train_dataset (`datasets.Dataset`):
             The dataset to use for training.
         eval_dataset (`datasets.Dataset`):
@@ -1162,13 +1112,8 @@ class UnslothOnlineDPOTrainer(_UnslothOnlineDPOTrainer):
         peft_config (`dict`):
             The peft config to use for training.
         compute_metrics (`Callable[[EvalPrediction], dict]`, *optional*):
-<<<<<<< HEAD
-            The function to use to compute the metrics. Must take a `EvalPrediction` and return
-            a dictionary string to metric values.
-=======
             The function to use to compute the metrics. Must take a `EvalPrediction` and return a dictionary string to
             metric values.
->>>>>>> 146303f (unsloth)
         callbacks (`list[transformers.TrainerCallback]`):
             The callbacks to use for training.
         optimizers (`tuple[torch.optim.Optimizer, torch.optim.lr_scheduler.LambdaLR]`):

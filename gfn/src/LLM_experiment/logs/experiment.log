@@ -4919,3 +4919,40 @@ ValueError: Error initializing torch.distributed using env:// rendezvous: enviro
 2025-07-03 22:29:06,625 - INFO - 🚀 Running command with live output...
 2025-07-03 22:31:55,537 - INFO - Experiment interrupted by user
 >>>>>>> Stashed changes
+2025-07-03 23:00:37,199 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 23:00:37,199 - INFO - Configuration: configs/config_ddp_456.yaml
+2025-07-03 23:00:37,199 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-03 23:00:37,199 - INFO - Checking prerequisites...
+2025-07-03 23:00:38,881 - INFO - ✅ All prerequisites checked
+2025-07-03 23:00:38,881 - INFO - Created/verified directory: ./processed_data
+2025-07-03 23:00:38,881 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/models_gpu456
+2025-07-03 23:00:38,881 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/results_gpu456
+2025-07-03 23:00:38,881 - INFO - Created/verified directory: ./logs
+2025-07-03 23:00:38,951 - INFO - Found 5 existing processed data files. Skipping preprocessing.
+2025-07-03 23:00:38,951 - INFO - Files: ['problem_86_processed.json', 'problem_139_processed.json', 'problem_178_processed.json', 'problem_149_processed.json', 'problem_240_processed.json']
+2025-07-03 23:00:38,951 - INFO - Use --force-preprocessing to regenerate.
+2025-07-03 23:00:38,952 - INFO - Using Unsloth for accelerated training (single GPU only)
+2025-07-03 23:00:38,952 - INFO - ==================================================
+2025-07-03 23:00:38,952 - INFO - Starting: Unsloth Training
+2025-07-03 23:00:38,952 - INFO - Command: /home/ubuntu/miniconda3/envs/gflownet/bin/python training_unsloth.py --config configs/config_ddp_456.yaml
+2025-07-03 23:00:38,952 - INFO - ==================================================
+2025-07-03 23:00:38,952 - INFO - 🚀 Running command with live output...
+2025-07-03 23:01:03,783 - INFO - Experiment interrupted by user
+2025-07-03 23:01:08,453 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 23:01:08,453 - INFO - Configuration: configs/config_ddp_456.yaml
+2025-07-03 23:01:08,453 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-03 23:01:08,453 - INFO - Checking prerequisites...
+2025-07-03 23:01:10,019 - INFO - ✅ All prerequisites checked
+2025-07-03 23:01:10,019 - INFO - Created/verified directory: ./processed_data
+2025-07-03 23:01:10,019 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/models_gpu456
+2025-07-03 23:01:10,019 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/results_gpu456
+2025-07-03 23:01:10,019 - INFO - Created/verified directory: ./logs
+2025-07-03 23:01:10,094 - INFO - Found 5 existing processed data files. Skipping preprocessing.
+2025-07-03 23:01:10,094 - INFO - Files: ['problem_86_processed.json', 'problem_139_processed.json', 'problem_178_processed.json', 'problem_149_processed.json', 'problem_240_processed.json']
+2025-07-03 23:01:10,094 - INFO - Use --force-preprocessing to regenerate.
+2025-07-03 23:01:10,095 - INFO - Using Unsloth for accelerated training (single GPU only)
+2025-07-03 23:01:10,095 - INFO - ==================================================
+2025-07-03 23:01:10,095 - INFO - Starting: Unsloth Training
+2025-07-03 23:01:10,095 - INFO - Command: /home/ubuntu/miniconda3/envs/gflownet/bin/python training_unsloth.py --config configs/config_ddp_456.yaml
+2025-07-03 23:01:10,095 - INFO - ==================================================
+2025-07-03 23:01:10,095 - INFO - 🚀 Running command with live output...

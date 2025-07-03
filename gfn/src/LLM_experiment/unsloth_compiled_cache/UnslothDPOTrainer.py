@@ -1,13 +1,8 @@
 """
 2025.6.8
 2025.6.12
-<<<<<<< HEAD
-4.51.3
-0.19.0.dev0
-=======
 4.53.0
 0.19.0
->>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -78,13 +73,8 @@ class UnslothDPOConfig(DPOConfig):
             Whether to disable dropout in the model and reference model.
         use_logits_to_keep (`bool`, *optional*, defaults to `False`):
             If `True`, only a specified number of logits are computed in the forward pass. This can be useful for
-<<<<<<< HEAD
-            saving memory and speeding up training by not computing the logits for all tokens, especially in
-            scenarios when working with very long prompts where labels are ignored (-100).
-=======
             saving memory and speeding up training by not computing the logits for all tokens, especially in scenarios
             when working with very long prompts where labels are ignored (-100).
->>>>>>> 146303f (unsloth)
 
         > Parameters that control the data preprocessing
 
@@ -118,13 +108,8 @@ class UnslothDPOConfig(DPOConfig):
             training batch size to speed up preprocessing. If `None`, defaults to `per_device_train_batch_size` for
             training and `per_device_eval_batch_size` for evaluation.
         tools (`Optional[list[Union[dict, Callable]]]`, *optional*, defaults to `None`):
-<<<<<<< HEAD
-            List of tools (callable functions) that will be accessible to the model.
-            If the template does not support function calling, this argument will have no effect.
-=======
             List of tools (callable functions) that will be accessible to the model. If the template does not support
             function calling, this argument will have no effect.
->>>>>>> 146303f (unsloth)
 
         > Parameters that control the training
 
@@ -132,18 +117,6 @@ class UnslothDPOConfig(DPOConfig):
             Type of loss to use. Possible values are:
 
                 - `"sigmoid"`: sigmoid loss from the original [DPO](https://huggingface.co/papers/2305.18290) paper.
-<<<<<<< HEAD
-                - `"hinge"`: hinge loss on the normalized likelihood from the [SLiC](https://huggingface.co/papers/2305.10425) paper.
-                - `"ipo"`: IPO loss from the [IPO](https://huggingface.co/papers/2310.12036) paper.
-                - `"exo_pair"`: pairwise EXO loss from the [EXO](https://huggingface.co/papers/2402.00856) paper.
-                - `"nca_pair"`: pairwise NCA loss from the [NCA](https://huggingface.co/papers/2402.05369) paper.
-                - `"robust"`: unbiased estimate of the DPO loss that is robust to preference noise from the [Robust DPO](https://huggingface.co/papers/2403.00409) paper.
-                - `"bco_pair"`: pairwise BCO loss from the [BCO](https://huggingface.co/papers/2404.04656) paper.
-                - `"sppo_hard"`: SPPO loss with hard label from the [SPPO](https://huggingface.co/papers/2405.00675) paper.
-                - `"aot"`: AOT loss for paired datasets from the [AOT](https://huggingface.co/papers/2406.05882) paper.
-                - `"aot_pair"`: AOT loss for unpaired datasets from the [AOT](https://huggingface.co/papers/2406.05882) paper.
-                - `"discopop"`: DiscoPOP (a.k.a Log-Ratio Modulated Loss, LRML) loss from the [DiscoPOP](https://huggingface.co/papers/2406.08414) paper.
-=======
                 - `"hinge"`: hinge loss on the normalized likelihood from the
                   [SLiC](https://huggingface.co/papers/2305.10425) paper.
                 - `"ipo"`: IPO loss from the [IPO](https://huggingface.co/papers/2310.12036) paper.
@@ -159,7 +132,6 @@ class UnslothDPOConfig(DPOConfig):
                   paper.
                 - `"discopop"`: DiscoPOP (a.k.a Log-Ratio Modulated Loss, LRML) loss from the
                   [DiscoPOP](https://huggingface.co/papers/2406.08414) paper.
->>>>>>> 146303f (unsloth)
                 - `"apo_zero"`: APO-zero loss from the [APO](https://huggingface.co/papers/2408.06266) paper.
                 - `"apo_down"`: APO-down loss from the [APO](https://huggingface.co/papers/2408.06266) paper.
 
@@ -180,13 +152,8 @@ class UnslothDPOConfig(DPOConfig):
             Whether to ignore the provided reference model and implicitly use a reference model that assigns equal
             probability to all responses.
         label_smoothing (`float`, *optional*, defaults to `0.0`):
-<<<<<<< HEAD
-            Robust DPO label smoothing parameter from the [cDPO report](https://ericmitchell.ai/cdpo.pdf) and
-            [Robust DPO](https://huggingface.co/papers/2403.00409) paper that should be between `0.0` and `0.5`.
-=======
             Robust DPO label smoothing parameter from the [cDPO report](https://ericmitchell.ai/cdpo.pdf) and [Robust
             DPO](https://huggingface.co/papers/2403.00409) paper that should be between `0.0` and `0.5`.
->>>>>>> 146303f (unsloth)
         use_weighting (`bool`, *optional*, defaults to `False`):
             Whether to weight the loss as done in the [WPO paper](https://huggingface.co/papers/2406.11827).
         rpo_alpha (`float`, *optional*, defaults to `None`):
@@ -308,10 +275,6 @@ class UnslothDPOConfig(DPOConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
-<<<<<<< HEAD
-        tp_size = 0,
-=======
->>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -336,10 +299,7 @@ class UnslothDPOConfig(DPOConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
-<<<<<<< HEAD
-=======
         hub_revision = None,
->>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -364,10 +324,7 @@ class UnslothDPOConfig(DPOConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
-<<<<<<< HEAD
-=======
         liger_kernel_config = None,
->>>>>>> 146303f (unsloth)
         eval_use_gather_object = False,
         average_tokens_across_devices = False,
         model_init_kwargs = None,
@@ -493,10 +450,6 @@ class UnslothDPOConfig(DPOConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
-<<<<<<< HEAD
-            tp_size = tp_size,
-=======
->>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -521,10 +474,7 @@ class UnslothDPOConfig(DPOConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
-<<<<<<< HEAD
-=======
             hub_revision = hub_revision,
->>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -549,10 +499,7 @@ class UnslothDPOConfig(DPOConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
-<<<<<<< HEAD
-=======
             liger_kernel_config = liger_kernel_config,
->>>>>>> 146303f (unsloth)
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             model_init_kwargs = model_init_kwargs,
@@ -1032,10 +979,7 @@ class _UnslothDPOTrainer(Trainer):
         Example:
         ```python
         >>> from transformers import GPT2Tokenizer
-<<<<<<< HEAD
-=======
 
->>>>>>> 146303f (unsloth)
         >>> tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         >>> features = {"prompt": "The sky is", "chosen": " blue", "rejected": " green"}
         >>> DPOTrainer.tokenize_row(
@@ -1258,30 +1202,19 @@ class _UnslothDPOTrainer(Trainer):
         batch: dict[str, Union[list, torch.LongTensor]], padding_value: int
     ) -> dict[str, torch.LongTensor]:
         """
-<<<<<<< HEAD
-        Concatenate the `chosen` and `rejected` inputs from the batch into a single tensor for both the prompt
-        and completion sequences.
-=======
         Concatenate the `chosen` and `rejected` inputs from the batch into a single tensor for both the prompt and
         completion sequences.
->>>>>>> 146303f (unsloth)
 
         Args:
             batch (`dict[str, Union[list, torch.LongTensor]]`):
                 A batch of input data. The batch must contain the following keys:
 
-<<<<<<< HEAD
-                - `"prompt_input_ids"`: Tensor of shape `(batch_size, prompt_length)` representing the prompt input IDs.
-                - `"chosen_input_ids"`: Tensor of shape `(batch_size, chosen_length)` representing the chosen completion input IDs.
-                - `"rejected_input_ids"`: Tensor of shape `(batch_size, rejected_length)` representing the rejected completion input IDs.
-=======
                 - `"prompt_input_ids"`: Tensor of shape `(batch_size, prompt_length)` representing the prompt input
                   IDs.
                 - `"chosen_input_ids"`: Tensor of shape `(batch_size, chosen_length)` representing the chosen
                   completion input IDs.
                 - `"rejected_input_ids"`: Tensor of shape `(batch_size, rejected_length)` representing the rejected
                   completion input IDs.
->>>>>>> 146303f (unsloth)
                 - `"prompt_pixel_values"` (optional): Tensor for pixel values, if available.
                 - `"prompt_pixel_attention_mask"` (optional): Tensor for pixel attention masks, if available.
 
@@ -1293,17 +1226,6 @@ class _UnslothDPOTrainer(Trainer):
             `dict[str, torch.LongTensor]`: A dictionary containing:
 
                 - `"prompt_input_ids"`: Concatenated prompt input IDs of shape `(2 * batch_size, prompt_length)`.
-<<<<<<< HEAD
-                - `"completion_input_ids"`: Concatenated chosen and rejected completion input IDs of shape `(2 * batch_size, max_completion_length)`.
-                - `"prompt_attention_mask"`: Concatenated prompt attention masks of shape `(2 * batch_size, prompt_length)`.
-                - `"completion_attention_mask"`: Concatenated chosen and rejected attention masks of shape `(2 * batch_size, max_completion_length)`.
-                - `"pixel_values"` (optional): Concatenated pixel values if `"prompt_pixel_values"` are present.
-                - `"pixel_attention_mask"` (optional): Concatenated pixel attention masks if `"prompt_pixel_attention_mask"` are present.
-
-        Notes:
-            The completion input IDs and attention masks are padded to the maximum completion length of the chosen
-            or rejected sequences.
-=======
                 - `"completion_input_ids"`: Concatenated chosen and rejected completion input IDs of shape `(2 *
                   batch_size, max_completion_length)`.
                 - `"prompt_attention_mask"`: Concatenated prompt attention masks of shape `(2 * batch_size,
@@ -1317,7 +1239,6 @@ class _UnslothDPOTrainer(Trainer):
         Notes:
             The completion input IDs and attention masks are padded to the maximum completion length of the chosen or
             rejected sequences.
->>>>>>> 146303f (unsloth)
         """
         output = {}
 
@@ -1374,16 +1295,9 @@ class _UnslothDPOTrainer(Trainer):
                 Log probabilities of the reference model for the rejected responses. Shape: `(batch_size,)`.
 
         Returns:
-<<<<<<< HEAD
-            A tuple of three tensors: `(losses, chosen_rewards, rejected_rewards)`.
-            The losses tensor contains the DPO loss for each example in the batch.
-            The `chosen_rewards` and `rejected_rewards` tensors contain the rewards for the chosen and rejected
-            responses, respectively.
-=======
             A tuple of three tensors: `(losses, chosen_rewards, rejected_rewards)`. The losses tensor contains the DPO
             loss for each example in the batch. The `chosen_rewards` and `rejected_rewards` tensors contain the rewards
             for the chosen and rejected responses, respectively.
->>>>>>> 146303f (unsloth)
         """
         device = self.accelerator.device
 
@@ -2186,13 +2100,8 @@ class _UnslothDPOTrainer(Trainer):
         metric_key_prefix: str = "eval",
     ) -> EvalLoopOutput:
         """
-<<<<<<< HEAD
-        Overriding built-in evaluation loop to store metrics for each batch.
-        Prediction/evaluation loop, shared by `Trainer.evaluate()` and `Trainer.predict()`.
-=======
         Overriding built-in evaluation loop to store metrics for each batch. Prediction/evaluation loop, shared by
         `Trainer.evaluate()` and `Trainer.predict()`.
->>>>>>> 146303f (unsloth)
 
         Works both with or without labels.
         """
@@ -2287,11 +2196,6 @@ class _UnslothDPOTrainer(Trainer):
         else:
             base_model = None
 
-<<<<<<< HEAD
-        tags = tags or set()
-        if isinstance(tags, str):
-            tags = {tags}
-=======
         # normalize `tags` to a mutable set
         if tags is None:
             tags = set()
@@ -2299,7 +2203,6 @@ class _UnslothDPOTrainer(Trainer):
             tags = {tags}
         else:
             tags = set(tags)
->>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")
@@ -2344,17 +2247,6 @@ class UnslothDPOTrainer(_UnslothDPOTrainer):
         model (`Union[str, PreTrainedModel]`):
             Model to be trained. Can be either:
 
-<<<<<<< HEAD
-            - A string, being the *model id* of a pretrained model hosted inside a model repo on huggingface.co, or
-              a path to a *directory* containing model weights saved using
-              [`~transformers.PreTrainedModel.save_pretrained`], e.g., `'./my_model_directory/'`. The model is
-              loaded using [`~transformers.AutoModelForCausalLM.from_pretrained`] with the keywork arguments
-              in `args.model_init_kwargs`.
-            - A [`~transformers.PreTrainedModel`] object. Only causal language models are supported.
-        ref_model (`PreTrainedModelWrapper`):
-            Hugging Face transformer model with a casual language modelling head. Used for implicit reward computation and loss. If no
-            reference model is provided, the trainer will create a reference model with the same architecture as the model to be optimized.
-=======
             - A string, being the *model id* of a pretrained model hosted inside a model repo on huggingface.co, or a
               path to a *directory* containing model weights saved using
               [`~transformers.PreTrainedModel.save_pretrained`], e.g., `'./my_model_directory/'`. The model is loaded
@@ -2365,7 +2257,6 @@ class UnslothDPOTrainer(_UnslothDPOTrainer):
             Hugging Face transformer model with a casual language modelling head. Used for implicit reward computation
             and loss. If no reference model is provided, the trainer will create a reference model with the same
             architecture as the model to be optimized.
->>>>>>> 146303f (unsloth)
         args ([`DPOConfig`], *optional*, defaults to `None`):
             Configuration for this trainer. If `None`, a default configuration is used.
         data_collator (`DataCollator`, *optional*):
@@ -2390,13 +2281,8 @@ class UnslothDPOTrainer(_UnslothDPOTrainer):
             after the last eval batch to signal that the function needs to calculate and return the global summary
             statistics rather than accumulating the batch-level statistics.
         callbacks (list of [`~transformers.TrainerCallback`], *optional*, defaults to `None`):
-<<<<<<< HEAD
-            List of callbacks to customize the training loop. Will add those to the list of default callbacks
-            detailed in [here](https://huggingface.co/docs/transformers/main_classes/callback).
-=======
             List of callbacks to customize the training loop. Will add those to the list of default callbacks detailed
             in [here](https://huggingface.co/docs/transformers/main_classes/callback).
->>>>>>> 146303f (unsloth)
 
             If you want to remove one of the default callbacks used, use the [`~transformers.Trainer.remove_callback`]
             method.
@@ -2404,13 +2290,8 @@ class UnslothDPOTrainer(_UnslothDPOTrainer):
             A tuple containing the optimizer and the scheduler to use. Will default to an instance of [`AdamW`] on your
             model and a scheduler given by [`get_linear_schedule_with_warmup`] controlled by `args`.
         optimizer_cls_and_kwargs (`Tuple[Type[torch.optim.Optimizer], Dict[str, Any]]`, *optional*, defaults to `None`):
-<<<<<<< HEAD
-            A tuple containing the optimizer class and keyword arguments to use.
-            Overrides `optim` and `optim_args` in `args`. Incompatible with the `optimizers` argument.
-=======
             A tuple containing the optimizer class and keyword arguments to use. Overrides `optim` and `optim_args` in
             `args`. Incompatible with the `optimizers` argument.
->>>>>>> 146303f (unsloth)
         preprocess_logits_for_metrics (`Callable[[torch.Tensor, torch.Tensor], torch.Tensor]`, *optional*, defaults to `None`):
             A function that preprocess the logits right before caching them at each evaluation step. Must take two
             tensors, the logits and the labels, and return the logits once processed as desired. The modifications made
