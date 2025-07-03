@@ -16,7 +16,10 @@ import logging
 from models.arc_transformer import create_model
 from utils.data_utils import create_vocabulary, flatten_grid_state, discretize_reward
 from configs.arc_config import base
-from LLM_experiment.utils.arc_action_executor import ARCActionExecutor
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from ARCenv.EntireARCEnv import DiagonalARCEnv
 
 
 class ARCTrajectoryInference:
@@ -34,8 +37,7 @@ class ARCTrajectoryInference:
         # Load model
         self.model = self.load_model(model_path)
         
-        # Initialize action executor
-        self.executor = ARCActionExecutor()
+        # Initialize ARC environment for action execution
         
         self.logger.info(f"Inference engine initialized on {self.device}")
     
@@ -218,18 +220,42 @@ class ARCTrajectoryInference:
     
     def load_rearc_problems(self, problem_ids: List[int]) -> List[Dict]:
         """Load ReARC problems"""
+        # Mapping from problem ID to hex filename
+        id_to_hex = {
+            86: "25ff71a9",
+            128: "5582e5ca", 
+            139: "6150a2bd",
+            149: "67a3c6ac",
+            154: "68b16354",
+            178: "74dd1130",
+            240: "9dfd6313",
+            379: "ed36ccf7"
+        }
+        
         problems = []
         rearc_dir = self.config['rearc_data_dir']
         
         for problem_id in problem_ids:
-            problem_file = os.path.join(rearc_dir, f"{problem_id}.json")
+            if problem_id not in id_to_hex:
+                self.logger.warning(f"No hex mapping found for problem ID {problem_id}")
+                continue
+                
+            hex_filename = id_to_hex[problem_id]
+            problem_file = os.path.join(rearc_dir, f"{hex_filename}.json")
             
             if os.path.exists(problem_file):
                 with open(problem_file, 'r') as f:
-                    problem_data = json.load(f)
-                    problem_data['id'] = problem_id
+                    raw_data = json.load(f)
+                    # Re-ARC format: list of examples with input/output
+                    # Convert to standard ARC format
+                    problem_data = {
+                        'train': raw_data,  # All examples as training data
+                        'test': [],  # No test data in re-arc format
+                        'id': problem_id,
+                        'hex_id': hex_filename
+                    }
                     problems.append(problem_data)
-                    self.logger.info(f"Loaded problem {problem_id}")
+                    self.logger.info(f"Loaded problem {problem_id} ({hex_filename}) with {len(raw_data)} examples")
             else:
                 self.logger.warning(f"Problem file not found: {problem_file}")
         

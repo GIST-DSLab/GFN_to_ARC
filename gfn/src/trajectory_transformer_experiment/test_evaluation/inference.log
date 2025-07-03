@@ -1,0 +1,58 @@
+2025-07-04 02:24:50,992 - INFO - Loading model from ./models/checkpoint_best.pt
+2025-07-04 02:24:54,293 - INFO - Model loaded successfully
+2025-07-04 02:24:54,293 - INFO - Training epoch: 9
+2025-07-04 02:24:54,293 - INFO - Best validation loss: 1.6615440597136815
+2025-07-04 02:24:54,293 - INFO - Inference engine initialized on cuda
+2025-07-04 02:24:54,293 - INFO - Starting evaluation on problems: [86, 139, 178, 149, 154, 240, 379]
+2025-07-04 02:24:54,294 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/86.json
+2025-07-04 02:24:54,294 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/139.json
+2025-07-04 02:24:54,294 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/178.json
+2025-07-04 02:24:54,294 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/149.json
+2025-07-04 02:24:54,294 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/154.json
+2025-07-04 02:24:54,294 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/240.json
+2025-07-04 02:24:54,294 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/379.json
+2025-07-04 02:28:27,879 - INFO - Loading model from ./models/checkpoint_best.pt
+2025-07-04 02:28:31,271 - INFO - Model loaded successfully
+2025-07-04 02:28:31,271 - INFO - Training epoch: 9
+2025-07-04 02:28:31,271 - INFO - Best validation loss: 1.6615440597136815
+2025-07-04 02:28:31,272 - INFO - Inference engine initialized on cuda
+2025-07-04 02:28:31,272 - INFO - Starting evaluation on problems: [86, 139, 178, 149, 154, 240, 379]
+2025-07-04 02:28:31,272 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/86.json
+2025-07-04 02:28:31,272 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/139.json
+2025-07-04 02:28:31,272 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/178.json
+2025-07-04 02:28:31,272 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/149.json
+2025-07-04 02:28:31,272 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/154.json
+2025-07-04 02:28:31,272 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/240.json
+2025-07-04 02:28:31,272 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/379.json
+2025-07-04 02:32:07,537 - INFO - Loading model from ./models/checkpoint_best.pt
+2025-07-04 02:32:10,877 - INFO - Model loaded successfully
+2025-07-04 02:32:10,877 - INFO - Training epoch: 9
+2025-07-04 02:32:10,877 - INFO - Best validation loss: 1.6615440597136815
+2025-07-04 02:32:10,877 - INFO - Inference engine initialized on cuda
+2025-07-04 02:32:10,878 - INFO - Starting evaluation on problems: [86, 139, 178, 149, 154, 240, 379]
+2025-07-04 02:32:10,878 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/re_arc_extracted/tasks/86.json
+2025-07-04 02:32:10,878 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/re_arc_extracted/tasks/139.json
+2025-07-04 02:32:10,878 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/re_arc_extracted/tasks/178.json
+2025-07-04 02:32:10,878 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/re_arc_extracted/tasks/149.json
+2025-07-04 02:32:10,878 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/re_arc_extracted/tasks/154.json
+2025-07-04 02:32:10,879 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/re_arc_extracted/tasks/240.json
+2025-07-04 02:32:10,879 - WARNING - Problem file not found: ../LLM_experiment/data/re-arc/re_arc_extracted/tasks/379.json
+2025-07-04 02:36:43,336 - INFO - Loading model from ./models/checkpoint_best.pt
+2025-07-04 02:36:46,681 - INFO - Model loaded successfully
+2025-07-04 02:36:46,681 - INFO - Training epoch: 9
+2025-07-04 02:36:46,681 - INFO - Best validation loss: 1.6615440597136815
+2025-07-04 02:36:46,681 - INFO - Inference engine initialized on cuda
+2025-07-04 02:36:46,681 - INFO - Starting evaluation on problems: [86, 139]
+2025-07-04 02:37:48,737 - INFO - Loading model from ./models/checkpoint_best.pt
+2025-07-04 02:37:52,018 - INFO - Model loaded successfully
+2025-07-04 02:37:52,018 - INFO - Training epoch: 9
+2025-07-04 02:37:52,018 - INFO - Best validation loss: 1.6615440597136815
+2025-07-04 02:37:52,018 - INFO - Inference engine initialized on cuda
+2025-07-04 02:37:52,019 - INFO - Starting evaluation on problems: [86]
+2025-07-04 02:37:52,070 - INFO - Loaded problem 86 (25ff71a9) with 1000 examples
+2025-07-04 02:37:52,075 - INFO - Evaluation completed!
+2025-07-04 02:37:52,075 - INFO - Overall accuracy: 0.000 (0/0)
+2025-07-04 02:37:52,075 - INFO - Results saved to: ./test_evaluation/evaluation_results.json
+2025-07-04 02:37:52,075 - INFO - 
+Per-problem results:
+2025-07-04 02:37:52,076 - INFO -   Problem 86: 0.000 (0/0)

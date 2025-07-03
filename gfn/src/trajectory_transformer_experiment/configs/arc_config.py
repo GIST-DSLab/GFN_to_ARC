@@ -72,7 +72,7 @@ base = {
         'max_test_samples': 50,
         
         # Paths
-        'rearc_data_dir': "../LLM_experiment/data/re-arc",
+        'rearc_data_dir': "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks",
         'model_load_path': "./models/arc_transformer_best.pt",
         'results_dir': "./results",
     }

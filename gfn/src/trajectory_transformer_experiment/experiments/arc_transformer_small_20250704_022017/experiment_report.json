@@ -1,0 +1,6 @@
+{
+  "experiment_name": "arc_transformer_small_20250704_022017",
+  "config": "small",
+  "timestamp": "2025-07-04T02:20:56.987092",
+  "experiment_dir": "./experiments/arc_transformer_small_20250704_022017"
+}

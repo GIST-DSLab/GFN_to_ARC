@@ -1,0 +1,41 @@
+2025-07-04 02:20:17,882 - INFO - Starting ARC Trajectory Transformer Experiment: arc_transformer_small_20250704_022017
+2025-07-04 02:20:17,882 - INFO - Configuration: small
+2025-07-04 02:20:17,882 - INFO - Experiment directory: ./experiments/arc_transformer_small_20250704_022017
+2025-07-04 02:20:17,882 - INFO - Checking prerequisites...
+2025-07-04 02:20:17,882 - INFO - ✓ Found: data_preprocessing.py
+2025-07-04 02:20:17,883 - INFO - ✓ Found: training.py
+2025-07-04 02:20:17,883 - INFO - ✓ Found: inference.py
+2025-07-04 02:20:17,883 - INFO - ✓ Found: models/arc_transformer.py
+2025-07-04 02:20:17,883 - INFO - ✓ Found: utils/data_utils.py
+2025-07-04 02:20:17,883 - INFO - ✓ Found: configs/arc_config.py
+2025-07-04 02:20:17,883 - INFO - ✓ Found: ../LLM_experiment/data/trajectories_output
+2025-07-04 02:20:17,883 - INFO - ✓ Found: ../LLM_experiment/data/re-arc
+2025-07-04 02:20:17,883 - INFO - === STEP 1: Data Preprocessing ===
+2025-07-04 02:20:17,883 - INFO - ✓ Preprocessed data already exists, skipping preprocessing
+2025-07-04 02:20:17,883 - INFO - Found: ./processed_data/arc_trajectory_data.json
+2025-07-04 02:20:17,883 - INFO - Use --force_preprocessing to rerun preprocessing
+2025-07-04 02:20:17,883 - INFO - === STEP 2: Model Training ===
+2025-07-04 02:20:17,883 - INFO - Force training requested, starting training...
+2025-07-04 02:20:17,883 - INFO - Starting: Model training
+2025-07-04 02:20:17,883 - INFO - Command: PYTHONPATH=/home/ubuntu/GFN_to_ARC/gfn/src/trajectory_transformer_experiment:$PYTHONPATH python training.py --config small
+2025-07-04 02:20:17,883 - INFO - 🚀 Running command with live output...
+2025-07-04 02:20:53,987 - INFO - SUCCESS: Model training (took 36.1s)
+2025-07-04 02:20:54,002 - INFO - Models copied to ./experiments/arc_transformer_small_20250704_022017/models
+2025-07-04 02:20:54,002 - INFO - === STEP 3: Model Inference & Evaluation ===
+2025-07-04 02:20:54,002 - INFO - Starting: Model inference and evaluation
+2025-07-04 02:20:54,002 - INFO - Command: python inference.py --config small --model_path ./experiments/arc_transformer_small_20250704_022017/models/checkpoint_best.pt --output_dir ./experiments/arc_transformer_small_20250704_022017/evaluation
+2025-07-04 02:20:56,986 - ERROR - FAILED: Model inference and evaluation (took 3.0s)
+2025-07-04 02:20:56,986 - ERROR - Error: Traceback (most recent call last):
+  File "/home/ubuntu/GFN_to_ARC/gfn/src/trajectory_transformer_experiment/inference.py", line 19, in <module>
+    from LLM_experiment.utils.arc_action_executor import ARCActionExecutor
+ModuleNotFoundError: No module named 'LLM_experiment'
+
+2025-07-04 02:20:56,986 - ERROR - Inference failed.
+2025-07-04 02:20:56,987 - INFO - === STEP 4: Generating Experiment Report ===
+2025-07-04 02:20:56,987 - INFO - 
+============================================================
+2025-07-04 02:20:56,987 - INFO - EXPERIMENT COMPLETED: arc_transformer_small_20250704_022017
+2025-07-04 02:20:56,987 - INFO - ============================================================
+2025-07-04 02:20:56,987 - INFO - Experiment Report: ./experiments/arc_transformer_small_20250704_022017/experiment_report.json
+2025-07-04 02:20:56,987 - INFO - ============================================================
+2025-07-04 02:20:56,987 - INFO - Total experiment time: 0.7 minutes

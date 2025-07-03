@@ -1,0 +1,42 @@
+{
+  "overall_accuracy": 0.0,
+  "total_correct": 0,
+  "total_tests": 0,
+  "problem_results": [
+    {
+      "problem_id": 86,
+      "test_results": [],
+      "accuracy": 0.0,
+      "correct_count": 0,
+      "total_count": 0
+    }
+  ],
+  "model_config": {
+    "temperature": 1.0,
+    "top_k": null,
+    "top_p": 0.9,
+    "max_new_tokens": 16,
+    "num_return_sequences": 1,
+    "horizon": 20,
+    "beam_width": 64,
+    "n_samples": 1,
+    "eval_problems": [
+      86,
+      139,
+      178,
+      149,
+      154,
+      240,
+      379
+    ],
+    "max_test_samples": 50,
+    "rearc_data_dir": "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks",
+    "model_load_path": "./models/arc_transformer_best.pt",
+    "results_dir": "./test_evaluation",
+    "max_actions": 10,
+    "device": "cuda"
+  },
+  "evaluation_problems": [
+    86
+  ]
+}
