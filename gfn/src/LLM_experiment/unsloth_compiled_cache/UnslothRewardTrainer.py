@@ -1,8 +1,13 @@
 """
 2025.6.8
 2025.6.12
+<<<<<<< HEAD
 4.51.3
 0.19.0.dev0
+=======
+4.53.0
+0.19.0
+>>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -65,8 +70,13 @@ class UnslothRewardConfig(RewardConfig):
             Coefficient to incentivize the reward model to output mean-zero rewards (proposed by
             https://huggingface.co/papers/2312.09244, Eq. 2). Recommended value: `0.01`.
         remove_unused_columns (`bool`, *optional*, defaults to `False`):
+<<<<<<< HEAD
             Whether to remove the columns that are not used by the model's forward pass. Can be `True` only if
             the dataset is pretokenized.
+=======
+            Whether to remove the columns that are not used by the model's forward pass. Can be `True` only if the
+            dataset is pretokenized.
+>>>>>>> 146303f (unsloth)
     
     """
     vllm_sampling_params: Optional[Any] = field(
@@ -155,7 +165,10 @@ class UnslothRewardConfig(RewardConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
+<<<<<<< HEAD
         tp_size = 0,
+=======
+>>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -180,6 +193,10 @@ class UnslothRewardConfig(RewardConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
+<<<<<<< HEAD
+=======
+        hub_revision = None,
+>>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -204,6 +221,10 @@ class UnslothRewardConfig(RewardConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
+<<<<<<< HEAD
+=======
+        liger_kernel_config = None,
+>>>>>>> 146303f (unsloth)
         eval_use_gather_object = False,
         average_tokens_across_devices = True,
         max_length = 1024,
@@ -300,7 +321,10 @@ class UnslothRewardConfig(RewardConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
+<<<<<<< HEAD
             tp_size = tp_size,
+=======
+>>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -325,6 +349,10 @@ class UnslothRewardConfig(RewardConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
+<<<<<<< HEAD
+=======
+            hub_revision = hub_revision,
+>>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -349,6 +377,10 @@ class UnslothRewardConfig(RewardConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
+<<<<<<< HEAD
+=======
+            liger_kernel_config = liger_kernel_config,
+>>>>>>> 146303f (unsloth)
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             max_length = max_length,
@@ -391,13 +423,20 @@ class _UnslothRewardTrainer(Trainer):
             args (`RewardConfig`):
                 The arguments to use for training.
             data_collator (`transformers.DataCollator`):
+<<<<<<< HEAD
                 The data collator to use for training. If None is specified, the default data collator (`RewardDataCollatorWithPadding`) will be used
                 which will pad the sequences to the maximum length of the sequences in the batch, given a dataset of paired sequences.
+=======
+                The data collator to use for training. If None is specified, the default data collator
+                (`RewardDataCollatorWithPadding`) will be used which will pad the sequences to the maximum length of
+                the sequences in the batch, given a dataset of paired sequences.
+>>>>>>> 146303f (unsloth)
             train_dataset (`datasets.Dataset`):
                 The dataset to use for training.
             eval_dataset (`datasets.Dataset`):
                 The dataset to use for evaluation.
             processing_class (`PreTrainedTokenizerBase` or `BaseImageProcessor` or `FeatureExtractionMixin` or `ProcessorMixin`, *optional*):
+<<<<<<< HEAD
                 Processing class used to process the data. If provided, will be used to automatically process the inputs
                 for the model, and it will be saved along the model to make it easier to rerun an interrupted training or
                 reuse the fine-tuned model.
@@ -405,6 +444,17 @@ class _UnslothRewardTrainer(Trainer):
                 The model initializer to use for training. If None is specified, the default model initializer will be used.
             compute_metrics (`Callable[[transformers.EvalPrediction], dict]`, *optional* defaults to `compute_accuracy`):
                 The metrics to use for evaluation. If no metrics are specified, the default metric (`compute_accuracy`) will be used.
+=======
+                Processing class used to process the data. If provided, will be used to automatically process the
+                inputs for the model, and it will be saved along the model to make it easier to rerun an interrupted
+                training or reuse the fine-tuned model.
+            model_init (`Callable[[], transformers.PreTrainedModel]`):
+                The model initializer to use for training. If None is specified, the default model initializer will be
+                used.
+            compute_metrics (`Callable[[transformers.EvalPrediction], dict]`, *optional* defaults to `compute_accuracy`):
+                The metrics to use for evaluation. If no metrics are specified, the default metric (`compute_accuracy`)
+                will be used.
+>>>>>>> 146303f (unsloth)
             callbacks (`list[transformers.TrainerCallback]`):
                 The callbacks to use for training.
             optimizers (`tuple[torch.optim.Optimizer, torch.optim.lr_scheduler.LambdaLR]`):
@@ -412,7 +462,12 @@ class _UnslothRewardTrainer(Trainer):
             preprocess_logits_for_metrics (`Callable[[torch.Tensor, torch.Tensor], torch.Tensor]`):
                 The function to use to preprocess the logits before computing the metrics.
             peft_config (`dict`, defaults to `None`):
+<<<<<<< HEAD
                 The PEFT configuration to use for training. If you pass a PEFT configuration, the model will be wrapped in a PEFT model.
+=======
+                The PEFT configuration to use for training. If you pass a PEFT configuration, the model will be wrapped
+                in a PEFT model.
+>>>>>>> 146303f (unsloth)
         """
         if not is_peft_available() and peft_config is not None:
             raise ValueError(
@@ -677,9 +732,19 @@ class _UnslothRewardTrainer(Trainer):
         else:
             base_model = None
 
+<<<<<<< HEAD
         tags = tags or set()
         if isinstance(tags, str):
             tags = {tags}
+=======
+        # normalize `tags` to a mutable set
+        if tags is None:
+            tags = set()
+        elif isinstance(tags, str):
+            tags = {tags}
+        else:
+            tags = set(tags)
+>>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")

@@ -1,8 +1,13 @@
 """
 2025.6.8
 2025.6.12
+<<<<<<< HEAD
 4.51.3
 0.19.0.dev0
+=======
+4.53.0
+0.19.0
+>>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -168,7 +173,10 @@ class UnslothRLOOConfig(RLOOConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
+<<<<<<< HEAD
         tp_size = 0,
+=======
+>>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -193,6 +201,10 @@ class UnslothRLOOConfig(RLOOConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
+<<<<<<< HEAD
+=======
+        hub_revision = None,
+>>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -217,6 +229,10 @@ class UnslothRLOOConfig(RLOOConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
+<<<<<<< HEAD
+=======
+        liger_kernel_config = None,
+>>>>>>> 146303f (unsloth)
         eval_use_gather_object = False,
         average_tokens_across_devices = False,
         dataset_num_proc = None,
@@ -344,7 +360,10 @@ class UnslothRLOOConfig(RLOOConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
+<<<<<<< HEAD
             tp_size = tp_size,
+=======
+>>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -369,6 +388,10 @@ class UnslothRLOOConfig(RLOOConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
+<<<<<<< HEAD
+=======
+            hub_revision = hub_revision,
+>>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -393,6 +416,10 @@ class UnslothRLOOConfig(RLOOConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
+<<<<<<< HEAD
+=======
+            liger_kernel_config = liger_kernel_config,
+>>>>>>> 146303f (unsloth)
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             dataset_num_proc = dataset_num_proc,
@@ -1034,9 +1061,19 @@ class _UnslothRLOOTrainer(Trainer):
         else:
             base_model = None
 
+<<<<<<< HEAD
         tags = tags or set()
         if isinstance(tags, str):
             tags = {tags}
+=======
+        # normalize `tags` to a mutable set
+        if tags is None:
+            tags = set()
+        elif isinstance(tags, str):
+            tags = {tags}
+        else:
+            tags = set(tags)
+>>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")

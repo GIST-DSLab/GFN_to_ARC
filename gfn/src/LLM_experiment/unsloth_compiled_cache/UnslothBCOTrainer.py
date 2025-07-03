@@ -1,8 +1,13 @@
 """
 2025.6.8
 2025.6.12
+<<<<<<< HEAD
 4.51.3
 0.19.0.dev0
+=======
+4.53.0
+0.19.0
+>>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -75,8 +80,13 @@ class UnslothBCOConfig(BCOConfig):
         disable_dropout (`bool`, *optional*, defaults to `True`):
             Whether to disable dropout in the model and reference model.
         generate_during_eval (`bool`, *optional*, defaults to `False`):
+<<<<<<< HEAD
             If `True`, generates and logs completions from both the model and the reference model to W&B or Comet during
             evaluation.
+=======
+            If `True`, generates and logs completions from both the model and the reference model to W&B or Comet
+            during evaluation.
+>>>>>>> 146303f (unsloth)
         is_encoder_decoder (`bool` or `None`, *optional*, defaults to `None`):
             When using the `model_init` argument (callable) to instantiate the model instead of the `model` argument,
             you need to specify if the model returned by the callable is an encoder-decoder model.
@@ -185,7 +195,10 @@ class UnslothBCOConfig(BCOConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
+<<<<<<< HEAD
         tp_size = 0,
+=======
+>>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -210,6 +223,10 @@ class UnslothBCOConfig(BCOConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
+<<<<<<< HEAD
+=======
+        hub_revision = None,
+>>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -234,6 +251,10 @@ class UnslothBCOConfig(BCOConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
+<<<<<<< HEAD
+=======
+        liger_kernel_config = None,
+>>>>>>> 146303f (unsloth)
         eval_use_gather_object = False,
         average_tokens_across_devices = False,
         max_length = 1024,
@@ -343,7 +364,10 @@ class UnslothBCOConfig(BCOConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
+<<<<<<< HEAD
             tp_size = tp_size,
+=======
+>>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -368,6 +392,10 @@ class UnslothBCOConfig(BCOConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
+<<<<<<< HEAD
+=======
+            hub_revision = hub_revision,
+>>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -392,6 +420,10 @@ class UnslothBCOConfig(BCOConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
+<<<<<<< HEAD
+=======
+            liger_kernel_config = liger_kernel_config,
+>>>>>>> 146303f (unsloth)
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             max_length = max_length,
@@ -835,8 +867,13 @@ class _UnslothBCOTrainer(Trainer):
 
     def _get_chosen_prob(self, prompt_embeddings: torch.FloatTensor) -> torch.FloatTensor:
         """
+<<<<<<< HEAD
         Calculates the probability if the given prompt embedding is from desirable dataset.
         This function calculates the probability in the process and ensemble across processes.
+=======
+        Calculates the probability if the given prompt embedding is from desirable dataset. This function calculates
+        the probability in the process and ensemble across processes.
+>>>>>>> 146303f (unsloth)
         """
         dtype = prompt_embeddings.dtype
         device = prompt_embeddings.device
@@ -864,8 +901,12 @@ class _UnslothBCOTrainer(Trainer):
 
     def _vectorize_prompt(self, input_ids: torch.LongTensor, attention_mask: torch.LongTensor) -> torch.FloatTensor:
         """
+<<<<<<< HEAD
         Replaces processing_class.pad_token_id to embedding_tokenizer.pad_token_id
         and applies self.embedding_func
+=======
+        Replaces processing_class.pad_token_id to embedding_tokenizer.pad_token_id and applies self.embedding_func
+>>>>>>> 146303f (unsloth)
         """
         input_ids = torch.where(
             input_ids == self.processing_class.pad_token_id,
@@ -904,8 +945,12 @@ class _UnslothBCOTrainer(Trainer):
 
     def _get_sample_prompt_embeddings(self, dataset: Dataset, sample_size: int = 512) -> torch.FloatTensor:
         """
+<<<<<<< HEAD
         Sample instances from dataset and get prompt embeddings.
         Used for density ratio classifier training.
+=======
+        Sample instances from dataset and get prompt embeddings. Used for density ratio classifier training.
+>>>>>>> 146303f (unsloth)
         """
         n_samples = min(len(dataset), sample_size)
         rand_indices = np.random.choice(len(dataset), size=(n_samples,))
@@ -1112,11 +1157,24 @@ class _UnslothBCOTrainer(Trainer):
 
         Args:
             logits: Logits of the model (unnormalized). Shape: (batch_size, sequence_length, vocab_size)
+<<<<<<< HEAD
             labels: Labels for which to compute the log probabilities. Label tokens with a value of label_pad_token_id are ignored. Shape: (batch_size, sequence_length)
             average_log_prob: If True, return the average log probability per (non-masked) token. Otherwise, return the sum of the log probabilities of the (non-masked) tokens.
 
         Returns:
             A tensor of shape (batch_size,) containing the average/sum log probabilities of the given labels under the given logits.
+=======
+            labels:
+                Labels for which to compute the log probabilities. Label tokens with a value of label_pad_token_id are
+                ignored. Shape: (batch_size, sequence_length)
+            average_log_prob:
+                If True, return the average log probability per (non-masked) token. Otherwise, return the sum of the
+                log probabilities of the (non-masked) tokens.
+
+        Returns:
+            A tensor of shape (batch_size,) containing the average/sum log probabilities of the given labels under the
+            given logits.
+>>>>>>> 146303f (unsloth)
         """
         if logits.shape[:-1] != labels.shape:
             raise ValueError("Logits (batch and sequence length dim) and labels must have the same shape.")
@@ -1211,18 +1269,37 @@ class _UnslothBCOTrainer(Trainer):
         """Compute the BCO loss for a batch of policy and reference model log probabilities.
 
         Args:
+<<<<<<< HEAD
             policy_chosen_logps: Log probabilities of the policy model for the chosen responses. Shape: (num(chosen) in batch_size,)
             policy_rejected_logps: Log probabilities of the policy model for the rejected responses. Shape: (num(rejected) in batch_size,)
             reference_chosen_logps: Log probabilities of the reference model for the chosen responses. Shape: (num(chosen) in batch_size,)
             reference_rejected_logps: Log probabilities of the reference model for the rejected responses. Shape: (num(rejected) in batch_size,)
+=======
+            policy_chosen_logps:
+                Log probabilities of the policy model for the chosen responses. Shape: (num(chosen) in batch_size,)
+            policy_rejected_logps:
+                Log probabilities of the policy model for the rejected responses. Shape: (num(rejected) in batch_size,)
+            reference_chosen_logps:
+                Log probabilities of the reference model for the chosen responses. Shape: (num(chosen) in batch_size,)
+            reference_rejected_logps:
+                Log probabilities of the reference model for the rejected responses. Shape: (num(rejected) in
+                batch_size,)
+>>>>>>> 146303f (unsloth)
             chosen_embeddings: embeddings of desirable prompts
             rejected_embeddings: embeddings of undesirable prompts
 
         Returns:
+<<<<<<< HEAD
             A tuple of four tensors: (losses, chosen_rewards, rejected_rewards, delta).
             The losses tensor contains the BCO loss for each example in the batch.
             The chosen_rewards and rejected_rewards tensors contain the rewards for the chosen and rejected responses, respectively.
             The delta value contains the moving average of all implicit rewards.
+=======
+            A tuple of four tensors: (losses, chosen_rewards, rejected_rewards, delta). The losses tensor contains the
+            BCO loss for each example in the batch. The chosen_rewards and rejected_rewards tensors contain the rewards
+            for the chosen and rejected responses, respectively. The delta value contains the moving average of all
+            implicit rewards.
+>>>>>>> 146303f (unsloth)
         """
 
         chosen_logratios = policy_chosen_logps - reference_chosen_logps
@@ -1471,8 +1548,13 @@ class _UnslothBCOTrainer(Trainer):
         metric_key_prefix: str = "eval",
     ) -> EvalLoopOutput:
         """
+<<<<<<< HEAD
         Overriding built-in evaluation loop to store metrics for each batch.
         Prediction/evaluation loop, shared by `Trainer.evaluate()` and `Trainer.predict()`.
+=======
+        Overriding built-in evaluation loop to store metrics for each batch. Prediction/evaluation loop, shared by
+        `Trainer.evaluate()` and `Trainer.predict()`.
+>>>>>>> 146303f (unsloth)
 
         Works both with or without labels.
         """
@@ -1588,9 +1670,19 @@ class _UnslothBCOTrainer(Trainer):
         else:
             base_model = None
 
+<<<<<<< HEAD
         tags = tags or set()
         if isinstance(tags, str):
             tags = {tags}
+=======
+        # normalize `tags` to a mutable set
+        if tags is None:
+            tags = set()
+        elif isinstance(tags, str):
+            tags = {tags}
+        else:
+            tags = set(tags)
+>>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")
@@ -1629,8 +1721,14 @@ class UnslothBCOTrainer(_UnslothBCOTrainer):
         model (`transformers.PreTrainedModel`):
             The model to train, preferably an `AutoModelForSequenceClassification`.
         ref_model (`PreTrainedModelWrapper`):
+<<<<<<< HEAD
             Hugging Face transformer model with a casual language modelling head. Used for implicit reward computation and loss. If no
             reference model is provided, the trainer will create a reference model with the same architecture as the model to be optimized.
+=======
+            Hugging Face transformer model with a casual language modelling head. Used for implicit reward computation
+            and loss. If no reference model is provided, the trainer will create a reference model with the same
+            architecture as the model to be optimized.
+>>>>>>> 146303f (unsloth)
         args (`BCOConfig`):
             The arguments to use for training.
         train_dataset (`datasets.Dataset`):
@@ -1642,10 +1740,19 @@ class UnslothBCOTrainer(_UnslothBCOTrainer):
             for the model, and it will be saved along the model to make it easier to rerun an interrupted training or
             reuse the fine-tuned model.
         data_collator (`transformers.DataCollator`, *optional*, defaults to `None`):
+<<<<<<< HEAD
             The data collator to use for training. If None is specified, the default data collator (`DPODataCollatorWithPadding`) will be used
             which will pad the sequences to the maximum length of the sequences in the batch, given a dataset of paired sequences.
         model_init (`Callable[[], transformers.PreTrainedModel]`):
             The model initializer to use for training. If None is specified, the default model initializer will be used.
+=======
+            The data collator to use for training. If None is specified, the default data collator
+            (`DPODataCollatorWithPadding`) will be used which will pad the sequences to the maximum length of the
+            sequences in the batch, given a dataset of paired sequences.
+        model_init (`Callable[[], transformers.PreTrainedModel]`):
+            The model initializer to use for training. If None is specified, the default model initializer will be
+            used.
+>>>>>>> 146303f (unsloth)
         callbacks (`list[transformers.TrainerCallback]`):
             The callbacks to use for training.
         optimizers (`tuple[torch.optim.Optimizer, torch.optim.lr_scheduler.LambdaLR]`):
@@ -1653,10 +1760,18 @@ class UnslothBCOTrainer(_UnslothBCOTrainer):
         preprocess_logits_for_metrics (`Callable[[torch.Tensor, torch.Tensor], torch.Tensor]`):
             The function to use to preprocess the logits before computing the metrics.
         peft_config (`dict`, defaults to `None`):
+<<<<<<< HEAD
             The PEFT configuration to use for training. If you pass a PEFT configuration, the model will be wrapped in a PEFT model.
         compute_metrics (`Callable[[EvalPrediction], dict]`, *optional*):
             The function to use to compute the metrics. Must take a `EvalPrediction` and return
             a dictionary string to metric values.
+=======
+            The PEFT configuration to use for training. If you pass a PEFT configuration, the model will be wrapped in
+            a PEFT model.
+        compute_metrics (`Callable[[EvalPrediction], dict]`, *optional*):
+            The function to use to compute the metrics. Must take a `EvalPrediction` and return a dictionary string to
+            metric values.
+>>>>>>> 146303f (unsloth)
         model_adapter_name (`str`, defaults to `None`):
             Name of the train target PEFT adapter, when using LoRA with multiple adapters.
         ref_adapter_name (`str`, defaults to `None`):

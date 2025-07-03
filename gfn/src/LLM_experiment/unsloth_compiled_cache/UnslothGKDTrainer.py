@@ -1,8 +1,13 @@
 """
 2025.6.8
 2025.6.12
+<<<<<<< HEAD
 4.51.3
 0.19.0.dev0
+=======
+4.53.0
+0.19.0
+>>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -60,16 +65,26 @@ class UnslothGKDConfig(GKDConfig):
         max_new_tokens (`int`, *optional*, defaults to `128`):
             Maximum number of tokens to generate per completion.
         teacher_model_name_or_path (`str` or `None`, *optional*, defaults to `None`):
+<<<<<<< HEAD
             Model name or path of the teacher model. If `None`, the teacher model will be the same as the model
             being trained.
+=======
+            Model name or path of the teacher model. If `None`, the teacher model will be the same as the model being
+            trained.
+>>>>>>> 146303f (unsloth)
         teacher_model_init_kwargs (`dict[str, Any]]` or `None`, *optional*, defaults to `None`):
             Keyword arguments to pass to `AutoModelForCausalLM.from_pretrained` when instantiating the teacher model
             from a string.
         disable_dropout (`bool`, *optional*, defaults to `True`):
             Whether to disable dropout in the model.
         seq_kd (`bool`, *optional*, defaults to `False`):
+<<<<<<< HEAD
             Seq_kd parameter that controls whether to perform Sequence-Level KD (can be viewed as supervised FT
             on teacher-generated output).
+=======
+            Seq_kd parameter that controls whether to perform Sequence-Level KD (can be viewed as supervised FT on
+            teacher-generated output).
+>>>>>>> 146303f (unsloth)
     
     """
     vllm_sampling_params: Optional[Any] = field(
@@ -158,7 +173,10 @@ class UnslothGKDConfig(GKDConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
+<<<<<<< HEAD
         tp_size = 0,
+=======
+>>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -183,6 +201,10 @@ class UnslothGKDConfig(GKDConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
+<<<<<<< HEAD
+=======
+        hub_revision = None,
+>>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -207,9 +229,17 @@ class UnslothGKDConfig(GKDConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
+<<<<<<< HEAD
         eval_use_gather_object = False,
         average_tokens_across_devices = True,
         model_init_kwargs = None,
+=======
+        liger_kernel_config = None,
+        eval_use_gather_object = False,
+        average_tokens_across_devices = True,
+        model_init_kwargs = None,
+        chat_template_path = None,
+>>>>>>> 146303f (unsloth)
         dataset_text_field = 'text',
         dataset_kwargs = None,
         dataset_num_proc = None,
@@ -222,6 +252,10 @@ class UnslothGKDConfig(GKDConfig):
         pad_to_multiple_of = None,
         eval_packing = None,
         completion_only_loss = None,
+<<<<<<< HEAD
+=======
+        assistant_only_loss = False,
+>>>>>>> 146303f (unsloth)
         activation_offloading = False,
         max_seq_length = None,
         temperature = 0.9,
@@ -327,7 +361,10 @@ class UnslothGKDConfig(GKDConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
+<<<<<<< HEAD
             tp_size = tp_size,
+=======
+>>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -352,6 +389,10 @@ class UnslothGKDConfig(GKDConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
+<<<<<<< HEAD
+=======
+            hub_revision = hub_revision,
+>>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -376,9 +417,17 @@ class UnslothGKDConfig(GKDConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
+<<<<<<< HEAD
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             model_init_kwargs = model_init_kwargs,
+=======
+            liger_kernel_config = liger_kernel_config,
+            eval_use_gather_object = eval_use_gather_object,
+            average_tokens_across_devices = average_tokens_across_devices,
+            model_init_kwargs = model_init_kwargs,
+            chat_template_path = chat_template_path,
+>>>>>>> 146303f (unsloth)
             dataset_text_field = dataset_text_field,
             dataset_kwargs = dataset_kwargs,
             dataset_num_proc = dataset_num_proc,
@@ -391,6 +440,10 @@ class UnslothGKDConfig(GKDConfig):
             pad_to_multiple_of = pad_to_multiple_of,
             eval_packing = eval_packing,
             completion_only_loss = completion_only_loss,
+<<<<<<< HEAD
+=======
+            assistant_only_loss = assistant_only_loss,
+>>>>>>> 146303f (unsloth)
             activation_offloading = activation_offloading,
             max_seq_length = max_seq_length,
             temperature = temperature,
@@ -503,12 +556,28 @@ class _UnslothGKDTrainer(SFTTrainer):
         of https://huggingface.co/papers/2306.13649 for the definition.
 
         Args:
+<<<<<<< HEAD
             student_logits: Tensor of shape (batch_size, sequence_length, vocab_size)
             teacher_logits: Tensor of shape (batch_size, sequence_length, vocab_size)
             labels: Tensor of shape (batch_size, sequence_length) with -100 for padding tokens to ignore when computing loss
             beta: Interpolation coefficient between 0 and 1 (default: 0.5)
             temperature: Softmax temperature (default: 1.0)
             reduction: Specifies the reduction to apply to the output (default: 'batchmean')
+=======
+            student_logits:
+                Tensor of shape (batch_size, sequence_length, vocab_size)
+            teacher_logits:
+                Tensor of shape (batch_size, sequence_length, vocab_size)
+            labels:
+                Tensor of shape (batch_size, sequence_length) with -100 for padding tokens to ignore when computing
+                loss
+            beta:
+                Interpolation coefficient between 0 and 1 (default: 0.5)
+            temperature:
+                Softmax temperature (default: 1.0)
+            reduction:
+                Specifies the reduction to apply to the output (default: 'batchmean')
+>>>>>>> 146303f (unsloth)
 
         Returns:
             loss: Scalar tensor with the generalized JSD loss
@@ -622,9 +691,15 @@ class _UnslothGKDTrainer(SFTTrainer):
         """
         Perform a training step for the Generalized Knowledge Distillation (GKD) model.
 
+<<<<<<< HEAD
         This method implements the on-policy learning approach described in the GKD paper.
         With probability `self.lmbda`, it generates new responses using the student model,
         which are then used for training instead of the original inputs.
+=======
+        This method implements the on-policy learning approach described in the GKD paper. With probability
+        `self.lmbda`, it generates new responses using the student model, which are then used for training instead of
+        the original inputs.
+>>>>>>> 146303f (unsloth)
         """
         if self.seq_kd:
             with unwrap_model_for_generation(self.teacher_model, self.accelerator) as unwrapped_model:
@@ -671,9 +746,19 @@ class _UnslothGKDTrainer(SFTTrainer):
         else:
             base_model = None
 
+<<<<<<< HEAD
         tags = tags or set()
         if isinstance(tags, str):
             tags = {tags}
+=======
+        # normalize `tags` to a mutable set
+        if tags is None:
+            tags = set()
+        elif isinstance(tags, str):
+            tags = {tags}
+        else:
+            tags = set(tags)
+>>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")

@@ -1,8 +1,13 @@
 """
 2025.6.8
 2025.6.12
+<<<<<<< HEAD
 4.51.3
 0.19.0.dev0
+=======
+4.53.0
+0.19.0
+>>>>>>> 146303f (unsloth)
 __UNSLOTH_VERSIONING__
 """
 from torch import Tensor
@@ -156,7 +161,10 @@ class UnslothPRMConfig(PRMConfig):
         fsdp = '',
         fsdp_min_num_params = 0,
         fsdp_config = None,
+<<<<<<< HEAD
         tp_size = 0,
+=======
+>>>>>>> 146303f (unsloth)
         fsdp_transformer_layer_cls_to_wrap = None,
         accelerator_config = None,
         deepspeed = None,
@@ -181,6 +189,10 @@ class UnslothPRMConfig(PRMConfig):
         hub_token = None,
         hub_private_repo = None,
         hub_always_push = False,
+<<<<<<< HEAD
+=======
+        hub_revision = None,
+>>>>>>> 146303f (unsloth)
         gradient_checkpointing = False,
         gradient_checkpointing_kwargs = None,
         include_inputs_for_metrics = False,
@@ -205,6 +217,10 @@ class UnslothPRMConfig(PRMConfig):
         batch_eval_metrics = False,
         eval_on_start = False,
         use_liger_kernel = False,
+<<<<<<< HEAD
+=======
+        liger_kernel_config = None,
+>>>>>>> 146303f (unsloth)
         eval_use_gather_object = False,
         average_tokens_across_devices = True,
         max_length = 1024,
@@ -305,7 +321,10 @@ class UnslothPRMConfig(PRMConfig):
             fsdp = fsdp,
             fsdp_min_num_params = fsdp_min_num_params,
             fsdp_config = fsdp_config,
+<<<<<<< HEAD
             tp_size = tp_size,
+=======
+>>>>>>> 146303f (unsloth)
             fsdp_transformer_layer_cls_to_wrap = fsdp_transformer_layer_cls_to_wrap,
             accelerator_config = accelerator_config,
             deepspeed = deepspeed,
@@ -330,6 +349,10 @@ class UnslothPRMConfig(PRMConfig):
             hub_token = hub_token,
             hub_private_repo = hub_private_repo,
             hub_always_push = hub_always_push,
+<<<<<<< HEAD
+=======
+            hub_revision = hub_revision,
+>>>>>>> 146303f (unsloth)
             gradient_checkpointing = gradient_checkpointing,
             gradient_checkpointing_kwargs = gradient_checkpointing_kwargs,
             include_inputs_for_metrics = include_inputs_for_metrics,
@@ -354,6 +377,10 @@ class UnslothPRMConfig(PRMConfig):
             batch_eval_metrics = batch_eval_metrics,
             eval_on_start = eval_on_start,
             use_liger_kernel = use_liger_kernel,
+<<<<<<< HEAD
+=======
+            liger_kernel_config = liger_kernel_config,
+>>>>>>> 146303f (unsloth)
             eval_use_gather_object = eval_use_gather_object,
             average_tokens_across_devices = average_tokens_across_devices,
             max_length = max_length,
@@ -521,7 +548,12 @@ class _UnslothPRMTrainer(Trainer):
                 Whether to train only on the last step. If `True`, the labels are `-100` for all tokens except the last
                 token of the completion.
             is_eval (`bool`):
+<<<<<<< HEAD
                 Whether the function is used to tokenize samples from a training or an evaluation dataset. Used only if `train_on_last_step_only` is set to `True`.
+=======
+                Whether the function is used to tokenize samples from a training or an evaluation dataset. Used only if
+                `train_on_last_step_only` is set to `True`.
+>>>>>>> 146303f (unsloth)
 
         Returns:
             `dict[str, list[int]]`:
@@ -530,12 +562,25 @@ class _UnslothPRMTrainer(Trainer):
         Example:
         ```python
         >>> from transformers import AutoTokenizer
+<<<<<<< HEAD
         >>> tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B")
         >>> features = {"prompt": "Which number is larger, 9.8 or 9.11?",
         ...             "completions": ["11 is greater than 8.",
         ...                             "Hence, 9.11 > 9.8."],
         ...             "labels": [True, False]}
         >>> PRMTrainer.tokenize_row(features, tokenizer, "\n", max_completion_length=None, train_on_last_step_only=False, is_eval=False)
+=======
+
+        >>> tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B")
+        >>> features = {
+        ...     "prompt": "Which number is larger, 9.8 or 9.11?",
+        ...     "completions": ["11 is greater than 8.", "Hence, 9.11 > 9.8."],
+        ...     "labels": [True, False],
+        ... }
+        >>> PRMTrainer.tokenize_row(
+        ...     features, tokenizer, "\n", max_completion_length=None, train_on_last_step_only=False, is_eval=False
+        ... )
+>>>>>>> 146303f (unsloth)
         {'input_ids': [23085, 1372, 374, 8131, 11, 220, 24, 13, 23, 476, 220, 24, 13, 16, 16, 30, 16, 16, 374, 7046, 1091, 220, 23, 13, 198, 39, 763, 11, 220, 24, 13, 16, 16, 861, 220, 24, 13, 23, 13, 198],
          'labels': [-100, -100, -100, -100, -100, -100, -100, -100, 1, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, 0]}
         ```
@@ -614,9 +659,19 @@ class _UnslothPRMTrainer(Trainer):
         else:
             base_model = None
 
+<<<<<<< HEAD
         tags = tags or set()
         if isinstance(tags, str):
             tags = {tags}
+=======
+        # normalize `tags` to a mutable set
+        if tags is None:
+            tags = set()
+        elif isinstance(tags, str):
+            tags = {tags}
+        else:
+            tags = set(tags)
+>>>>>>> 146303f (unsloth)
 
         if hasattr(self.model.config, "unsloth_version"):
             tags.add("unsloth")
@@ -655,8 +710,14 @@ class UnslothPRMTrainer(_UnslothPRMTrainer):
         args (`PRMConfig`):
             The arguments to use for training.
         data_collator (`transformers.DataCollator`):
+<<<<<<< HEAD
             The data collator to use for training. If None is specified, the default data collator (`DataCollatorForTokenClassification`) will be used
             which will pad the sequences to the maximum length of the sequences in the batch, given a dataset of paired sequences.
+=======
+            The data collator to use for training. If None is specified, the default data collator
+            (`DataCollatorForTokenClassification`) will be used which will pad the sequences to the maximum length of
+            the sequences in the batch, given a dataset of paired sequences.
+>>>>>>> 146303f (unsloth)
         train_dataset (`datasets.Dataset`):
             The dataset to use for training.
         eval_dataset (`datasets.Dataset`):
@@ -666,9 +727,17 @@ class UnslothPRMTrainer(_UnslothPRMTrainer):
             for the model, and it will be saved along the model to make it easier to rerun an interrupted training or
             reuse the fine-tuned model.
         model_init (`Callable[[], transformers.PreTrainedModel]`):
+<<<<<<< HEAD
             The model initializer to use for training. If None is specified, the default model initializer will be used.
         compute_metrics (`Callable[[transformers.EvalPrediction], dict]`, *optional* defaults to `compute_accuracy`):
             The metrics to use for evaluation. If no metrics are specified, the default metric (`compute_accuracy`) will be used.
+=======
+            The model initializer to use for training. If None is specified, the default model initializer will be
+            used.
+        compute_metrics (`Callable[[transformers.EvalPrediction], dict]`, *optional* defaults to `compute_accuracy`):
+            The metrics to use for evaluation. If no metrics are specified, the default metric (`compute_accuracy`)
+            will be used.
+>>>>>>> 146303f (unsloth)
         callbacks (`list[transformers.TrainerCallback]`):
             The callbacks to use for training.
         optimizers (`tuple[torch.optim.Optimizer, torch.optim.lr_scheduler.LambdaLR]`):
@@ -676,7 +745,12 @@ class UnslothPRMTrainer(_UnslothPRMTrainer):
         preprocess_logits_for_metrics (`Callable[[torch.Tensor, torch.Tensor], torch.Tensor]`):
             The function to use to preprocess the logits before computing the metrics.
         peft_config (`dict`, defaults to `None`):
+<<<<<<< HEAD
             The PEFT configuration to use for training. If you pass a PEFT configuration, the model will be wrapped in a PEFT model.
+=======
+            The PEFT configuration to use for training. If you pass a PEFT configuration, the model will be wrapped in
+            a PEFT model.
+>>>>>>> 146303f (unsloth)
     
     """
     def __init__(
