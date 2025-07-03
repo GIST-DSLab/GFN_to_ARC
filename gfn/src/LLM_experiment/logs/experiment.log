@@ -4568,6 +4568,7 @@ ValueError: Error initializing torch.distributed using env:// rendezvous: enviro
 2025-07-04 05:26:46,270 - INFO - ==================================================
 2025-07-04 05:26:46,270 - INFO - 🚀 Running command with live output...
 2025-07-04 05:29:18,812 - INFO - Experiment interrupted by user
+<<<<<<< Updated upstream
 2025-07-04 05:46:47,217 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
 2025-07-04 05:46:47,217 - INFO - Configuration: configs/config.yaml
 2025-07-04 05:46:47,217 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
@@ -4602,3 +4603,45 @@ ValueError: Error initializing torch.distributed using env:// rendezvous: enviro
 2025-07-04 05:50:59,383 - INFO - Command: /data/miniforge3/envs/gflow-llm/bin/python -m torch.distributed.run --nproc-per-node=3 --nnodes=1 --standalone training.py --config configs/config_ddp_456.yaml
 2025-07-04 05:50:59,383 - INFO - ==================================================
 2025-07-04 05:50:59,383 - INFO - 🚀 Running command with live output...
+=======
+2025-07-03 20:39:33,994 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 20:39:33,994 - INFO - Configuration: configs/config_ddp_456.yaml
+2025-07-03 20:39:33,994 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-03 20:39:33,994 - INFO - Checking prerequisites...
+2025-07-03 20:39:35,598 - INFO - ✅ All prerequisites checked
+2025-07-03 20:39:35,598 - INFO - Created/verified directory: ./processed_data
+2025-07-03 20:39:35,598 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/models_ddp_456
+2025-07-03 20:39:35,598 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/results_ddp_456
+2025-07-03 20:39:35,598 - INFO - Created/verified directory: ./logs
+2025-07-03 20:39:35,673 - INFO - Found 5 existing processed data files. Skipping preprocessing.
+2025-07-03 20:39:35,673 - INFO - Files: ['problem_86_processed.json', 'problem_139_processed.json', 'problem_178_processed.json', 'problem_149_processed.json', 'problem_240_processed.json']
+2025-07-03 20:39:35,673 - INFO - Use --force-preprocessing to regenerate.
+2025-07-03 20:39:35,674 - INFO - Using DDP with torchrun on 3 GPUs: 4 5 6
+2025-07-03 20:39:35,674 - INFO - ==================================================
+2025-07-03 20:39:35,674 - INFO - Starting: Model Training
+2025-07-03 20:39:35,674 - INFO - Command: /data/miniforge3/envs/gflownet/bin/python -m torch.distributed.run --nproc-per-node=3 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-03 20:39:35,674 - INFO - ==================================================
+2025-07-03 20:39:35,675 - INFO - 🚀 Running command with live output...
+2025-07-03 20:39:35,676 - ERROR - ❌ Failed: Model Training (0.00s)
+2025-07-03 20:39:35,676 - ERROR - Exit code: 127
+2025-07-03 20:39:35,676 - ERROR - Training failed
+2025-07-03 20:39:35,676 - ERROR - ❌ Experiment failed. Total time: 1.68s
+2025-07-03 20:40:29,342 - INFO - 🚀 Starting LLM Experiment for ARC Action Sequence Learning
+2025-07-03 20:40:29,342 - INFO - Configuration: configs/config_ddp_456.yaml
+2025-07-03 20:40:29,342 - INFO - Model: meta-llama/Llama-3.1-8B-Instruct
+2025-07-03 20:40:29,342 - INFO - Checking prerequisites...
+2025-07-03 20:40:30,904 - INFO - ✅ All prerequisites checked
+2025-07-03 20:40:30,904 - INFO - Created/verified directory: ./processed_data
+2025-07-03 20:40:30,904 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/models_ddp_456
+2025-07-03 20:40:30,904 - INFO - Created/verified directory: /opt/dlami/nvme/seungpil/results_ddp_456
+2025-07-03 20:40:30,904 - INFO - Created/verified directory: ./logs
+2025-07-03 20:40:30,974 - INFO - Found 5 existing processed data files. Skipping preprocessing.
+2025-07-03 20:40:30,974 - INFO - Files: ['problem_86_processed.json', 'problem_139_processed.json', 'problem_178_processed.json', 'problem_149_processed.json', 'problem_240_processed.json']
+2025-07-03 20:40:30,974 - INFO - Use --force-preprocessing to regenerate.
+2025-07-03 20:40:30,975 - INFO - Using DDP with torchrun on 3 GPUs: 4 5 6
+2025-07-03 20:40:30,975 - INFO - ==================================================
+2025-07-03 20:40:30,975 - INFO - Starting: Model Training
+2025-07-03 20:40:30,975 - INFO - Command: /home/ubuntu/miniconda3/envs/gflownet/bin/python -m torch.distributed.run --nproc-per-node=3 --nnodes=1 --standalone training.py --config configs/config.yaml
+2025-07-03 20:40:30,975 - INFO - ==================================================
+2025-07-03 20:40:30,975 - INFO - 🚀 Running command with live output...
+>>>>>>> Stashed changes

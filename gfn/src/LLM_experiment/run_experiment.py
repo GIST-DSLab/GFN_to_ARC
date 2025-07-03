@@ -184,7 +184,7 @@ def run_training(config: Dict, logger, gpu_ids: str = None, force: bool = False,
             command = f"{python_path} -m torch.distributed.run --nproc-per-node={num_gpus} --nnodes=1 --standalone training.py --config {config_path}"
             return run_command(command, "Model Training", logger, capture_output=False)
         else:
-            # 단일 GPU: 일반 python 사용 (gflow-llm 환경)
+            # 단일 GPU: 일반 python 사용 (gflownet 환경)
             logger.info(f"Using single GPU: {gpu_ids}")
             python_path = "/data/miniforge3/envs/gflow-llm/bin/python"
             command = f"{python_path} training.py --gpu_ids {gpu_ids} --config {config_path}"

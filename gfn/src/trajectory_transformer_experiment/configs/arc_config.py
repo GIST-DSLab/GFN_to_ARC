@@ -41,10 +41,10 @@ base = {
         'observation_weight': 1.0,
         
         # Paths
-        'trajectory_data_dir': "../LLM_experiment/data/trajectories_output",
+        'trajectory_data_dir': "/opt/dlami/nvme/seungpil",
         'processed_data_dir': "./processed_data", 
-        'model_save_dir': "./models",
-        'results_dir': "./results",
+        'model_save_dir': "/opt/dlami/nvme/seungpil/rl_models",
+        'results_dir': "/opt/dlami/nvme/seungpil/rl_results",
         'device': 'cuda',
         'seed': 42,
         
@@ -73,8 +73,8 @@ base = {
         
         # Paths
         'rearc_data_dir': "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks",
-        'model_load_path': "./models/arc_transformer_best.pt",
-        'results_dir': "./results",
+        'model_load_path': "/opt/dlami/nvme/seungpil/rl_models/arc_transformer_best.pt",
+        'results_dir': "/opt/dlami/nvme/seungpil/rl_results",
     }
 }
 
