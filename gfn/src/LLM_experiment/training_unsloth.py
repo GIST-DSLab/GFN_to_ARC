@@ -144,7 +144,7 @@ def train_with_unsloth(config: Dict, logger: logging.Logger) -> None:
         per_device_train_batch_size=config.get('batch_size', 8),  # 큰 배치 크기
         gradient_accumulation_steps=config.get('gradient_accumulation_steps', 2),
         warmup_steps=config.get('warmup_steps', 50),
-        max_steps=500,  # 빠른 테스트를 위해 제한
+        num_train_epochs=config.get('num_epochs', 1),  # config에서 epoch 수 가져오기
         learning_rate=config.get('learning_rate', 2e-4),  # LoRA에 적합한 높은 LR
         fp16=not is_bfloat16_supported(),
         bf16=is_bfloat16_supported(),
@@ -215,6 +215,8 @@ def main():
     logger.info(f"  Max length: {config['max_length']}")
     logger.info(f"  Batch size: {config.get('batch_size', 8)}")
     logger.info(f"  Learning rate: {config.get('learning_rate', 2e-4)}")
+    logger.info(f"  Num epochs: {config.get('num_epochs', 1)}")
+    logger.info(f"  Gradient accumulation steps: {config.get('gradient_accumulation_steps', 2)}")
     
     try:
         train_with_unsloth(config, logger)

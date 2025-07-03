@@ -1,18 +1,18 @@
 # LLM Experiment Configuration - DDP on GPU 4,5,6
 
 # Data paths
-trajectory_data_dir: "/opt/dlami/nvme/seungpil/"
+trajectory_data_dir: "./data/trajectories_output"
 rearc_data_dir: "./data/re-arc"
-processed_data_dir: "./processed_data"
-model_save_dir: "/opt/dlami/nvme/seungpil//models_gpu456"
-results_dir: "/opt/dlami/nvme/seungpil/results_gpu456"
+processed_data_dir: "./processed_data_gpu456"
+model_save_dir: "./models_gpu456"
+results_dir: "./results_gpu456"
 
 # Training parameters
 model_name: "meta-llama/Llama-3.1-8B-Instruct"
 max_length: 1024
-batch_size: 2 # 3개 GPU로 증가
+batch_size: 8 # 3개 GPU로 증가
 learning_rate: 0.00005
-num_epochs: 3 # 더 많은 epoch
+num_epochs: 10 # 더 많은 epoch
 warmup_steps: 50
 gradient_accumulation_steps: 2 # 3 GPU이므로 줄임
 
