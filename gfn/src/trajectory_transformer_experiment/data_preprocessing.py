@@ -20,7 +20,7 @@ from utils.data_utils import (
     pad_sequence,
     create_attention_mask
 )
-from configs.arc_config import base, arc_small
+import yaml
 
 class ARCTrajectoryDataset(Dataset):
     """ARC Trajectory Dataset for Transformer"""
@@ -176,20 +176,16 @@ def analyze_sample_data(dataset: ARCTrajectoryDataset, num_samples: int = 3):
 
 def main():
     parser = argparse.ArgumentParser(description="Preprocess ARC trajectory data")
-    parser.add_argument("--config_name", type=str, default="base", 
-                       help="Configuration name")
+    parser.add_argument("--config", type=str, default="configs/config.yaml", 
+                       help="Configuration file path")
     parser.add_argument("--analyze", action="store_true",
                        help="Analyze sample data")
     
     args = parser.parse_args()
     
     # Configuration 로드
-    if args.config_name == "base":
-        config = base['train']
-    elif args.config_name == "small":
-        config = arc_small['train']
-    else:
-        raise ValueError(f"Unknown config: {args.config_name}")
+    with open(args.config, 'r') as f:
+        config = yaml.safe_load(f)
     
     try:
         # 데이터 전처리

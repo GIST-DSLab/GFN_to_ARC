@@ -15,7 +15,7 @@ import logging
 
 from models.arc_transformer import create_model
 from utils.data_utils import create_vocabulary, flatten_grid_state, discretize_reward
-from configs.arc_config import base
+import yaml
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -346,36 +346,36 @@ class ARCTrajectoryInference:
 
 def main():
     parser = argparse.ArgumentParser(description="ARC Trajectory Transformer Inference")
-    parser.add_argument("--config", type=str, default="base",
-                       choices=["base", "small"], help="Configuration name")
-    parser.add_argument("--model_path", type=str, required=True,
-                       help="Path to trained model checkpoint")
+    parser.add_argument("--config", type=str, default="configs/config.yaml",
+                       help="Configuration file path")
+    parser.add_argument("--model_path", type=str, default=None,
+                       help="Path to trained model checkpoint (overrides config)")
     parser.add_argument("--problems", type=int, nargs="+", default=None,
                        help="Problem IDs to evaluate (default: all)")
-    parser.add_argument("--device", type=str, default="cuda",
-                       help="Device to use for inference")
-    parser.add_argument("--output_dir", type=str, default="./results",
-                       help="Output directory for results")
+    parser.add_argument("--device", type=str, default=None,
+                       help="Device to use for inference (overrides config)")
+    parser.add_argument("--output_dir", type=str, default=None,
+                       help="Output directory for results (overrides config)")
     
     args = parser.parse_args()
     
     # Load configuration
-    if args.config == "base":
-        config = base['inference'].copy()
-    elif args.config == "small":
-        config = base['inference'].copy()
-        config.update({
-            'max_new_tokens': 16,
-            'max_actions': 10
-        })
-    else:
-        raise ValueError(f"Unknown config: {args.config}")
+    with open(args.config, 'r') as f:
+        config = yaml.safe_load(f)
     
-    config['device'] = args.device
-    config['results_dir'] = args.output_dir
+    # Override config with command line arguments
+    if args.device:
+        config['device'] = args.device
+    if args.output_dir:
+        config['results_dir'] = args.output_dir
+    if args.model_path:
+        config['model_load_path'] = args.model_path
+    else:
+        # Use default model path from config
+        config['model_load_path'] = os.path.join(config['model_save_dir'], "arc_transformer_best.pt")
     
     # Initialize inference engine
-    inference_engine = ARCTrajectoryInference(config, args.model_path)
+    inference_engine = ARCTrajectoryInference(config, config['model_load_path'])
     
     try:
         # Run evaluation

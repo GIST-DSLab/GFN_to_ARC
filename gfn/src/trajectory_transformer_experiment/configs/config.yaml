@@ -1,0 +1,74 @@
+# Trajectory Transformer Experiment Configuration
+
+# Data paths
+trajectory_data_dir: "../LLM_experiment/data/trajectories_output"
+rearc_data_dir: "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks"
+processed_data_dir: "./processed_data"
+model_save_dir: "./models"
+results_dir: "./results"
+
+# Model architecture
+n_layer: 6           # Transformer layers
+n_head: 8            # Attention heads  
+n_embd: 128          # Embedding dimension
+
+# Training parameters
+batch_size: 32
+learning_rate: 0.0001
+n_epochs: 50
+warmup_steps: 1000
+lr_decay: true
+weight_decay: 0.01
+
+# Regularization
+embd_pdrop: 0.1
+resid_pdrop: 0.1
+attn_pdrop: 0.1
+
+# Sequence parameters
+max_sequence_length: 64  # Max trajectory length
+step: 1                  # Subsampling step
+
+# Data parameters
+observation_dim: 9       # 3x3 grid flattened
+action_dim: 1           # Single action index
+reward_dim: 1           # Single reward value
+vocab_size: 22          # 0-9 colors + special tokens
+
+# Loss weights
+action_weight: 5.0      # Emphasize action prediction
+reward_weight: 1.0
+observation_weight: 1.0
+
+# Training settings
+device: "cuda"
+seed: 42
+log_interval: 100
+eval_interval: 1000
+save_interval: 5000
+
+# Inference parameters
+temperature: 1.0
+top_k: null
+top_p: 0.9
+max_new_tokens: 32      # Max action sequence length
+num_return_sequences: 1
+
+# Planning parameters  
+horizon: 20             # Planning horizon
+beam_width: 64          # Beam search width
+n_samples: 1            # Number of trajectory samples
+
+# Evaluation parameters
+eval_problems: [86, 139, 178, 149, 154, 240, 379]
+max_test_samples: 50
+
+# Problem-specific max actions
+problem_max_actions:
+  86: 15
+  139: 20
+  178: 12
+  149: 18
+  154: 16
+  240: 22
+  379: 14
