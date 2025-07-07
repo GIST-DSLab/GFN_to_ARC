@@ -1,0 +1,584 @@
+2025-07-03 16:15:26,580 - INFO - Starting trajectory data preprocessing...
+2025-07-03 16:15:26,580 - INFO - Processing problem 86
+2025-07-03 16:15:26,580 - INFO - Found 100 trajectory files for problem 86
+2025-07-03 16:15:26,580 - INFO - Processing file: trajectories_0_1000.json
+2025-07-03 16:15:28,391 - INFO - Starting trajectory data preprocessing...
+2025-07-03 16:15:28,391 - INFO - Processing problem 86
+2025-07-03 16:15:28,391 - INFO - Found 100 trajectory files for problem 86
+2025-07-03 16:15:28,392 - INFO - Processing file: trajectories_0_1000.json
+2025-07-03 16:15:30,098 - INFO - Starting trajectory data preprocessing...
+2025-07-03 16:15:30,098 - INFO - Processing problem 86
+2025-07-03 16:15:30,099 - INFO - Found 100 trajectory files for problem 86
+2025-07-03 16:15:30,099 - INFO - Processing file: trajectories_0_1000.json
+2025-07-03 16:15:30,447 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_0_1000.json
+2025-07-03 16:15:30,455 - INFO - Processing file: trajectories_10000_11000.json
+2025-07-03 16:15:32,242 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_0_1000.json
+2025-07-03 16:15:32,250 - INFO - Processing file: trajectories_10000_11000.json
+2025-07-03 16:15:33,202 - INFO - Starting trajectory data preprocessing...
+2025-07-03 16:15:33,203 - INFO - Processing problem 86
+2025-07-03 16:15:33,203 - INFO - Found 100 trajectory files for problem 86
+2025-07-03 16:15:33,203 - INFO - Processing file: trajectories_0_1000.json
+2025-07-03 16:15:34,292 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_0_1000.json
+2025-07-03 16:15:34,300 - INFO - Processing file: trajectories_10000_11000.json
+2025-07-03 16:15:34,355 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_10000_11000.json
+2025-07-03 16:15:34,565 - INFO - Processing file: trajectories_1000_2000.json
+2025-07-03 16:15:36,490 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_10000_11000.json
+2025-07-03 16:15:36,725 - INFO - Processing file: trajectories_1000_2000.json
+2025-07-03 16:15:36,830 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_0_1000.json
+2025-07-03 16:15:36,837 - INFO - Processing file: trajectories_10000_11000.json
+2025-07-03 16:15:38,367 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_1000_2000.json
+2025-07-03 16:15:38,553 - INFO - Processing file: trajectories_11000_12000.json
+2025-07-03 16:15:38,586 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_10000_11000.json
+2025-07-03 16:15:38,814 - INFO - Processing file: trajectories_1000_2000.json
+2025-07-03 16:15:40,644 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_10000_11000.json
+2025-07-03 16:15:40,847 - INFO - Processing file: trajectories_1000_2000.json
+2025-07-03 16:15:40,972 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_1000_2000.json
+2025-07-03 16:15:41,236 - INFO - Processing file: trajectories_11000_12000.json
+2025-07-03 16:15:42,565 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_11000_12000.json
+2025-07-03 16:15:42,652 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_1000_2000.json
+2025-07-03 16:15:42,748 - INFO - Processing file: trajectories_12000_13000.json
+2025-07-03 16:15:42,848 - INFO - Processing file: trajectories_11000_12000.json
+2025-07-03 16:15:44,775 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_1000_2000.json
+2025-07-03 16:15:45,001 - INFO - Processing file: trajectories_11000_12000.json
+2025-07-03 16:15:45,709 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_11000_12000.json
+2025-07-03 16:15:45,934 - INFO - Processing file: trajectories_12000_13000.json
+2025-07-03 16:15:46,491 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_12000_13000.json
+2025-07-03 16:15:46,708 - INFO - Processing file: trajectories_13000_14000.json
+2025-07-03 16:15:46,797 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_11000_12000.json
+2025-07-03 16:15:46,975 - INFO - Processing file: trajectories_12000_13000.json
+2025-07-03 16:15:49,060 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_11000_12000.json
+2025-07-03 16:15:49,236 - INFO - Processing file: trajectories_12000_13000.json
+2025-07-03 16:15:49,831 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_12000_13000.json
+2025-07-03 16:15:50,048 - INFO - Processing file: trajectories_13000_14000.json
+2025-07-03 16:15:50,247 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_13000_14000.json
+2025-07-03 16:15:50,441 - INFO - Processing file: trajectories_14000_15000.json
+2025-07-03 16:15:50,736 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_12000_13000.json
+2025-07-03 16:15:50,915 - INFO - Processing file: trajectories_13000_14000.json
+2025-07-03 16:15:52,802 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_12000_13000.json
+2025-07-03 16:15:52,976 - INFO - Processing file: trajectories_13000_14000.json
+2025-07-03 16:15:53,841 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_13000_14000.json
+2025-07-03 16:15:54,068 - INFO - Processing file: trajectories_14000_15000.json
+2025-07-03 16:15:54,160 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_14000_15000.json
+2025-07-03 16:15:54,296 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_13000_14000.json
+2025-07-03 16:15:54,401 - INFO - Processing file: trajectories_15000_16000.json
+2025-07-03 16:15:54,476 - INFO - Processing file: trajectories_14000_15000.json
+2025-07-03 16:15:56,401 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_13000_14000.json
+2025-07-03 16:15:56,579 - INFO - Processing file: trajectories_14000_15000.json
+2025-07-03 16:15:57,702 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_14000_15000.json
+2025-07-03 16:15:57,765 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_14000_15000.json
+2025-07-03 16:15:57,878 - INFO - Processing file: trajectories_15000_16000.json
+2025-07-03 16:15:57,984 - INFO - Processing file: trajectories_15000_16000.json
+2025-07-03 16:15:58,441 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_15000_16000.json
+2025-07-03 16:15:58,637 - INFO - Processing file: trajectories_16000_17000.json
+2025-07-03 16:15:59,798 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_14000_15000.json
+2025-07-03 16:15:59,972 - INFO - Processing file: trajectories_15000_16000.json
+2025-07-03 16:16:01,753 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_15000_16000.json
+2025-07-03 16:16:01,921 - INFO - Processing file: trajectories_16000_17000.json
+2025-07-03 16:16:02,262 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_15000_16000.json
+2025-07-03 16:16:02,475 - INFO - Processing file: trajectories_16000_17000.json
+2025-07-03 16:16:02,948 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_16000_17000.json
+2025-07-03 16:16:03,136 - INFO - Processing file: trajectories_17000_18000.json
+2025-07-03 16:16:04,159 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_15000_16000.json
+2025-07-03 16:16:04,392 - INFO - Processing file: trajectories_16000_17000.json
+2025-07-03 16:16:05,845 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_16000_17000.json
+2025-07-03 16:16:06,022 - INFO - Processing file: trajectories_17000_18000.json
+2025-07-03 16:16:06,764 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_17000_18000.json
+2025-07-03 16:16:06,953 - INFO - Processing file: trajectories_18000_19000.json
+2025-07-03 16:16:06,957 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_16000_17000.json
+2025-07-03 16:16:07,174 - INFO - Processing file: trajectories_17000_18000.json
+2025-07-03 16:16:08,875 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_16000_17000.json
+2025-07-03 16:16:09,051 - INFO - Processing file: trajectories_17000_18000.json
+2025-07-03 16:16:09,406 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_17000_18000.json
+2025-07-03 16:16:09,576 - INFO - Processing file: trajectories_18000_19000.json
+2025-07-03 16:16:10,741 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_18000_19000.json
+2025-07-03 16:16:10,962 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_17000_18000.json
+2025-07-03 16:16:10,999 - INFO - Processing file: trajectories_19000_20000.json
+2025-07-03 16:16:11,177 - INFO - Processing file: trajectories_18000_19000.json
+2025-07-03 16:16:12,468 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_17000_18000.json
+2025-07-03 16:16:12,638 - INFO - Processing file: trajectories_18000_19000.json
+2025-07-03 16:16:12,892 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_18000_19000.json
+2025-07-03 16:16:13,064 - INFO - Processing file: trajectories_19000_20000.json
+2025-07-03 16:16:14,858 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_18000_19000.json
+2025-07-03 16:16:15,067 - INFO - Processing file: trajectories_19000_20000.json
+2025-07-03 16:16:15,172 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_19000_20000.json
+2025-07-03 16:16:15,389 - INFO - Processing file: trajectories_20000_21000.json
+2025-07-03 16:16:16,025 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_18000_19000.json
+2025-07-03 16:16:16,195 - INFO - Processing file: trajectories_19000_20000.json
+2025-07-03 16:16:16,763 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_19000_20000.json
+2025-07-03 16:16:16,936 - INFO - Processing file: trajectories_20000_21000.json
+2025-07-03 16:16:19,293 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_19000_20000.json
+2025-07-03 16:16:19,513 - INFO - Processing file: trajectories_20000_21000.json
+2025-07-03 16:16:19,632 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_20000_21000.json
+2025-07-03 16:16:19,822 - INFO - Processing file: trajectories_2000_3000.json
+2025-07-03 16:16:20,678 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_19000_20000.json
+2025-07-03 16:16:20,878 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_20000_21000.json
+2025-07-03 16:16:20,919 - INFO - Processing file: trajectories_20000_21000.json
+2025-07-03 16:16:21,045 - INFO - Processing file: trajectories_2000_3000.json
+2025-07-03 16:16:23,400 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_2000_3000.json
+2025-07-03 16:16:23,584 - INFO - Processing file: trajectories_21000_22000.json
+2025-07-03 16:16:24,018 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_20000_21000.json
+2025-07-03 16:16:24,217 - INFO - Processing file: trajectories_2000_3000.json
+2025-07-03 16:16:24,515 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_2000_3000.json
+2025-07-03 16:16:24,686 - INFO - Processing file: trajectories_21000_22000.json
+2025-07-03 16:16:25,425 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_20000_21000.json
+2025-07-03 16:16:25,591 - INFO - Processing file: trajectories_2000_3000.json
+2025-07-03 16:16:27,379 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_21000_22000.json
+2025-07-03 16:16:27,673 - INFO - Processing file: trajectories_22000_23000.json
+2025-07-03 16:16:28,014 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_21000_22000.json
+2025-07-03 16:16:28,124 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_2000_3000.json
+2025-07-03 16:16:28,190 - INFO - Processing file: trajectories_22000_23000.json
+2025-07-03 16:16:28,339 - INFO - Processing file: trajectories_21000_22000.json
+2025-07-03 16:16:29,088 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_2000_3000.json
+2025-07-03 16:16:29,257 - INFO - Processing file: trajectories_21000_22000.json
+2025-07-03 16:16:32,032 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_21000_22000.json
+2025-07-03 16:16:32,112 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_22000_23000.json
+2025-07-03 16:16:32,243 - INFO - Processing file: trajectories_22000_23000.json
+2025-07-03 16:16:32,280 - INFO - Processing file: trajectories_23000_24000.json
+2025-07-03 16:16:32,488 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_22000_23000.json
+2025-07-03 16:16:32,627 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_21000_22000.json
+2025-07-03 16:16:32,713 - INFO - Processing file: trajectories_23000_24000.json
+2025-07-03 16:16:32,802 - INFO - Processing file: trajectories_22000_23000.json
+2025-07-03 16:16:35,625 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_23000_24000.json
+2025-07-03 16:16:35,794 - INFO - Processing file: trajectories_24000_25000.json
+2025-07-03 16:16:36,596 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_23000_24000.json
+2025-07-03 16:16:36,677 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_22000_23000.json
+2025-07-03 16:16:36,783 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_22000_23000.json
+2025-07-03 16:16:36,841 - INFO - Processing file: trajectories_24000_25000.json
+2025-07-03 16:16:36,887 - INFO - Processing file: trajectories_23000_24000.json
+2025-07-03 16:16:36,951 - INFO - Processing file: trajectories_23000_24000.json
+2025-07-03 16:16:39,907 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_24000_25000.json
+2025-07-03 16:16:40,074 - INFO - Processing file: trajectories_25000_26000.json
+2025-07-03 16:16:40,428 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_23000_24000.json
+2025-07-03 16:16:40,617 - INFO - Processing file: trajectories_24000_25000.json
+2025-07-03 16:16:40,620 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_23000_24000.json
+2025-07-03 16:16:40,825 - INFO - Processing file: trajectories_24000_25000.json
+2025-07-03 16:16:41,738 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_24000_25000.json
+2025-07-03 16:16:41,944 - INFO - Processing file: trajectories_25000_26000.json
+2025-07-03 16:16:43,653 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_25000_26000.json
+2025-07-03 16:16:43,830 - INFO - Processing file: trajectories_26000_27000.json
+2025-07-03 16:16:44,851 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_24000_25000.json
+2025-07-03 16:16:45,018 - INFO - Processing file: trajectories_25000_26000.json
+2025-07-03 16:16:45,508 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_24000_25000.json
+2025-07-03 16:16:45,718 - INFO - Processing file: trajectories_25000_26000.json
+2025-07-03 16:16:46,027 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_25000_26000.json
+2025-07-03 16:16:46,273 - INFO - Processing file: trajectories_26000_27000.json
+2025-07-03 16:16:47,774 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_26000_27000.json
+2025-07-03 16:16:47,994 - INFO - Processing file: trajectories_27000_28000.json
+2025-07-03 16:16:48,592 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_25000_26000.json
+2025-07-03 16:16:48,838 - INFO - Processing file: trajectories_26000_27000.json
+2025-07-03 16:16:49,748 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_25000_26000.json
+2025-07-03 16:16:49,964 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_26000_27000.json
+2025-07-03 16:16:49,964 - INFO - Processing file: trajectories_26000_27000.json
+2025-07-03 16:16:50,161 - INFO - Processing file: trajectories_27000_28000.json
+2025-07-03 16:16:52,359 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_27000_28000.json
+2025-07-03 16:16:52,535 - INFO - Processing file: trajectories_28000_29000.json
+2025-07-03 16:16:52,770 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_26000_27000.json
+2025-07-03 16:16:53,013 - INFO - Processing file: trajectories_27000_28000.json
+2025-07-03 16:16:53,812 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_26000_27000.json
+2025-07-03 16:16:54,035 - INFO - Processing file: trajectories_27000_28000.json
+2025-07-03 16:16:54,493 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_27000_28000.json
+2025-07-03 16:16:54,679 - INFO - Processing file: trajectories_28000_29000.json
+2025-07-03 16:16:56,180 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_28000_29000.json
+2025-07-03 16:16:56,354 - INFO - Processing file: trajectories_29000_30000.json
+2025-07-03 16:16:57,364 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_27000_28000.json
+2025-07-03 16:16:57,548 - INFO - Processing file: trajectories_28000_29000.json
+2025-07-03 16:16:58,562 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_28000_29000.json
+2025-07-03 16:16:58,617 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_27000_28000.json
+2025-07-03 16:16:58,778 - INFO - Processing file: trajectories_29000_30000.json
+2025-07-03 16:16:58,829 - INFO - Processing file: trajectories_28000_29000.json
+2025-07-03 16:16:59,657 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_29000_30000.json
+2025-07-03 16:16:59,849 - INFO - Processing file: trajectories_30000_31000.json
+2025-07-03 16:17:01,057 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_28000_29000.json
+2025-07-03 16:17:01,226 - INFO - Processing file: trajectories_29000_30000.json
+2025-07-03 16:17:02,585 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_29000_30000.json
+2025-07-03 16:17:02,768 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_28000_29000.json
+2025-07-03 16:17:02,820 - INFO - Processing file: trajectories_30000_31000.json
+2025-07-03 16:17:02,983 - INFO - Processing file: trajectories_29000_30000.json
+2025-07-03 16:17:03,901 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_30000_31000.json
+2025-07-03 16:17:04,138 - INFO - Processing file: trajectories_3000_4000.json
+2025-07-03 16:17:04,491 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_29000_30000.json
+2025-07-03 16:17:04,664 - INFO - Processing file: trajectories_30000_31000.json
+2025-07-03 16:17:06,662 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_29000_30000.json
+2025-07-03 16:17:06,875 - INFO - Processing file: trajectories_30000_31000.json
+2025-07-03 16:17:06,987 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_30000_31000.json
+2025-07-03 16:17:07,171 - INFO - Processing file: trajectories_3000_4000.json
+2025-07-03 16:17:08,160 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_3000_4000.json
+2025-07-03 16:17:08,332 - INFO - Processing file: trajectories_31000_32000.json
+2025-07-03 16:17:08,512 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_30000_31000.json
+2025-07-03 16:17:08,677 - INFO - Processing file: trajectories_3000_4000.json
+2025-07-03 16:17:11,253 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_30000_31000.json
+2025-07-03 16:17:11,461 - INFO - Processing file: trajectories_3000_4000.json
+2025-07-03 16:17:11,738 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_31000_32000.json
+2025-07-03 16:17:11,908 - INFO - Processing file: trajectories_32000_33000.json
+2025-07-03 16:17:11,983 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_3000_4000.json
+2025-07-03 16:17:12,211 - INFO - Processing file: trajectories_31000_32000.json
+2025-07-03 16:17:12,649 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_3000_4000.json
+2025-07-03 16:17:12,822 - INFO - Processing file: trajectories_31000_32000.json
+2025-07-03 16:17:15,907 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_32000_33000.json
+2025-07-03 16:17:15,989 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_3000_4000.json
+2025-07-03 16:17:16,078 - INFO - Processing file: trajectories_33000_34000.json
+2025-07-03 16:17:16,199 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_31000_32000.json
+2025-07-03 16:17:16,201 - INFO - Processing file: trajectories_31000_32000.json
+2025-07-03 16:17:16,214 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_31000_32000.json
+2025-07-03 16:17:16,384 - INFO - Processing file: trajectories_32000_33000.json
+2025-07-03 16:17:16,428 - INFO - Processing file: trajectories_32000_33000.json
+2025-07-03 16:17:19,495 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_33000_34000.json
+2025-07-03 16:17:19,704 - INFO - Processing file: trajectories_34000_35000.json
+2025-07-03 16:17:20,023 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_31000_32000.json
+2025-07-03 16:17:20,237 - INFO - Processing file: trajectories_32000_33000.json
+2025-07-03 16:17:20,367 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_32000_33000.json
+2025-07-03 16:17:20,539 - INFO - Processing file: trajectories_33000_34000.json
+2025-07-03 16:17:21,206 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_32000_33000.json
+2025-07-03 16:17:21,434 - INFO - Processing file: trajectories_33000_34000.json
+2025-07-03 16:17:23,711 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_34000_35000.json
+2025-07-03 16:17:23,926 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_33000_34000.json
+2025-07-03 16:17:23,945 - INFO - Processing file: trajectories_35000_36000.json
+2025-07-03 16:17:24,094 - INFO - Processing file: trajectories_34000_35000.json
+2025-07-03 16:17:24,820 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_32000_33000.json
+2025-07-03 16:17:25,029 - INFO - Processing file: trajectories_33000_34000.json
+2025-07-03 16:17:25,122 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_33000_34000.json
+2025-07-03 16:17:25,310 - INFO - Processing file: trajectories_34000_35000.json
+2025-07-03 16:17:27,367 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_34000_35000.json
+2025-07-03 16:17:27,534 - INFO - Processing file: trajectories_35000_36000.json
+2025-07-03 16:17:28,763 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_35000_36000.json
+2025-07-03 16:17:28,875 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_34000_35000.json
+2025-07-03 16:17:28,900 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_33000_34000.json
+2025-07-03 16:17:28,995 - INFO - Processing file: trajectories_36000_37000.json
+2025-07-03 16:17:29,058 - INFO - Processing file: trajectories_35000_36000.json
+2025-07-03 16:17:29,113 - INFO - Processing file: trajectories_34000_35000.json
+2025-07-03 16:17:31,375 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_35000_36000.json
+2025-07-03 16:17:31,540 - INFO - Processing file: trajectories_36000_37000.json
+2025-07-03 16:17:32,807 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_34000_35000.json
+2025-07-03 16:17:33,011 - INFO - Processing file: trajectories_35000_36000.json
+2025-07-03 16:17:33,198 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_35000_36000.json
+2025-07-03 16:17:33,385 - INFO - Processing file: trajectories_36000_37000.json
+2025-07-03 16:17:33,982 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_36000_37000.json
+2025-07-03 16:17:34,224 - INFO - Processing file: trajectories_37000_38000.json
+2025-07-03 16:17:35,489 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_36000_37000.json
+2025-07-03 16:17:35,662 - INFO - Processing file: trajectories_37000_38000.json
+2025-07-03 16:17:37,401 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_35000_36000.json
+2025-07-03 16:17:37,610 - INFO - Processing file: trajectories_36000_37000.json
+2025-07-03 16:17:37,693 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_36000_37000.json
+2025-07-03 16:17:37,880 - INFO - Processing file: trajectories_37000_38000.json
+2025-07-03 16:17:39,313 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_37000_38000.json
+2025-07-03 16:17:39,553 - INFO - Processing file: trajectories_38000_39000.json
+2025-07-03 16:17:39,755 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_37000_38000.json
+2025-07-03 16:17:39,925 - INFO - Processing file: trajectories_38000_39000.json
+2025-07-03 16:17:42,127 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_36000_37000.json
+2025-07-03 16:17:42,245 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_37000_38000.json
+2025-07-03 16:17:42,338 - INFO - Processing file: trajectories_37000_38000.json
+2025-07-03 16:17:42,458 - INFO - Processing file: trajectories_38000_39000.json
+2025-07-03 16:17:43,484 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_38000_39000.json
+2025-07-03 16:17:43,591 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_38000_39000.json
+2025-07-03 16:17:43,654 - INFO - Processing file: trajectories_39000_40000.json
+2025-07-03 16:17:43,804 - INFO - Processing file: trajectories_39000_40000.json
+2025-07-03 16:17:46,817 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_38000_39000.json
+2025-07-03 16:17:46,987 - INFO - Processing file: trajectories_39000_40000.json
+2025-07-03 16:17:47,086 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_37000_38000.json
+2025-07-03 16:17:47,163 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_39000_40000.json
+2025-07-03 16:17:47,300 - INFO - Processing file: trajectories_38000_39000.json
+2025-07-03 16:17:47,333 - INFO - Processing file: trajectories_40000_41000.json
+2025-07-03 16:17:47,717 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_39000_40000.json
+2025-07-03 16:17:47,965 - INFO - Processing file: trajectories_40000_41000.json
+2025-07-03 16:17:50,692 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_39000_40000.json
+2025-07-03 16:17:50,896 - INFO - Processing file: trajectories_40000_41000.json
+2025-07-03 16:17:51,345 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_38000_39000.json
+2025-07-03 16:17:51,484 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_40000_41000.json
+2025-07-03 16:17:51,551 - INFO - Processing file: trajectories_39000_40000.json
+2025-07-03 16:17:51,657 - INFO - Processing file: trajectories_4000_5000.json
+2025-07-03 16:17:52,772 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_40000_41000.json
+2025-07-03 16:17:52,959 - INFO - Processing file: trajectories_4000_5000.json
+2025-07-03 16:17:55,181 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_40000_41000.json
+2025-07-03 16:17:55,200 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_4000_5000.json
+2025-07-03 16:17:55,360 - INFO - Processing file: trajectories_4000_5000.json
+2025-07-03 16:17:55,373 - INFO - Processing file: trajectories_41000_42000.json
+2025-07-03 16:17:55,552 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_39000_40000.json
+2025-07-03 16:17:55,768 - INFO - Processing file: trajectories_40000_41000.json
+2025-07-03 16:17:56,819 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_4000_5000.json
+2025-07-03 16:17:57,049 - INFO - Processing file: trajectories_41000_42000.json
+2025-07-03 16:17:58,770 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_41000_42000.json
+2025-07-03 16:17:58,943 - INFO - Processing file: trajectories_42000_43000.json
+2025-07-03 16:17:59,023 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_4000_5000.json
+2025-07-03 16:17:59,197 - INFO - Processing file: trajectories_41000_42000.json
+2025-07-03 16:18:00,569 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_40000_41000.json
+2025-07-03 16:18:00,632 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_41000_42000.json
+2025-07-03 16:18:00,780 - INFO - Processing file: trajectories_4000_5000.json
+2025-07-03 16:18:00,817 - INFO - Processing file: trajectories_42000_43000.json
+2025-07-03 16:18:02,643 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_41000_42000.json
+2025-07-03 16:18:02,814 - INFO - Processing file: trajectories_42000_43000.json
+2025-07-03 16:18:02,913 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_42000_43000.json
+2025-07-03 16:18:03,082 - INFO - Processing file: trajectories_43000_44000.json
+2025-07-03 16:18:04,838 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_4000_5000.json
+2025-07-03 16:18:04,997 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_42000_43000.json
+2025-07-03 16:18:05,057 - INFO - Processing file: trajectories_41000_42000.json
+2025-07-03 16:18:05,195 - INFO - Processing file: trajectories_43000_44000.json
+2025-07-03 16:18:06,875 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_42000_43000.json
+2025-07-03 16:18:07,077 - INFO - Processing file: trajectories_43000_44000.json
+2025-07-03 16:18:07,227 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_43000_44000.json
+2025-07-03 16:18:07,400 - INFO - Processing file: trajectories_44000_45000.json
+2025-07-03 16:18:08,904 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_41000_42000.json
+2025-07-03 16:18:09,115 - INFO - Processing file: trajectories_42000_43000.json
+2025-07-03 16:18:09,631 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_43000_44000.json
+2025-07-03 16:18:09,817 - INFO - Processing file: trajectories_44000_45000.json
+2025-07-03 16:18:10,930 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_44000_45000.json
+2025-07-03 16:18:11,102 - INFO - Processing file: trajectories_45000_46000.json
+2025-07-03 16:18:11,287 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_43000_44000.json
+2025-07-03 16:18:11,461 - INFO - Processing file: trajectories_44000_45000.json
+2025-07-03 16:18:13,536 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_44000_45000.json
+2025-07-03 16:18:13,723 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_42000_43000.json
+2025-07-03 16:18:13,729 - INFO - Processing file: trajectories_45000_46000.json
+2025-07-03 16:18:13,936 - INFO - Processing file: trajectories_43000_44000.json
+2025-07-03 16:18:15,014 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_44000_45000.json
+2025-07-03 16:18:15,186 - INFO - Processing file: trajectories_45000_46000.json
+2025-07-03 16:18:15,257 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_45000_46000.json
+2025-07-03 16:18:15,430 - INFO - Processing file: trajectories_46000_47000.json
+2025-07-03 16:18:18,172 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_45000_46000.json
+2025-07-03 16:18:18,373 - INFO - Processing file: trajectories_46000_47000.json
+2025-07-03 16:18:18,743 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_43000_44000.json
+2025-07-03 16:18:18,955 - INFO - Processing file: trajectories_44000_45000.json
+2025-07-03 16:18:19,013 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_46000_47000.json
+2025-07-03 16:18:19,180 - INFO - Processing file: trajectories_47000_48000.json
+2025-07-03 16:18:19,395 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_45000_46000.json
+2025-07-03 16:18:19,567 - INFO - Processing file: trajectories_46000_47000.json
+2025-07-03 16:18:22,217 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_46000_47000.json
+2025-07-03 16:18:22,399 - INFO - Processing file: trajectories_47000_48000.json
+2025-07-03 16:18:22,676 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_47000_48000.json
+2025-07-03 16:18:22,849 - INFO - Processing file: trajectories_48000_49000.json
+2025-07-03 16:18:22,984 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_44000_45000.json
+2025-07-03 16:18:23,200 - INFO - Processing file: trajectories_45000_46000.json
+2025-07-03 16:18:23,219 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_46000_47000.json
+2025-07-03 16:18:23,386 - INFO - Processing file: trajectories_47000_48000.json
+2025-07-03 16:18:26,114 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_47000_48000.json
+2025-07-03 16:18:26,299 - INFO - Processing file: trajectories_48000_49000.json
+2025-07-03 16:18:26,898 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_47000_48000.json
+2025-07-03 16:18:27,066 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_48000_49000.json
+2025-07-03 16:18:27,070 - INFO - Processing file: trajectories_48000_49000.json
+2025-07-03 16:18:27,236 - INFO - Processing file: trajectories_49000_50000.json
+2025-07-03 16:18:28,048 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_45000_46000.json
+2025-07-03 16:18:28,259 - INFO - Processing file: trajectories_46000_47000.json
+2025-07-03 16:18:30,823 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_48000_49000.json
+2025-07-03 16:18:30,906 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_49000_50000.json
+2025-07-03 16:18:31,005 - INFO - Processing file: trajectories_49000_50000.json
+2025-07-03 16:18:31,078 - INFO - Processing file: trajectories_50000_51000.json
+2025-07-03 16:18:31,351 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_48000_49000.json
+2025-07-03 16:18:31,520 - INFO - Processing file: trajectories_49000_50000.json
+2025-07-03 16:18:32,371 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_46000_47000.json
+2025-07-03 16:18:32,581 - INFO - Processing file: trajectories_47000_48000.json
+2025-07-03 16:18:34,608 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_50000_51000.json
+2025-07-03 16:18:34,784 - INFO - Processing file: trajectories_5000_6000.json
+2025-07-03 16:18:34,853 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_49000_50000.json
+2025-07-03 16:18:35,063 - INFO - Processing file: trajectories_50000_51000.json
+2025-07-03 16:18:35,265 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_49000_50000.json
+2025-07-03 16:18:35,437 - INFO - Processing file: trajectories_50000_51000.json
+2025-07-03 16:18:36,583 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_47000_48000.json
+2025-07-03 16:18:36,793 - INFO - Processing file: trajectories_48000_49000.json
+2025-07-03 16:18:38,735 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_50000_51000.json
+2025-07-03 16:18:38,903 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_5000_6000.json
+2025-07-03 16:18:38,925 - INFO - Processing file: trajectories_5000_6000.json
+2025-07-03 16:18:38,975 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_50000_51000.json
+2025-07-03 16:18:39,075 - INFO - Processing file: trajectories_51000_52000.json
+2025-07-03 16:18:39,163 - INFO - Processing file: trajectories_5000_6000.json
+2025-07-03 16:18:41,703 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_48000_49000.json
+2025-07-03 16:18:41,913 - INFO - Processing file: trajectories_49000_50000.json
+2025-07-03 16:18:42,575 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_51000_52000.json
+2025-07-03 16:18:42,746 - INFO - Processing file: trajectories_52000_53000.json
+2025-07-03 16:18:43,221 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_5000_6000.json
+2025-07-03 16:18:43,298 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_5000_6000.json
+2025-07-03 16:18:43,406 - INFO - Processing file: trajectories_51000_52000.json
+2025-07-03 16:18:43,470 - INFO - Processing file: trajectories_51000_52000.json
+2025-07-03 16:18:46,106 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_49000_50000.json
+2025-07-03 16:18:46,316 - INFO - Processing file: trajectories_50000_51000.json
+2025-07-03 16:18:46,739 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_52000_53000.json
+2025-07-03 16:18:46,913 - INFO - Processing file: trajectories_53000_54000.json
+2025-07-03 16:18:46,973 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_51000_52000.json
+2025-07-03 16:18:47,023 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_51000_52000.json
+2025-07-03 16:18:47,145 - INFO - Processing file: trajectories_52000_53000.json
+2025-07-03 16:18:47,209 - INFO - Processing file: trajectories_52000_53000.json
+2025-07-03 16:18:50,349 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_50000_51000.json
+2025-07-03 16:18:50,570 - INFO - Processing file: trajectories_5000_6000.json
+2025-07-03 16:18:51,151 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_53000_54000.json
+2025-07-03 16:18:51,152 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_52000_53000.json
+2025-07-03 16:18:51,319 - INFO - Processing file: trajectories_54000_55000.json
+2025-07-03 16:18:51,325 - INFO - Processing file: trajectories_53000_54000.json
+2025-07-03 16:18:51,389 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_52000_53000.json
+2025-07-03 16:18:51,575 - INFO - Processing file: trajectories_53000_54000.json
+2025-07-03 16:18:54,894 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_54000_55000.json
+2025-07-03 16:18:55,070 - INFO - Processing file: trajectories_55000_56000.json
+2025-07-03 16:18:55,345 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_5000_6000.json
+2025-07-03 16:18:55,555 - INFO - Processing file: trajectories_51000_52000.json
+2025-07-03 16:18:55,587 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_53000_54000.json
+2025-07-03 16:18:55,756 - INFO - Processing file: trajectories_54000_55000.json
+2025-07-03 16:18:55,975 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_53000_54000.json
+2025-07-03 16:18:56,157 - INFO - Processing file: trajectories_54000_55000.json
+2025-07-03 16:18:59,304 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_55000_56000.json
+2025-07-03 16:18:59,337 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_54000_55000.json
+2025-07-03 16:18:59,474 - INFO - Processing file: trajectories_56000_57000.json
+2025-07-03 16:18:59,512 - INFO - Processing file: trajectories_55000_56000.json
+2025-07-03 16:18:59,533 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_51000_52000.json
+2025-07-03 16:18:59,748 - INFO - Processing file: trajectories_52000_53000.json
+2025-07-03 16:18:59,873 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_54000_55000.json
+2025-07-03 16:19:00,065 - INFO - Processing file: trajectories_55000_56000.json
+2025-07-03 16:19:03,171 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_56000_57000.json
+2025-07-03 16:19:03,344 - INFO - Processing file: trajectories_57000_58000.json
+2025-07-03 16:19:03,766 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_55000_56000.json
+2025-07-03 16:19:03,937 - INFO - Processing file: trajectories_56000_57000.json
+2025-07-03 16:19:04,340 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_52000_53000.json
+2025-07-03 16:19:04,550 - INFO - Processing file: trajectories_53000_54000.json
+2025-07-03 16:19:04,577 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_55000_56000.json
+2025-07-03 16:19:04,763 - INFO - Processing file: trajectories_56000_57000.json
+2025-07-03 16:19:07,647 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_56000_57000.json
+2025-07-03 16:19:07,666 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_57000_58000.json
+2025-07-03 16:19:07,819 - INFO - Processing file: trajectories_57000_58000.json
+2025-07-03 16:19:07,845 - INFO - Processing file: trajectories_58000_59000.json
+2025-07-03 16:19:08,616 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_56000_57000.json
+2025-07-03 16:19:08,802 - INFO - Processing file: trajectories_57000_58000.json
+2025-07-03 16:19:09,471 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_53000_54000.json
+2025-07-03 16:19:09,681 - INFO - Processing file: trajectories_54000_55000.json
+2025-07-03 16:19:11,570 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_58000_59000.json
+2025-07-03 16:19:11,743 - INFO - Processing file: trajectories_59000_60000.json
+2025-07-03 16:19:12,154 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_57000_58000.json
+2025-07-03 16:19:12,333 - INFO - Processing file: trajectories_58000_59000.json
+2025-07-03 16:19:13,161 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_57000_58000.json
+2025-07-03 16:19:13,340 - INFO - Processing file: trajectories_58000_59000.json
+2025-07-03 16:19:13,749 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_54000_55000.json
+2025-07-03 16:19:13,962 - INFO - Processing file: trajectories_55000_56000.json
+2025-07-03 16:19:15,262 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_59000_60000.json
+2025-07-03 16:19:15,430 - INFO - Processing file: trajectories_60000_61000.json
+2025-07-03 16:19:15,966 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_58000_59000.json
+2025-07-03 16:19:16,139 - INFO - Processing file: trajectories_59000_60000.json
+2025-07-03 16:19:16,943 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_58000_59000.json
+2025-07-03 16:19:17,115 - INFO - Processing file: trajectories_59000_60000.json
+2025-07-03 16:19:18,870 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_55000_56000.json
+2025-07-03 16:19:19,082 - INFO - Processing file: trajectories_56000_57000.json
+2025-07-03 16:19:19,587 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_60000_61000.json
+2025-07-03 16:19:19,660 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_59000_60000.json
+2025-07-03 16:19:19,757 - INFO - Processing file: trajectories_6000_7000.json
+2025-07-03 16:19:19,828 - INFO - Processing file: trajectories_60000_61000.json
+2025-07-03 16:19:20,619 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_59000_60000.json
+2025-07-03 16:19:20,785 - INFO - Processing file: trajectories_60000_61000.json
+2025-07-03 16:19:23,320 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_56000_57000.json
+2025-07-03 16:19:23,530 - INFO - Processing file: trajectories_57000_58000.json
+2025-07-03 16:19:24,000 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_60000_61000.json
+2025-07-03 16:19:24,159 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_6000_7000.json
+2025-07-03 16:19:24,170 - INFO - Processing file: trajectories_6000_7000.json
+2025-07-03 16:19:24,331 - INFO - Processing file: trajectories_61000_62000.json
+2025-07-03 16:19:24,919 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_60000_61000.json
+2025-07-03 16:19:25,088 - INFO - Processing file: trajectories_6000_7000.json
+2025-07-03 16:19:28,101 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_61000_62000.json
+2025-07-03 16:19:28,271 - INFO - Processing file: trajectories_62000_63000.json
+2025-07-03 16:19:28,555 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_57000_58000.json
+2025-07-03 16:19:28,570 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_6000_7000.json
+2025-07-03 16:19:28,743 - INFO - Processing file: trajectories_61000_62000.json
+2025-07-03 16:19:28,776 - INFO - Processing file: trajectories_58000_59000.json
+2025-07-03 16:19:29,449 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_6000_7000.json
+2025-07-03 16:19:29,620 - INFO - Processing file: trajectories_61000_62000.json
+2025-07-03 16:19:32,025 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_62000_63000.json
+2025-07-03 16:19:32,196 - INFO - Processing file: trajectories_63000_64000.json
+2025-07-03 16:19:32,524 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_61000_62000.json
+2025-07-03 16:19:32,694 - INFO - Processing file: trajectories_62000_63000.json
+2025-07-03 16:19:32,905 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_58000_59000.json
+2025-07-03 16:19:33,115 - INFO - Processing file: trajectories_59000_60000.json
+2025-07-03 16:19:33,361 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_61000_62000.json
+2025-07-03 16:19:33,529 - INFO - Processing file: trajectories_62000_63000.json
+2025-07-03 16:19:35,819 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_63000_64000.json
+2025-07-03 16:19:35,994 - INFO - Processing file: trajectories_64000_65000.json
+2025-07-03 16:19:36,456 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_62000_63000.json
+2025-07-03 16:19:36,628 - INFO - Processing file: trajectories_63000_64000.json
+2025-07-03 16:19:37,119 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_59000_60000.json
+2025-07-03 16:19:37,257 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_62000_63000.json
+2025-07-03 16:19:37,328 - INFO - Processing file: trajectories_60000_61000.json
+2025-07-03 16:19:37,427 - INFO - Processing file: trajectories_63000_64000.json
+2025-07-03 16:19:40,267 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_63000_64000.json
+2025-07-03 16:19:40,275 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_64000_65000.json
+2025-07-03 16:19:40,441 - INFO - Processing file: trajectories_64000_65000.json
+2025-07-03 16:19:40,448 - INFO - Processing file: trajectories_65000_66000.json
+2025-07-03 16:19:41,035 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_63000_64000.json
+2025-07-03 16:19:41,208 - INFO - Processing file: trajectories_64000_65000.json
+2025-07-03 16:19:42,088 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_60000_61000.json
+2025-07-03 16:19:42,286 - INFO - Processing file: trajectories_6000_7000.json
+2025-07-03 16:19:44,054 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_65000_66000.json
+2025-07-03 16:19:44,229 - INFO - Processing file: trajectories_66000_67000.json
+2025-07-03 16:19:44,746 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_64000_65000.json
+2025-07-03 16:19:44,918 - INFO - Processing file: trajectories_65000_66000.json
+2025-07-03 16:19:45,472 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_64000_65000.json
+2025-07-03 16:19:45,643 - INFO - Processing file: trajectories_65000_66000.json
+2025-07-03 16:19:47,736 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_6000_7000.json
+2025-07-03 16:19:47,946 - INFO - Processing file: trajectories_61000_62000.json
+2025-07-03 16:19:48,366 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_66000_67000.json
+2025-07-03 16:19:48,529 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_65000_66000.json
+2025-07-03 16:19:48,537 - INFO - Processing file: trajectories_67000_68000.json
+2025-07-03 16:19:48,702 - INFO - Processing file: trajectories_66000_67000.json
+2025-07-03 16:19:49,233 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_65000_66000.json
+2025-07-03 16:19:49,406 - INFO - Processing file: trajectories_66000_67000.json
+2025-07-03 16:19:52,380 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_61000_62000.json
+2025-07-03 16:19:52,630 - INFO - Processing file: trajectories_62000_63000.json
+2025-07-03 16:19:52,865 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_66000_67000.json
+2025-07-03 16:19:53,004 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_67000_68000.json
+2025-07-03 16:19:53,036 - INFO - Processing file: trajectories_67000_68000.json
+2025-07-03 16:19:53,169 - INFO - Processing file: trajectories_68000_69000.json
+2025-07-03 16:19:53,526 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_66000_67000.json
+2025-07-03 16:19:53,696 - INFO - Processing file: trajectories_67000_68000.json
+2025-07-03 16:19:56,995 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_68000_69000.json
+2025-07-03 16:19:57,169 - INFO - Processing file: trajectories_69000_70000.json
+2025-07-03 16:19:57,289 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_62000_63000.json
+2025-07-03 16:19:57,515 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_67000_68000.json
+2025-07-03 16:19:57,529 - INFO - Processing file: trajectories_63000_64000.json
+2025-07-03 16:19:57,680 - INFO - Processing file: trajectories_68000_69000.json
+2025-07-03 16:19:58,133 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_67000_68000.json
+2025-07-03 16:19:58,296 - INFO - Processing file: trajectories_68000_69000.json
+2025-07-03 16:20:00,937 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_69000_70000.json
+2025-07-03 16:20:01,108 - INFO - Processing file: trajectories_70000_71000.json
+2025-07-03 16:20:01,517 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_68000_69000.json
+2025-07-03 16:20:01,691 - INFO - Processing file: trajectories_69000_70000.json
+2025-07-03 16:20:01,954 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_63000_64000.json
+2025-07-03 16:20:02,098 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_68000_69000.json
+2025-07-03 16:20:02,195 - INFO - Processing file: trajectories_64000_65000.json
+2025-07-03 16:20:02,271 - INFO - Processing file: trajectories_69000_70000.json
+2025-07-03 16:20:04,862 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_70000_71000.json
+2025-07-03 16:20:05,031 - INFO - Processing file: trajectories_7000_8000.json
+2025-07-03 16:20:05,474 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_69000_70000.json
+2025-07-03 16:20:05,643 - INFO - Processing file: trajectories_70000_71000.json
+2025-07-03 16:20:06,016 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_69000_70000.json
+2025-07-03 16:20:06,185 - INFO - Processing file: trajectories_70000_71000.json
+2025-07-03 16:20:07,576 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_64000_65000.json
+2025-07-03 16:20:07,816 - INFO - Processing file: trajectories_65000_66000.json
+2025-07-03 16:20:08,673 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_7000_8000.json
+2025-07-03 16:20:08,849 - INFO - Processing file: trajectories_71000_72000.json
+2025-07-03 16:20:09,413 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_70000_71000.json
+2025-07-03 16:20:09,582 - INFO - Processing file: trajectories_7000_8000.json
+2025-07-03 16:20:09,931 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_70000_71000.json
+2025-07-03 16:20:10,098 - INFO - Processing file: trajectories_7000_8000.json
+2025-07-03 16:20:12,070 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_65000_66000.json
+2025-07-03 16:20:12,312 - INFO - Processing file: trajectories_66000_67000.json
+2025-07-03 16:20:13,193 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_71000_72000.json
+2025-07-03 16:20:13,234 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_7000_8000.json
+2025-07-03 16:20:13,364 - INFO - Processing file: trajectories_72000_73000.json
+2025-07-03 16:20:13,407 - INFO - Processing file: trajectories_71000_72000.json
+2025-07-03 16:20:13,712 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_7000_8000.json
+2025-07-03 16:20:13,885 - INFO - Processing file: trajectories_71000_72000.json
+2025-07-03 16:20:16,883 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_66000_67000.json
+2025-07-03 16:20:17,042 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_72000_73000.json
+2025-07-03 16:20:17,057 - INFO - Processing file: trajectories_67000_68000.json
+2025-07-03 16:20:17,218 - INFO - Processing file: trajectories_73000_74000.json
+2025-07-03 16:20:17,775 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_71000_72000.json
+2025-07-03 16:20:17,947 - INFO - Processing file: trajectories_72000_73000.json
+2025-07-03 16:20:18,235 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_71000_72000.json
+2025-07-03 16:20:18,406 - INFO - Processing file: trajectories_72000_73000.json
+2025-07-03 16:20:21,469 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_73000_74000.json
+2025-07-03 16:20:21,627 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_72000_73000.json
+2025-07-03 16:20:21,643 - INFO - Processing file: trajectories_74000_75000.json
+2025-07-03 16:20:21,803 - INFO - Processing file: trajectories_73000_74000.json
+2025-07-03 16:20:22,053 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_72000_73000.json
+2025-07-03 16:20:22,227 - INFO - Processing file: trajectories_73000_74000.json
+2025-07-03 16:20:22,259 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_67000_68000.json
+2025-07-03 16:20:22,468 - INFO - Processing file: trajectories_68000_69000.json
+2025-07-03 16:20:26,041 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_74000_75000.json
+2025-07-03 16:20:26,073 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_73000_74000.json
+2025-07-03 16:20:26,212 - INFO - Processing file: trajectories_75000_76000.json
+2025-07-03 16:20:26,247 - INFO - Processing file: trajectories_74000_75000.json
+2025-07-03 16:20:26,450 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_73000_74000.json
+2025-07-03 16:20:26,623 - INFO - Processing file: trajectories_74000_75000.json
+2025-07-03 16:20:27,098 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_68000_69000.json
+2025-07-03 16:20:27,311 - INFO - Processing file: trajectories_69000_70000.json
+2025-07-03 16:20:30,076 - INFO - Loaded 1000 trajectories from /opt/dlami/nvme/seungpil/problem_86/trajectories_75000_76000.json
+2025-07-03 16:20:30,241 - INFO - Processing file: trajectories_76000_77000.json
