@@ -26,7 +26,7 @@ resid_pdrop: 0.1
 attn_pdrop: 0.1
 
 # Sequence parameters
-max_sequence_length: 64 # Max trajectory length
+max_sequence_length: 1024 # Max trajectory length - increased for large ReARC grids
 step: 1 # Subsampling step
 
 # Data parameters

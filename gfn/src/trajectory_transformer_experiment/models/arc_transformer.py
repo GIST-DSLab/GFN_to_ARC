@@ -195,12 +195,13 @@ class ARCTrajectoryTransformer(nn.Module):
         B, T = input_ids.size()
         
         with torch.no_grad():
-            for _ in range(max_new_tokens):
+            for step in range(max_new_tokens):
                 # Get current sequence length
                 current_length = input_ids.size(1)
                 
                 # Stop if we exceed max sequence length
                 if current_length >= self.max_seq_len:
+                    print(f"Stopping: exceeded max_seq_len ({self.max_seq_len})")
                     break
                 
                 # Forward pass
@@ -233,12 +234,18 @@ class ARCTrajectoryTransformer(nn.Module):
                 probs = F.softmax(next_token_logits, dim=-1)
                 next_token = torch.multinomial(probs, num_samples=1)
                 
+                # Clamp token to valid vocabulary range
+                next_token = torch.clamp(next_token, 0, self.vocab_size - 1)
+                
                 # Append to sequence
                 input_ids = torch.cat([input_ids, next_token], dim=1)
                 
                 # Stop if EOS token is generated
                 if next_token.item() == eos_token_id:
+                    print(f"Stopping: EOS token generated at step {step}")
                     break
+                    
+                print(f"Step {step}: generated token {next_token.item()}")
         
         return input_ids
 

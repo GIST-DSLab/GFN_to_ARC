@@ -29,6 +29,7 @@ class ARCTrajectoryInference:
         self.config = config
         self.device = torch.device(config.get('device', 'cuda' if torch.cuda.is_available() else 'cpu'))
         self.vocab = create_vocabulary()
+        self.vocab_size = config.get('vocab_size', 22)
         self.inverse_vocab = {v: k for k, v in self.vocab.items()}
         
         # Setup logging
@@ -49,11 +50,16 @@ class ARCTrajectoryInference:
                 """Execute sequence of actions on grid"""
                 current_grid = [row[:] for row in initial_grid]  # Deep copy
                 
+                # If no actions, return original grid
+                if not actions:
+                    return current_grid
+                
                 for action in actions:
-                    if action == 0:  # left_rotate
-                        current_grid = [[current_grid[j][2-i] for j in range(3)] for i in range(3)]
-                    elif action == 1:  # right_rotate
-                        current_grid = [[current_grid[2-j][i] for j in range(3)] for i in range(3)]
+                    rows, cols = len(current_grid), len(current_grid[0])
+                    if action == 0:  # left_rotate (90° counter-clockwise)
+                        current_grid = [[current_grid[j][rows-1-i] for j in range(cols)] for i in range(rows)]
+                    elif action == 1:  # right_rotate (90° clockwise)
+                        current_grid = [[current_grid[cols-1-j][i] for j in range(cols)] for i in range(rows)]
                     elif action == 2:  # horizontal_flip
                         current_grid = [row[::-1] for row in current_grid]
                     elif action == 3:  # vertical_flip
@@ -103,12 +109,13 @@ class ARCTrajectoryInference:
     
     def encode_initial_state(self, grid_state: List[List[int]]) -> List[int]:
         """Encode initial grid state as tokens"""
-        # Flatten 3x3 grid
+        # Flatten any size grid
         flat_grid = np.array(grid_state).flatten()
         
         # Convert to tokens (0-9 for colors, 10 for padding)
         tokens = [int(x) if x < 10 else 10 for x in flat_grid]
         
+        self.logger.info(f"Grid shape: {np.array(grid_state).shape}, tokens: {len(tokens)}")
         return tokens
     
     def decode_action_sequence(self, tokens: List[int]) -> List[int]:
@@ -121,6 +128,7 @@ class ARCTrajectoryInference:
                 action = token - 11  # Convert back to action index (0-4)
                 actions.append(action)
         
+        self.logger.info(f"Decoded actions: {actions} from tokens: {tokens}")
         return actions
     
     def generate_action_sequence(self, initial_grid: List[List[int]], 
@@ -139,6 +147,9 @@ class ARCTrajectoryInference:
         input_ids = torch.tensor([self.vocab['sos']] + initial_tokens, 
                                 device=self.device).unsqueeze(0)
         
+        self.logger.info(f"Input sequence length: {input_ids.size(1)}")
+        self.logger.info(f"Input tokens: {input_ids[0].cpu().tolist()}")
+        
         confidences = []
         
         with torch.no_grad():
@@ -156,12 +167,26 @@ class ARCTrajectoryInference:
             # Extract generated tokens (excluding initial input)
             generated_tokens = generated[0, input_ids.size(1):].cpu().tolist()
             
-            # Calculate confidence (simplified - using max probability)
-            outputs = self.model(generated[0:1])
-            logits = outputs['logits'][0, input_ids.size(1)-1:]
-            probs = F.softmax(logits, dim=-1)
-            token_confidences = torch.max(probs, dim=-1)[0].cpu().tolist()
-            confidences.extend(token_confidences)
+            # Debug: Print generated tokens
+            self.logger.info(f"Generated tokens: {generated_tokens}")
+            self.logger.info(f"Token range: min={min(generated_tokens) if generated_tokens else 'N/A'}, max={max(generated_tokens) if generated_tokens else 'N/A'}")
+            
+            # Skip confidence calculation if no tokens generated
+            if len(generated_tokens) > 0:
+                # Calculate confidence (simplified - using max probability)
+                # Clamp generated tokens to valid vocabulary range to avoid embedding errors
+                generated_clamped = torch.clamp(generated[0:1], 0, self.vocab_size - 1)
+                try:
+                    outputs = self.model(generated_clamped)
+                    logits = outputs['logits'][0, input_ids.size(1)-1:]
+                    probs = F.softmax(logits, dim=-1)
+                    token_confidences = torch.max(probs, dim=-1)[0].cpu().tolist()
+                    confidences.extend(token_confidences)
+                except Exception as e:
+                    self.logger.error(f"Error calculating confidence: {e}")
+                    confidences = [0.0] * len(generated_tokens)
+            else:
+                confidences = []
         
         # Decode actions from generated sequence
         actions = self.decode_action_sequence(generated_tokens)
