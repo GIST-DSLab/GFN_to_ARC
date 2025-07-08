@@ -20,8 +20,10 @@ from transformers import (
     AutoTokenizer, AutoModelForCausalLM, 
     TrainingArguments, Trainer,
     DataCollatorForLanguageModeling,
-    EarlyStoppingCallback
+    EarlyStoppingCallback,
+    BitsAndBytesConfig
 )
+from peft import LoraConfig, get_peft_model, TaskType, PeftModel
 import numpy as np
 from typing import List, Dict, Any, Tuple
 from utils import *
@@ -160,6 +162,21 @@ class ARCActionTrainer:
         else:
             self.logger.info("Skipping .to(device) for quantized model")
         
+        # PEFT 설정 적용
+        if config.get('use_peft', False):
+            peft_config = config.get('peft_config', {})
+            lora_config = LoraConfig(
+                r=peft_config.get('r', 16),
+                lora_alpha=peft_config.get('lora_alpha', 32),
+                target_modules=peft_config.get('target_modules', ["q_proj", "v_proj"]),
+                lora_dropout=peft_config.get('lora_dropout', 0.1),
+                bias=peft_config.get('bias', "none"),
+                task_type=peft_config.get('task_type', "CAUSAL_LM")
+            )
+            self.model = get_peft_model(self.model, lora_config)
+            self.logger.info(f"Applied LoRA PEFT with r={peft_config.get('r', 16)}, alpha={peft_config.get('lora_alpha', 32)}")
+            self.model.print_trainable_parameters()
+        
         # DDP 래핑 (멀티 GPU인 경우)
         if world_size > 1:
             self.model = DDP(self.model, device_ids=[rank])
@@ -292,18 +309,22 @@ class ARCActionTrainer:
         """모델 학습"""
         self.logger.info("Starting model training...")
         
-        # wandb 로그인 및 초기화 (rank 0에서만)
-        if self.rank == 0:
-            wandb.login(key="2f4e627868f1f9dad10bcb1a14fbf96817e6baa9")
-            
-            # WandB config 가져오기
-            wandb_config = self.config.get('wandb', {})
-            wandb.init(
-                project=wandb_config.get('project', "arc-action-sequence"),
-                config=self.config,
-                name=f"arc_llm_{self.config['model_name'].split('/')[-1]}",
-                tags=wandb_config.get('tags', ["llama3.1", "action_sequence", "arc"])
-            )
+        # wandb 로그인 및 초기화 (rank 0에서만) - 비활성화됨
+        if self.rank == 0 and self.config.get('use_wandb', False):
+            try:
+                import wandb
+                wandb.login(key="2f4e627868f1f9dad10bcb1a14fbf96817e6baa9")
+                
+                # WandB config 가져오기
+                wandb_config = self.config.get('wandb', {})
+                wandb.init(
+                    project=wandb_config.get('project', "arc-action-sequence"),
+                    config=self.config,
+                    name=f"arc_llm_{self.config['model_name'].split('/')[-1]}",
+                    tags=wandb_config.get('tags', ["llama3.1", "action_sequence", "arc"])
+                )
+            except Exception as e:
+                self.logger.warning(f"WandB initialization failed: {e}")
         
         # 데이터 로드
         train_data, val_data = self.load_training_data()

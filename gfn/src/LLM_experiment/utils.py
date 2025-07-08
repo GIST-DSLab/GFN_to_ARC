@@ -142,13 +142,23 @@ def parse_action_sequence_from_llm(action_str: str) -> List[int]:
     }
     
     try:
-        # 문자열에서 액션 이름들 추출
+        # 문자열에서 대괄호 내용 찾기
         action_str = action_str.strip()
-        if action_str.startswith('[') and action_str.endswith(']'):
-            action_str = action_str[1:-1]
         
-        action_names = [name.strip().strip('"\'') for name in action_str.split(',')]
-        actions = [name_to_id.get(name, -1) for name in action_names]
+        # 첫 번째 대괄호 시퀀스만 추출 (여러 개가 있는 경우 첫 번째 것만 사용)
+        if '[' in action_str and ']' in action_str:
+            start = action_str.find('[')
+            end = action_str.find(']', start)
+            if start < end:
+                bracket_content = action_str[start+1:end]
+            else:
+                bracket_content = action_str
+        else:
+            bracket_content = action_str
+        
+        # 쉼표로 분리하여 액션 이름 추출
+        action_names = [name.strip().strip('"\'') for name in bracket_content.split(',')]
+        actions = [name_to_id.get(name, -1) for name in action_names if name.strip()]
         
         # 유효하지 않은 액션 제거
         actions = [a for a in actions if a != -1]
@@ -159,16 +169,38 @@ def parse_action_sequence_from_llm(action_str: str) -> List[int]:
 def create_training_prompt(input_grid: List[List[int]], 
                           output_grid: List[List[int]], 
                           action_sequence: List[int],
-                          use_barc_format: bool = True) -> str:
-    """학습용 프롬프트 생성 (action은 completion으로 분리)"""
+                          use_barc_format: bool = True,
+                          few_shot_examples: List[Dict] = None) -> str:
+    """학습용 프롬프트 생성 (few-shot examples 포함, action은 completion으로 분리)"""
     if use_barc_format:
         # BARC/Llama-3.1 스타일 프롬프트
         input_str = format_grid_for_llm(input_grid, use_colors=True)
         output_str = format_grid_for_llm(output_grid, use_colors=True)
         
         system_prompt = "You are a world-class puzzle solver who is extremely good at spotting patterns and solving puzzles by applying transformations like rotations and flips."
-        user_prompt = f"""Given an input grid, predict the sequence of actions (rotations and flips) needed to transform it into the output grid.
+        
+        # Few-shot examples 구성 (있는 경우)
+        examples_text = ""
+        if few_shot_examples:
+            for i, example in enumerate(few_shot_examples[:2]):  # 최대 2개 예제 사용 (토큰 절약)
+                example_input_str = format_grid_for_llm(example['input'], use_colors=True)
+                example_output_str = format_grid_for_llm(example['output'], use_colors=True)
+                example_actions_str = format_action_sequence_for_llm(example['actions'])
+                
+                examples_text += f"""Example {i+1}:
+Input:
+{example_input_str}
 
+Target Output:
+{example_output_str}
+
+Actions: {example_actions_str}
+
+"""
+        
+        user_prompt = f"""Look at the examples to understand the transformation pattern. Then predict the sequence of actions (rotations and flips) needed to transform the given input into the target output.
+
+{examples_text}Now solve this:
 Input:
 {input_str}
 
@@ -181,11 +213,19 @@ Actions:"""
         prompt = f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{user_prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
         return prompt
     else:
-        # 기존 형식
+        # 기존 형식 (few-shot 지원)
+        examples_text = ""
+        if few_shot_examples:
+            for example in few_shot_examples[:2]:
+                example_input_str = format_grid_for_llm(example['input'])
+                example_output_str = format_grid_for_llm(example['output'])
+                example_actions_str = format_action_sequence_for_llm(example['actions'])
+                examples_text += f"Input: {example_input_str}\nOutput: {example_output_str}\nActions: {example_actions_str}\n\n"
+        
         input_str = format_grid_for_llm(input_grid)
         output_str = format_grid_for_llm(output_grid) 
         
-        prompt = f"Input: {input_str}\nOutput: {output_str}\nActions:"
+        prompt = f"{examples_text}Input: {input_str}\nOutput: {output_str}\nActions:"
         return prompt
 
 def create_inference_prompt(input_grid: List[List[int]], 
@@ -199,7 +239,7 @@ def create_inference_prompt(input_grid: List[List[int]],
         # Few-shot examples 구성 (input-output pair만, 액션 제외)
         examples_text = ""
         if train_examples:
-            for i, example in enumerate(train_examples[:3]):  # 최대 3개 예제 사용
+            for i, example in enumerate(train_examples[:2]):  # 최대 2개 예제 사용 (학습과 일치)
                 train_input_str = format_grid_for_llm(example['input'], use_colors=True)
                 train_output_str = format_grid_for_llm(example['output'], use_colors=True)
                 
@@ -215,13 +255,14 @@ Target Output:
         # 실제 문제 (input만 제공, output은 숨김)
         input_str = format_grid_for_llm(input_grid, use_colors=True)
         
-        user_prompt = f"""Look at the input-output examples and learn the transformation pattern. Then predict the sequence of actions (rotations and flips) needed to transform the given input.
+        user_prompt = f"""Look at the examples to understand the transformation pattern. Then predict the sequence of actions (rotations and flips) needed to transform the given input.
 
 {examples_text}Now solve this:
 Input:
 {input_str}
 
 Based on the pattern from the examples, predict the sequence of actions needed. Use action names: left_rotate, right_rotate, horizontal_flip, vertical_flip, submit.
+Respond with ONLY the action sequence in this exact format: [action1,action2,submit]
 Actions:"""
         
         # Llama-3.1 format
@@ -231,7 +272,7 @@ Actions:"""
         # 기존 형식
         examples_text = ""
         if train_examples:
-            for example in train_examples[:3]:
+            for example in train_examples[:2]:
                 train_input_str = format_grid_for_llm(example['input'])
                 train_output_str = format_grid_for_llm(example['output'])
                 examples_text += f"Input: {train_input_str}\nOutput: {train_output_str}\n\n"

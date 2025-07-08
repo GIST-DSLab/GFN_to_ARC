@@ -38,16 +38,11 @@ class ARCActionExecutor:
                                actions: List[int]) -> List[List[int]]:
         """액션 시퀀스를 실행하여 최종 그리드 반환"""
         try:
-            # 환경 초기화
-            # 더미 옵션으로 환경 리셋 (실제 문제 ID는 중요하지 않음)
-            state, info = self.env.reset(options={
-                "prob_index": 178,  # 더미 문제 ID
-                "adaptation": True,
-                "subprob_index": 0
-            })
+            # 그리드 크기 정규화: 학습 데이터와 동일한 처리
+            # 1. 원본 그리드 크기와 형태 보존
+            original_shape = (len(initial_grid), len(initial_grid[0]) if initial_grid else 0)
             
-            # 초기 그리드를 환경에 설정
-            # 이 부분은 환경의 구체적인 구현에 따라 달라질 수 있음
+            # 2. 액션 실행을 위해 그리드를 numpy 배열로 변환
             current_grid = copy.deepcopy(initial_grid)
             
             # 각 액션 실행
@@ -55,20 +50,24 @@ class ARCActionExecutor:
                 if action == 4:  # submit
                     break
                     
-                # GFlowNet action을 ARC action으로 변환
-                arc_action = map_gflownet_action_to_arc_action(action)
-                
                 # 액션 적용 (직접 그리드 변환)
                 current_grid = self.apply_action_to_grid(current_grid, action)
             
-            return current_grid
+            # 3. 결과 그리드의 크기 검증 및 정규화
+            # 회전으로 인해 크기가 바뀔 수 있으므로 원본 크기 범위 내에서만 결과 반환
+            result_grid = self.normalize_grid_size(current_grid, original_shape)
+            
+            return result_grid
             
         except Exception as e:
             logging.error(f"Error executing action sequence: {e}")
             return initial_grid  # 실패시 원본 반환
     
     def apply_action_to_grid(self, grid: List[List[int]], action: int) -> List[List[int]]:
-        """그리드에 액션 직접 적용"""
+        """그리드에 액션 직접 적용 (학습 데이터 처리와 일치하도록 개선)"""
+        if not grid or not grid[0]:
+            return grid
+            
         grid_array = np.array(grid)
         
         if action == 0:  # left rotate (90도 반시계 방향)
@@ -83,6 +82,34 @@ class ARCActionExecutor:
             result = grid_array  # 다른 액션은 변화 없음
             
         return result.tolist()
+    
+    def normalize_grid_size(self, grid: List[List[int]], original_shape: Tuple[int, int]) -> List[List[int]]:
+        """그리드 크기를 정규화하여 일관성 보장"""
+        if not grid or not grid[0]:
+            return grid
+            
+        current_shape = (len(grid), len(grid[0]))
+        
+        # 회전으로 인해 크기가 바뀐 경우 처리
+        if current_shape != original_shape:
+            # 정사각형이 아닌 그리드의 회전 결과를 원본 형태로 맞춤
+            grid_array = np.array(grid)
+            
+            # 원본보다 큰 경우 자르기
+            if current_shape[0] > original_shape[0] or current_shape[1] > original_shape[1]:
+                max_h = min(current_shape[0], original_shape[0])
+                max_w = min(current_shape[1], original_shape[1])
+                grid_array = grid_array[:max_h, :max_w]
+            
+            # 원본보다 작은 경우 패딩 (0으로)
+            if grid_array.shape[0] < original_shape[0] or grid_array.shape[1] < original_shape[1]:
+                padded = np.zeros(original_shape, dtype=grid_array.dtype)
+                padded[:grid_array.shape[0], :grid_array.shape[1]] = grid_array
+                grid_array = padded
+                
+            return grid_array.tolist()
+        
+        return grid
 
 class ARCInferenceEvaluator:
     """ARC 추론 및 평가기"""
@@ -190,9 +217,10 @@ class ARCInferenceEvaluator:
         # 생성 설정 가져오기
         gen_config = self.config.get('generation', {})
         
-        # 생성
+        # 생성 (DataParallel 모델의 경우 module 속성으로 접근)
+        model_for_generation = getattr(self.model, 'module', self.model)
         with torch.no_grad():
-            outputs = self.model.generate(
+            outputs = model_for_generation.generate(
                 inputs['input_ids'],
                 max_new_tokens=max_new_tokens,
                 num_return_sequences=1,
@@ -203,16 +231,47 @@ class ARCInferenceEvaluator:
                 early_stopping=gen_config.get('early_stopping', True)
             )
         
-        # 디코딩
-        generated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        
-        # 프롬프트 부분 제거
-        response = generated_text[len(prompt):].strip()
+        # 디코딩 (프롬프트 부분만 먼저 제거)
+        input_length = inputs['input_ids'].shape[1]
+        generated_tokens = outputs[0][input_length:]
+        response = self.tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
         
         # 액션 시퀀스 파싱
         actions = parse_action_sequence_from_llm(response)
         
         return actions, response
+    
+    def calculate_pixel_accuracy(self, predicted_grid: List[List[int]], target_grid: List[List[int]]) -> float:
+        """픽셀 단위 정확도 계산"""
+        try:
+            pred_array = np.array(predicted_grid)
+            target_array = np.array(target_grid)
+            
+            # 크기가 다른 경우 처리
+            if pred_array.shape != target_array.shape:
+                # 더 큰 크기에 맞춰 패딩 또는 자르기
+                max_h = max(pred_array.shape[0], target_array.shape[0])
+                max_w = max(pred_array.shape[1], target_array.shape[1])
+                
+                # 패딩
+                padded_pred = np.zeros((max_h, max_w), dtype=pred_array.dtype)
+                padded_target = np.zeros((max_h, max_w), dtype=target_array.dtype)
+                
+                padded_pred[:pred_array.shape[0], :pred_array.shape[1]] = pred_array
+                padded_target[:target_array.shape[0], :target_array.shape[1]] = target_array
+                
+                pred_array = padded_pred
+                target_array = padded_target
+            
+            # 픽셀 단위 일치 개수 계산
+            correct_pixels = np.sum(pred_array == target_array)
+            total_pixels = pred_array.size
+            
+            return correct_pixels / total_pixels if total_pixels > 0 else 0.0
+            
+        except Exception as e:
+            self.logger.warning(f"Error calculating pixel accuracy: {e}")
+            return 0.0
     
     def evaluate_single_problem(self, arc_id: str, problem_data: Dict) -> Dict:
         """단일 문제에 대한 평가"""
@@ -266,8 +325,9 @@ class ARCInferenceEvaluator:
                 test_input, predicted_actions
             )
             
-            # 정확도 계산
+            # 정확도 계산 (exact match + pixel accuracy)
             is_correct = np.array_equal(np.array(predicted_grid), np.array(test_output))
+            pixel_accuracy = self.calculate_pixel_accuracy(predicted_grid, test_output)
             
             test_result = {
                 'test_idx': test_idx,
@@ -276,19 +336,25 @@ class ARCInferenceEvaluator:
                 'predicted_actions': predicted_actions,
                 'predicted_grid': predicted_grid,
                 'is_correct': is_correct,
+                'pixel_accuracy': pixel_accuracy,
                 'raw_response': raw_response
             }
             
             results['test_results'].append(test_result)
             
-            self.logger.info(f"Test {test_idx}: {'✓' if is_correct else '✗'} Actions: {predicted_actions}")
+            self.logger.info(f"Test {test_idx}: {'✓' if is_correct else '✗'} (pixel: {pixel_accuracy:.3f}) Actions: {predicted_actions}")
         
-        # 정확도 계산
+        # 정확도 계산 (exact match + pixel accuracy)
         correct_count = sum(1 for r in results['test_results'] if r['is_correct'])
         total_count = len(results['test_results'])
-        accuracy = correct_count / total_count if total_count > 0 else 0.0
+        exact_accuracy = correct_count / total_count if total_count > 0 else 0.0
         
-        results['accuracy'] = accuracy
+        # 전체 pixel accuracy 평균 계산
+        pixel_accuracies = [r['pixel_accuracy'] for r in results['test_results']]
+        avg_pixel_accuracy = sum(pixel_accuracies) / len(pixel_accuracies) if pixel_accuracies else 0.0
+        
+        results['exact_accuracy'] = exact_accuracy
+        results['pixel_accuracy'] = avg_pixel_accuracy
         results['correct_count'] = correct_count
         results['total_count'] = total_count
         
@@ -299,8 +365,11 @@ class ARCInferenceEvaluator:
         # ReARC 데이터 로드
         rearc_data = self.load_rearc_data()
         
+        # DataParallel 모델의 경우 module 속성으로 접근
+        model_name = getattr(self.model, 'module', self.model).config.name_or_path if hasattr(getattr(self.model, 'module', self.model), 'config') else self.config.get('model_name', 'unknown')
+        
         all_results = {
-            'model_path': self.model.config.name_or_path,
+            'model_path': model_name,
             'config': self.config,
             'problem_results': {},
             'overall_stats': {}
@@ -308,6 +377,7 @@ class ARCInferenceEvaluator:
         
         total_correct = 0
         total_tests = 0
+        all_pixel_accuracies = []
         
         # 각 문제별 평가
         for arc_id, problem_data in tqdm(rearc_data.items(), desc="Evaluating problems"):
@@ -319,20 +389,28 @@ class ARCInferenceEvaluator:
             total_correct += problem_results['correct_count']
             total_tests += problem_results['total_count']
             
-            self.logger.info(f"Problem {arc_id}: {problem_results['accuracy']:.3f} "
+            # 문제별 pixel accuracy 수집
+            problem_pixel_accuracies = [r['pixel_accuracy'] for r in problem_results['test_results']]
+            all_pixel_accuracies.extend(problem_pixel_accuracies)
+            
+            self.logger.info(f"Problem {arc_id}: exact={problem_results['exact_accuracy']:.3f} pixel={problem_results['pixel_accuracy']:.3f} "
                            f"({problem_results['correct_count']}/{problem_results['total_count']})")
         
         # 전체 통계
-        overall_accuracy = total_correct / total_tests if total_tests > 0 else 0.0
+        overall_exact_accuracy = total_correct / total_tests if total_tests > 0 else 0.0
+        overall_pixel_accuracy = sum(all_pixel_accuracies) / len(all_pixel_accuracies) if all_pixel_accuracies else 0.0
+        
         all_results['overall_stats'] = {
             'total_correct': total_correct,
             'total_tests': total_tests,
-            'overall_accuracy': overall_accuracy,
+            'exact_accuracy': overall_exact_accuracy,
+            'pixel_accuracy': overall_pixel_accuracy,
             'num_problems': len(rearc_data)
         }
         
         self.logger.info(f"\\n=== FINAL RESULTS ===")
-        self.logger.info(f"Overall Accuracy: {overall_accuracy:.3f} ({total_correct}/{total_tests})")
+        self.logger.info(f"Overall Exact Accuracy: {overall_exact_accuracy:.3f} ({total_correct}/{total_tests})")
+        self.logger.info(f"Overall Pixel Accuracy: {overall_pixel_accuracy:.3f}")
         self.logger.info(f"Problems Evaluated: {len(rearc_data)}")
         
         return all_results
