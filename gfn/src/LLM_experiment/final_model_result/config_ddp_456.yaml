@@ -1,0 +1,40 @@
+# LLM Experiment Configuration - DDP on GPU 4,5,6
+
+# Data paths
+trajectory_data_dir: "/opt/dlami/nvme/seungpil/"
+rearc_data_dir: "./data/re-arc"
+processed_data_dir: "./processed_data"
+model_save_dir: "/opt/dlami/nvme/seungpil/models_gpu456"
+results_dir: "/opt/dlami/nvme/seungpil/results_gpu456"
+
+# Training parameters
+model_name: "meta-llama/Llama-3.1-8B-Instruct"
+max_length: 2048  # Increased for larger ReARC grids
+batch_size: 4 # Reduced for longer sequences
+learning_rate: 0.00005
+num_epochs: 10 # 더 많은 epoch
+warmup_steps: 50
+gradient_accumulation_steps: 4 # Increased to maintain effective batch size
+
+# Data preprocessing
+max_grid_size: 30
+action_mapping:
+  0: "left_rotate" # 왼쪽 회전
+  1: "right_rotate" # 오른쪽 회전
+  2: "horizontal_flip" # 수평 뒤집기
+  3: "vertical_flip" # 수직 뒤집기
+  4: "submit" # 제출
+
+# Available problem IDs and their ARC task IDs (only available trajectory files)
+problem_mapping:
+  86: "25ff71a9"
+  139: "6150a2bd"
+  178: "74dd1130"
+  149: "6773b310"
+  154: "6855a6e4"
+  240: "9d9215db"
+  379: "ecdecbb3"
+
+# Evaluation
+num_test_samples: 50
+max_action_sequence_length: 20

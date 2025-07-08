@@ -1,0 +1,104 @@
+📊 Training data loaded: 1000 samples
+=== ARC + Re-ARC 통합 학습 시작 ===
+Training data: ./correct_mixed_training_data/correct_mixed_training_data.json
+Base model: meta-llama/Llama-3.1-8B-Instruct
+Output dir: integrated_training_output
+✅ Created training script: integrated_training_output/run_integrated_training.py
+🚀 Starting training...
+❌ Training failed: 2025-07-08 08:00:02,581 - INFO - Loading base model and tokenizer...
+
+Loading checkpoint shards:   0%|                         | 0/4 [00:00<?, ?it/s]
+Loading checkpoint shards:  25%|████▎            | 1/4 [00:00<00:02,  1.15it/s]
+Loading checkpoint shards:  50%|████████▌        | 2/4 [00:01<00:01,  1.15it/s]
+Loading checkpoint shards:  75%|████████████▊    | 3/4 [00:02<00:00,  1.17it/s]
+Loading checkpoint shards: 100%|█████████████████| 4/4 [00:02<00:00,  1.67it/s]
+Loading checkpoint shards: 100%|█████████████████| 4/4 [00:02<00:00,  1.44it/s]
+2025-07-08 08:00:07,833 - INFO - Setting up LoRA configuration...
+2025-07-08 08:00:08,127 - INFO - Loading training data...
+2025-07-08 08:00:08,157 - INFO - Total training samples: 1000
+
+Tokenizing training data:   0%|                | 0/1000 [00:00<?, ? examples/s]
+Tokenizing training data:   6%|▎     | 58/1000 [00:00<00:01, 559.23 examples/s]
+Tokenizing training data:  12%|▌    | 121/1000 [00:00<00:01, 599.23 examples/s]
+Tokenizing training data:  21%|█    | 211/1000 [00:00<00:01, 592.69 examples/s]
+Tokenizing training data:  27%|█▎   | 274/1000 [00:00<00:01, 602.05 examples/s]
+Tokenizing training data:  35%|█▋   | 348/1000 [00:00<00:01, 643.56 examples/s]
+Tokenizing training data:  42%|██   | 419/1000 [00:00<00:00, 659.70 examples/s]
+Tokenizing training data:  49%|██▍  | 492/1000 [00:00<00:00, 680.59 examples/s]
+Tokenizing training data:  60%|██▉  | 595/1000 [00:00<00:00, 673.42 examples/s]
+Tokenizing training data:  66%|███▎ | 663/1000 [00:01<00:00, 670.19 examples/s]
+Tokenizing training data:  74%|███▋ | 744/1000 [00:01<00:00, 616.16 examples/s]
+Tokenizing training data:  84%|████▏| 838/1000 [00:01<00:00, 610.77 examples/s]
+Tokenizing training data:  91%|████▌| 908/1000 [00:01<00:00, 629.87 examples/s]
+Tokenizing training data:  98%|████▉| 977/1000 [00:01<00:00, 643.00 examples/s]
+Tokenizing training data: 100%|████| 1000/1000 [00:01<00:00, 565.29 examples/s]
+2025-07-08 08:00:10,091 - INFO - Tokenized dataset size: 1000
+No label_names provided for model class `PeftModelForCausalLM`. Since `PeftModel` hides base models input arguments, if label_names is not given, label_names can't be set automatically within `Trainer`. Note that empty label_names list will be used instead.
+2025-07-08 08:00:10,976 - INFO - 🚀 Starting integrated ARC + Re-ARC training...
+wandb: WARNING The `run_name` is currently set to the same value as `TrainingArguments.output_dir`. If this was not intended, please specify a different run name by setting the `TrainingArguments.run_name` parameter.
+wandb: Currently logged in as: iamseungpil (gistdslab) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /data/GFN_to_ARC/gfn/src/LLM_experiment/wandb/run-20250708_080011-deqbt38b
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run integrated_training_output/integrated_model
+wandb: ⭐️ View project at https://wandb.ai/gistdslab/huggingface
+wandb: 🚀 View run at https://wandb.ai/gistdslab/huggingface/runs/deqbt38b
+
+  0%|                                                   | 0/80 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 767, in convert_to_tensors
+    tensor = as_tensor(value)
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 729, in as_tensor
+    return torch.tensor(value)
+           ~~~~~~~~~~~~^^^^^^^
+ValueError: expected sequence of length 1024 at dim 1 (got 114)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/data/GFN_to_ARC/gfn/src/LLM_experiment/integrated_training_output/run_integrated_training.py", line 136, in <module>
+    model_path = main()
+  File "/data/GFN_to_ARC/gfn/src/LLM_experiment/integrated_training_output/run_integrated_training.py", line 124, in main
+    trainer.train()
+    ~~~~~~~~~~~~~^^
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/trainer.py", line 2206, in train
+    return inner_training_loop(
+        args=args,
+    ...<2 lines>...
+        ignore_keys_for_eval=ignore_keys_for_eval,
+    )
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/trainer.py", line 2502, in _inner_training_loop
+    batch_samples, num_items_in_batch = self.get_batch_samples(epoch_iterator, num_batches, args.device)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/trainer.py", line 5300, in get_batch_samples
+    batch_samples.append(next(epoch_iterator))
+                         ~~~~^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/accelerate/data_loader.py", line 567, in __iter__
+    current_batch = next(dataloader_iter)
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/torch/utils/data/dataloader.py", line 733, in __next__
+    data = self._next_data()
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/torch/utils/data/dataloader.py", line 789, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/torch/utils/data/_utils/fetch.py", line 55, in fetch
+    return self.collate_fn(data)
+           ~~~~~~~~~~~~~~~^^^^^^
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/data/data_collator.py", line 46, in __call__
+    return self.torch_call(features)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/data/data_collator.py", line 1014, in torch_call
+    batch = pad_without_fast_tokenizer_warning(
+        self.tokenizer, examples, return_tensors="pt", pad_to_multiple_of=self.pad_to_multiple_of
+    )
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/data/data_collator.py", line 67, in pad_without_fast_tokenizer_warning
+    padded = tokenizer.pad(*pad_args, **pad_kwargs)
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 3374, in pad
+    return BatchEncoding(batch_outputs, tensor_type=return_tensors)
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 240, in __init__
+    self.convert_to_tensors(tensor_type=tensor_type, prepend_batch_axis=prepend_batch_axis)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/miniconda3/lib/python3.13/site-packages/transformers/tokenization_utils_base.py", line 783, in convert_to_tensors
+    raise ValueError(
+    ...<4 lines>...
+    ) from e
+ValueError: Unable to create tensor, you should probably activate truncation and/or padding with 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your features (`labels` in this case) have excessive nesting (inputs type `list` where type `int` is expected).
+
+❌ Integrated training failed!
