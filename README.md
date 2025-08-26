@@ -10,6 +10,7 @@ This repository accompanies the paper:
 
 **"Solution Augmentation for ARC Problems Using GFlowNet: A Probabilistic Exploration Approach"**  
 Accepted at *Transactions on Machine Learning Research (TMLR), 2025*.
+
 [OpenReview](https://openreview.net/forum?id=ULCOhBgGzy&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DTMLR%2FAuthors%23your-submissions)) | [Project Page (Constructing)](https://your-vercel-link.vercel.app)
 
 Authors: Sanha Hwang, Seungpil Lee, Sejin Kim, Sundong Kim
