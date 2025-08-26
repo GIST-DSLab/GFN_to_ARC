@@ -1,0 +1,74 @@
+# ARC Trajectory Transformer Configuration - 20250706 version
+
+# Data paths
+trajectory_data_dir: "/data/gflownet-llm/"
+rearc_data_dir: "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks"
+processed_data_dir: "/data/gflownet-llm/20250706/processed_data_rl"
+model_save_dir: "/data/gflownet-llm/20250706/models_rl"
+results_dir: "/data/gflownet-llm/20250706/results_rl"
+
+# Model architecture
+n_layer: 6
+n_head: 8
+n_embd: 128
+
+# Training hyperparameters
+batch_size: 48
+learning_rate: 0.0001
+n_epochs: 20  # Reduced for initial test
+warmup_steps: 1000
+lr_decay: true
+weight_decay: 0.01
+
+# Regularization
+embd_pdrop: 0.1
+resid_pdrop: 0.1
+attn_pdrop: 0.1
+
+# Sequence parameters
+max_sequence_length: 64
+step: 1
+
+# Environment parameters
+observation_dim: 9
+action_dim: 1
+reward_dim: 1
+vocab_size: 22
+
+# Loss weights
+action_weight: 5.0
+reward_weight: 1.0
+observation_weight: 1.0
+
+# Training settings
+device: "cuda"
+seed: 42
+log_interval: 100
+eval_interval: 1000
+save_interval: 5000
+
+# Generation/Inference parameters
+temperature: 1.0
+top_k: null
+top_p: 0.9
+max_new_tokens: 32
+num_return_sequences: 1
+
+# Trajectory search parameters
+horizon: 20
+beam_width: 64
+n_samples: 1
+
+# Evaluation problems
+eval_problems: [86, 139, 149, 178, 240]
+max_test_samples: 50
+
+# Problem-specific action limits
+problem_max_actions:
+  "86": 15
+  "139": 20
+  "178": 12
+  "149": 18
+  "154": 16
+  "240": 22
+  "379": 14

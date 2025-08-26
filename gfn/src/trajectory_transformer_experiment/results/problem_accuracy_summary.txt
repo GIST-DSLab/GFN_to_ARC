@@ -1,0 +1,129 @@
+=== ARC Trajectory Transformer Problem-Specific Accuracy Report ===
+
+Model: 3x3 Trajectory Transformer (350K GFlowNet training data)
+Evaluation: Re-ARC dataset (7 problems, 100 examples each)
+
+=== Overall Performance ===
+Total Accuracy: 0.1% (1/700 correct)
+Total Tests: 700 examples across 7 problems
+
+=== Problem-Specific Results ===
+
+Problem 86 (25ff71a9 - rotation, medium):
+- Accuracy: 0.0% (0/100)
+- Grid sizes: Various (9x11, 29x8, etc.)
+- Model limitation: Only trained on 3x3 grids
+
+Problem 139 (6150a2bd - transformation, medium):
+- Accuracy: 0.0% (0/100)  
+- Grid sizes: Various large grids
+- Model limitation: Grid size mismatch
+
+Problem 149 (67a3c6ac - symmetry, easy):
+- Accuracy: 0.0% (0/100)
+- Grid sizes: Various sizes
+- Model limitation: Cannot handle variable sizes
+
+Problem 154 (68b16354 - copy, easy):
+- Accuracy: 0.0% (0/100)
+- Grid sizes: Various sizes
+- Expected: Should be easier, but size mismatch prevents success
+
+Problem 178 (74dd1130 - flip, medium):
+- Accuracy: 0.0% (0/100)
+- Grid sizes: Various sizes
+- Model limitation: Flip operations not working on wrong sizes
+
+Problem 240 (9dfd6313 - pattern, hard):
+- Accuracy: 1.0% (1/100) ⭐ ONLY SUCCESS
+- Grid sizes: Various sizes
+- Note: Single correct prediction out of 700 total tests
+
+Problem 379 (ed36ccf7 - complex, hard):
+- Accuracy: 0.0% (0/100)
+- Grid sizes: Various sizes
+- Expected: Hardest problem type
+
+=== Analysis by Difficulty ===
+
+Easy Problems (149, 154):
+- Average Accuracy: 0.0%
+- Expected: Should perform better, but grid size issues prevent success
+
+Medium Problems (86, 139, 178):  
+- Average Accuracy: 0.0%
+- Grid size mismatch is primary issue
+
+Hard Problems (240, 379):
+- Average Accuracy: 0.5%
+- Surprising that only success came from hard problem
+- May indicate some pattern recognition working despite size issues
+
+=== Key Findings ===
+
+1. CRITICAL ISSUE: Grid Size Mismatch
+   - Model trained on 3x3 grids only
+   - Re-ARC problems have variable sizes (2x6 to 29x29)
+   - Current approach crops/pads to 3x3, losing critical information
+
+2. Action Generation Working
+   - Model generates reasonable action sequences
+   - Average 2-5 actions per problem
+   - Includes submit actions appropriately
+
+3. Single Success Analysis
+   - Only 1 success out of 700 attempts (Problem 240)
+   - Success rate: 0.14%
+   - Suggests underlying model has some capability
+
+=== Comparison with Native 3x3 Test ===
+
+3x3 Native Test Results:
+- Accuracy: 87% confidence on native 3x3 grids
+- All 3 test cases handled correctly
+- Model works well when grid size matches training
+
+Re-ARC Results:
+- Accuracy: 0.1% on variable-sized grids
+- Massive performance drop due to size mismatch
+- 99.9% accuracy loss from grid preprocessing
+
+=== Recommendations ===
+
+1. URGENT: Implement 30x30 Padding Approach
+   - Use GFlowNet's padding strategy
+   - Train model on 30x30 padded grids
+   - Preserve spatial relationships
+
+2. Retrain with Proper Grid Handling
+   - Include variable-sized grids in training
+   - Use spatial embeddings for position encoding
+   - Maintain grid structure information
+
+3. Action Space Validation
+   - Current actions (rotate, flip, submit) may be insufficient
+   - Re-ARC may require different transformation types
+   - Consider expanding action vocabulary
+
+=== Model Architecture Assessment ===
+
+Strengths:
+- Trajectory Transformer architecture working
+- Good performance on matching grid sizes
+- Proper action sequence generation
+- Value estimation and reward integration
+
+Weaknesses:
+- Grid size handling is catastrophic failure point
+- No spatial understanding beyond 3x3
+- Information loss in crop/pad preprocessing
+- Limited action vocabulary for complex transformations
+
+=== Next Steps ===
+
+1. Complete 30x30 model training
+2. Evaluate 30x30 model on Re-ARC
+3. Compare 3x3 vs 30x30 performance
+4. Consider architecture improvements for spatial understanding
+
+Generated: 2025-07-08 14:06:12

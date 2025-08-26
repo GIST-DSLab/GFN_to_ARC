@@ -1,0 +1,53 @@
+action_dim: 1
+action_weight: 2.0
+attn_pdrop: 0.1
+batch_size: 2
+device: cuda
+embd_pdrop: 0.1
+eval_interval: 1000
+eval_problems:
+- 86
+- 139
+- 149
+- 154
+- 178
+- 240
+- 379
+learning_rate: 0.0001
+log_interval: 100
+lr_decay: true
+max_new_tokens: 64
+max_sequence_length: 920
+max_test_samples: null
+model_save_dir: ./models_30x30
+n_embd: 128
+n_epochs: 3
+n_head: 8
+n_layer: 3
+num_return_sequences: 1
+observation_dim: 900
+observation_weight: 1.0
+problem_max_actions:
+  '139': 20
+  '149': 18
+  '154': 16
+  '178': 12
+  '240': 22
+  '379': 20
+  '86': 15
+processed_data_dir: ./processed_data_30x30
+rearc_data_dir: ../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks
+resid_pdrop: 0.1
+results_dir: ./results_30x30
+reward_dim: 1
+reward_weight: 1.0
+save_interval: 5000
+seed: 42
+temperature: 1.0
+top_k: null
+top_p: 0.9
+value_dim: 1
+value_weight: 1.5
+vocab_size: 26
+warmup_steps: 10000
+weight_decay: 0.01

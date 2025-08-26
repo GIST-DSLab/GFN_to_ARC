@@ -1,0 +1,70 @@
+# GFlowNet 방식 30x30 ARC Trajectory Transformer Configuration
+
+# Data paths
+trajectory_data_dir: "/data/gflownet-llm"
+rearc_data_dir: "../LLM_experiment/data/re-arc/re_arc_extracted/re_arc/tasks"
+processed_data_dir: "./processed_data_30x30"
+model_save_dir: "./models_gflownet_30x30"
+results_dir: "./results_gflownet_30x30"
+
+# Model architecture (더 작은 모델로 안정성 확보)
+n_layer: 3           # Transformer layers (작게 시작)
+n_head: 8            # Attention heads  
+n_embd: 128          # Embedding dimension (작게 시작)
+
+# Training parameters (안정적 설정)
+batch_size: 4           # 멀티 GPU용으로 증가
+learning_rate: 0.00001  # 매우 낮은 학습률
+n_epochs: 2             # 적은 에포크
+warmup_steps: 1000      # 워밍업 단계
+lr_decay: true
+weight_decay: 0.01
+
+# Regularization
+embd_pdrop: 0.1
+resid_pdrop: 0.1
+attn_pdrop: 0.1
+
+# Sequence parameters
+max_sequence_length: 920  # obs(900) + action(1) + reward(1) + value(1) per step
+step: 1
+
+# Data parameters (30x30 GFlowNet 방식)
+observation_dim: 900     # 30x30 grid flattened
+action_dim: 1           # Single action index
+reward_dim: 1           # Single reward value  
+value_dim: 1            # Single value estimate
+vocab_size: 26          # 0-9 colors + pad(10) + actions(11-15) + rewards(16-20) + values(21-25)
+
+# Loss weights
+action_weight: 2.0
+reward_weight: 1.0
+value_weight: 1.5
+observation_weight: 1.0
+
+# Training settings
+device: "cuda"
+seed: 42
+log_interval: 50        # 더 자주 로깅
+eval_interval: 500      # 더 자주 평가
+save_interval: 1000
+
+# Inference parameters
+temperature: 1.0
+top_k: null
+top_p: 0.9
+max_new_tokens: 64
+num_return_sequences: 1
+
+# Evaluation parameters
+eval_problems: [178]
+max_test_samples: 10    # 평가용 작은 샘플
+
+# Problem-specific max actions
+problem_max_actions:
+  178: 12
+
+# GFlowNet specific settings
+padding_value: 10       # GFlowNet과 동일한 패딩 값
+grid_size: 30          # 30x30 고정 크기
+use_spatial_embedding: true  # 공간 위치 임베딩 사용
