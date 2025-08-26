@@ -4,6 +4,46 @@ This project provides an implementation of GFlowNet for saving trajectories gene
 
 ---
 
+## Publication
+
+This repository accompanies the paper:
+
+**"Solution Augmentation for ARC Problems Using GFlowNet: A Probabilistic Exploration Approach"**  
+Accepted at *Transactions on Machine Learning Research (TMLR), 2025*.
+[OpenReview](https://openreview.net/forum?id=ULCOhBgGzy&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DTMLR%2FAuthors%23your-submissions)) | [Project Page (Constructing)](https://your-vercel-link.vercel.app)
+
+Authors: Sanha Hwang, Seungpil Lee, Sejin Kim, Sundong Kim
+
+### Citation
+If you find this work useful, please cite our paper:
+```bibtex
+@article{hwang2025solution,
+  title={Solution Augmentation for ARC Problems Using GFlowNet: A Probabilistic Exploration Approach},
+  author={Hwang, Sanha and Lee, Seungpil and Kim, Sejin and Kim, Sundong},
+  journal={Transactions on Machine Learning Research},
+  year={2025}
+}
+```
+
+---
+
+## Branches
+
+- **`main`**: Stable branch containing the core GFlowNet implementation for ARC-style environments and trajectory saving.  
+- **`LLM-Experiment-clean`**: Dedicated branch for downstream LLM fine-tuning experiments described in the paper (e.g., Section 4.3/4.4). This branch contains code for preparing trajectory datasets and integrating them with LLaMA-based models.  
+
+---
+
+## Acknowledgements
+This work was supported by NRF (Reinforcement Learning-Based Program Synthesis Techniques for Solving Abstract Visual Reasoning Problems by Identifying Patterns and Combining Concepts; RS-2024-00451162, Developing Abstraction and Reasoning Capability for AI Model; RS-2024-00454000),  IITP (Enhancing AI Model Reliability Through Domain-Specific Automated Value Alignment Assessment; RS-2024-00445087, Development of Artificial Complex Intelligence for Conceptually Understanding and Inferring like Human; RS-2023-00216011), and GIST (KH0330, Future-leading Specialized Research Project) grants funded by the Ministry of Science and ICT, Korea.
+
+Furthermore, This implementation was initially inspired by [augustwester/gflownet](https://github.com/augustwester/gflownet), which served as a reference during the early stages of development. Over time, the codebase has diverged significantly to accommodate ARC-specific environments, trajectory saving utilities, and LLM downstream integration.
+
+---
+
+
+---
+
 ## Table of Contents
 - [Overview](#overview)
 - [Installation](#installation)
@@ -38,8 +78,8 @@ The `save_gflownet_trajectories` functionality allows users to:
 Clone the repository and install the required dependencies:
 
 ```bash
-$ git clone <repository_url>
-$ cd <repository_folder>
+$ git clone https://github.com/GIST-DSLab/GFN_to_ARC.git
+$ cd gfn
 $ pip install -r requirements.txt
 ```
 
@@ -129,9 +169,9 @@ python main.py --save_trajectories "trajectories_partial.json" --env_mode "parti
 
 ## Contact
 For further information or questions, please contact:
-- **Name**: [Your Name]
-- **Email**: [Your Email]
-- **GitHub**: [Your GitHub Profile]
+- **Name**: Sanha Hwang
+- **Email**: hsh6449@gmail.com
+- **GitHub**: [GitHub Profile](https://github.com/hsh6449)
 
 ---
 
