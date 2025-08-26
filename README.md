@@ -42,9 +42,6 @@ Furthermore, This implementation was initially inspired by [augustwester/gflowne
 
 ---
 
-
----
-
 ## Table of Contents
 - [Overview](#overview)
 - [Installation](#installation)
