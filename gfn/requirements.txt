@@ -6,3 +6,4 @@ torch
 matplotlib
 pandas
 gymnasium
+numpy
