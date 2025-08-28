@@ -31,7 +31,7 @@ If you find this work useful, please cite our paper:
 ## Branches
 
 - **`main`**: Stable branch containing the core GFlowNet implementation for ARC-style environments and trajectory saving.  
-- **`LLM-Experiment-clean`**: Dedicated branch for downstream LLM fine-tuning experiments described in the paper (e.g., Section 4.3/4.4). This branch contains code for preparing trajectory datasets and integrating them with LLaMA-based models.  
+- **`LLM-Experiment`**: Dedicated branch for downstream LLM fine-tuning experiments described in the paper (e.g., Section 4.3/4.4). This branch contains code for preparing trajectory datasets and integrating them with LLaMA-based models.  
 
 ---
 
